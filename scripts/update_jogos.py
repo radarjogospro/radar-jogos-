@@ -1,44 +1,49 @@
+import os
 import requests
 import json
-import os
-from datetime import datetime
-import pytz
+from datetime import datetime, timedelta
 
 API_KEY = os.getenv("API_FOOTBALL_KEY")
 
-today = datetime.utcnow().strftime("%Y-%m-%d")
-
-url = f"https://v3.football.api-sports.io/fixtures?date={today}"
+if not API_KEY:
+    raise Exception("API_FOOTBALL_KEY não encontrada.")
 
 headers = {
     "x-apisports-key": API_KEY
 }
 
-response = requests.get(url, headers=headers)
+# Data de hoje
+today = datetime.utcnow().strftime("%Y-%m-%d")
+
+url = "https://v3.football.api-sports.io/fixtures"
+params = {
+    "date": today,
+    "timezone": "America/Sao_Paulo"
+}
+
+response = requests.get(url, headers=headers, params=params)
+
+if response.status_code != 200:
+    raise Exception(f"Erro na API: {response.text}")
+
 data = response.json()
 
 games = []
 
-if "response" in data:
-    for item in data["response"]:
-        fixture = item["fixture"]
-        league = item["league"]
-        teams = item["teams"]
+for item in data.get("response", []):
+    fixture = item["fixture"]
+    league = item["league"]
+    teams = item["teams"]
 
-        # Converter horário para Brasil
-        utc_time = datetime.fromisoformat(fixture["date"].replace("Z", "+00:00"))
-        brazil_tz = pytz.timezone("America/Sao_Paulo")
-        brazil_time = utc_time.astimezone(brazil_tz)
-
-        games.append({
-            "home": teams["home"]["name"],
-            "away": teams["away"]["name"],
-            "league": league["name"],
-            "country": league["country"],
-            "date": brazil_time.strftime("%d/%m/%Y"),
-            "time": brazil_time.strftime("%H:%M"),
-            "status": fixture["status"]["short"]
-        })
+    games.append({
+        "home": teams["home"]["name"],
+        "away": teams["away"]["name"],
+        "league": league["name"],
+        "country": league["country"],
+        "date": fixture["date"][:10],
+        "time": fixture["date"][11:16],
+        "status": fixture["status"]["short"]
+    })
 
 output = {
     "updatedAt": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
@@ -49,4 +54,4 @@ output = {
 with open("jogos.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print("Jogos atualizados com API-Football com sucesso!")
+print("jogos.json atualizado com sucesso.")
