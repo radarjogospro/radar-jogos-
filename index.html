@@ -3,38 +3,131 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
   <title>Radar Jogos PRO</title>
-  <meta name="theme-color" content="#0f172a" />
+
+  <!-- Favicon SVG inline -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='35%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%2322c55e'/%3E%3Cstop offset='100%25' stop-color='%230b1220'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3Cpath d='M18 34c6-10 22-10 28 0' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='36' r='4' fill='white'/%3E%3C/svg%3E" />
+
   <style>
-    :root{--bg:#0b1220;--panel:#0f172a;--card:#111a2f;--muted:#94a3b8;--text:#e5e7eb;--accent:#16a34a;--shadow:0 14px 40px rgba(0,0,0,.35);--radius:22px}
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --card:#0b1430;
+      --text:#e5e7eb; --muted:#94a3b8; --line:rgba(148,163,184,.18);
+      --green:#22c55e; --green2:#16a34a; --shadow:0 14px 40px rgba(0,0,0,.35);
+      --r:18px;
+    }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(1200px 800px at 20% -10%, rgba(22,163,74,.18), transparent 60%),radial-gradient(900px 600px at 110% 10%, rgba(59,130,246,.10), transparent 60%),var(--bg);color:var(--text)}
-    .wrap{max-width:760px;margin:0 auto;padding:18px}
-    header{padding:14px 0 8px;text-align:center}
-    h1{margin:6px 0 6px;font-size:44px;letter-spacing:.5px}
-    .status{display:inline-flex;gap:10px;align-items:center;color:var(--muted);font-weight:600}
-    .dot{width:10px;height:10px;border-radius:999px;background:#22c55e;box-shadow:0 0 0 6px rgba(34,197,94,.12)}
-    .panel{margin:18px auto 16px;background:rgba(15,23,42,.68);border:1px solid rgba(148,163,184,.16);border-radius:28px;padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
-    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+      background:
+        radial-gradient(1100px 700px at 20% 0%, rgba(34,197,94,.16), transparent 55%),
+        radial-gradient(900px 600px at 85% 10%, rgba(56,189,248,.10), transparent 55%),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:940px;margin:0 auto;padding:22px 14px 90px}
+    header{padding:20px 14px 10px;text-align:center}
+    h1{margin:10px 0 6px;font-size:46px;letter-spacing:.2px}
+    .status{display:inline-flex;gap:10px;align-items:center;justify-content:center;color:var(--muted);font-weight:600}
+    .dot{width:10px;height:10px;border-radius:50%;background:#64748b;box-shadow:0 0 0 4px rgba(100,116,139,.14)}
+    .dot.on{background:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.18)}
+
+    .panel{
+      margin:16px auto 14px;
+      background:rgba(15,23,42,.72);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:26px;
+      padding:16px;
+      max-width:720px;
+    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .search{flex:1;min-width:220px}
-    input{width:100%;height:48px;border-radius:14px;border:1px solid rgba(148,163,184,.20);background:#0b1220;color:var(--text);padding:0 14px;font-size:16px;outline:none}
-    input::placeholder{color:#9aa7bd}
-    .btn{height:44px;border:none;border-radius:14px;padding:0 16px;font-weight:800;color:#eaf2ff;background:rgba(148,163,184,.14);cursor:pointer}
-    .btn-green{background:linear-gradient(180deg, #22c55e, #16a34a)}
-    .hint{margin:10px 2px 0;color:var(--muted);font-size:14px}
-    .list{display:flex;flex-direction:column;gap:12px;margin-top:10px}
-    .card{background:rgba(17,26,47,.80);border:1px solid rgba(148,163,184,.14);border-radius:22px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
-    .title{font-size:22px;font-weight:900;margin:0 0 6px}
-    .meta{color:var(--muted);font-weight:700}
-    .pill{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:999px;background:rgba(22,163,74,.16);border:1px solid rgba(34,197,94,.35);color:#bbf7d0;font-weight:900}
-    .empty{opacity:.9;border:1px dashed rgba(148,163,184,.22);background:rgba(15,23,42,.35);text-align:center;padding:18px;border-radius:22px;color:var(--muted)}
+    input{
+      width:100%;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.22);
+      background:rgba(2,6,23,.35);
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+    }
+    input::placeholder{color:rgba(148,163,184,.9)}
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:800;
+      cursor:pointer;
+      color:#fff;
+    }
+    .btn.gray{background:rgba(148,163,184,.18)}
+    .btn.green{background:linear-gradient(180deg,var(--green),var(--green2))}
+    .hint{margin-top:10px;color:var(--muted);font-size:14px;line-height:1.3}
+
+    .chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0 6px}
+    .chip{
+      padding:10px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.18);
+      background:rgba(15,23,42,.55);color:var(--text);
+      font-weight:800;cursor:pointer;
+      user-select:none;
+    }
+    .chip.on{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.38)}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+    .card{
+      background:rgba(11,20,48,.72);
+      border:1px solid rgba(148,163,184,.16);
+      border-radius:20px;
+      box-shadow:0 12px 30px rgba(0,0,0,.24);
+      padding:16px 16px;
+    }
+    .teams{font-size:24px;font-weight:900;letter-spacing:.2px}
+    .meta{color:var(--muted);font-weight:700;margin-top:2px}
+    .pill{
+      display:inline-block;margin-top:10px;
+      background:rgba(34,197,94,.18);
+      color:#d9ffe7;
+      border:1px solid rgba(34,197,94,.35);
+      padding:8px 12px;border-radius:999px;font-weight:900
+    }
+    .small{font-size:13px;color:var(--muted);margin-top:6px}
+    .err{
+      margin:10px auto 0;
+      max-width:720px;
+      background:rgba(239,68,68,.10);
+      border:1px solid rgba(239,68,68,.25);
+      color:#fecaca;
+      padding:12px 14px;
+      border-radius:16px;
+      display:none;
+    }
+
+    footer{
+      position:fixed;left:0;right:0;bottom:0;
+      background:rgba(2,6,23,.55);
+      border-top:1px solid rgba(148,163,184,.14);
+      backdrop-filter: blur(10px);
+    }
+    .tabs{max-width:940px;margin:0 auto;display:flex;gap:12px;justify-content:center;padding:12px 12px}
+    .tab{
+      width:180px;max-width:30vw;
+      padding:12px 14px;border-radius:18px;
+      border:1px solid rgba(148,163,184,.16);
+      background:rgba(15,23,42,.45);
+      color:rgba(229,231,235,.85);
+      font-weight:900;text-align:center;
+    }
+    .tab.on{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.35);color:#eafff2}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
       <h1>Radar Jogos PRO</h1>
-      <div class="status"><span class="dot"></span><span id="statusTxt">Online</span></div>
+      <div class="status"><span id="dot" class="dot"></span><span id="onlineTxt">Offline</span></div>
     </header>
 
     <div class="panel">
@@ -42,76 +135,146 @@
         <div class="search">
           <input id="q" placeholder="Buscar jogo ou time..." />
         </div>
-        <button class="btn" id="btnClear">Limpar</button>
-        <button class="btn btn-green" id="btnRefresh">Atualizar</button>
+        <button class="btn gray" id="clear">Limpar</button>
+        <button class="btn green" id="refresh">Atualizar</button>
       </div>
-      <div class="hint" id="hintTxt">Carregando jogos atuais…</div>
+      <div class="hint">
+        Fonte automática diária (GitHub Action). Última atualização: <b id="updatedAt">—</b>
+      </div>
     </div>
 
-    <div class="list" id="list"></div>
+    <div id="err" class="err"></div>
+
+    <div class="chips" id="chips"></div>
+
+    <div class="grid" id="list"></div>
+    <div class="small" id="empty" style="display:none;text-align:center;margin-top:18px;">
+      Nenhum jogo encontrado. Tente mudar filtros ou limpar a busca.
+    </div>
   </div>
 
-  <script>
-    const $ = (id)=>document.getElementById(id);
-    const listEl = $("list");
-    const hintEl = $("hintTxt");
-    const statusEl = $("statusTxt");
-    let jogos = [];
+  <footer>
+    <div class="tabs">
+      <div class="tab on">Jogos</div>
+      <div class="tab">Favoritos</div>
+      <div class="tab">Histórico</div>
+    </div>
+  </footer>
 
-    function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
+<script>
+  const $ = (id)=>document.getElementById(id);
 
-    function render(items){
-      listEl.innerHTML = "";
-      if(!items.length){
-        listEl.innerHTML = `<div class="empty">Nenhum jogo encontrado.</div>`;
-        return;
-      }
-      for(const j of items){
-        const el = document.createElement("div");
-        el.className = "card";
-        el.innerHTML = `
-          <div class="title">${j.home} x ${j.away}</div>
-          <div class="meta">Liga: ${j.league || "—"} · ${j.time || ""}</div>
-          <div class="pill">${j.tip || "Sugestão"}</div>
-        `;
-        listEl.appendChild(el);
-      }
+  const state = {
+    all: [],
+    filter: 'Todos',
+    q: ''
+  };
+
+  const FILTERS = ['Todos','Brasil','Europa','Hoje'];
+
+  function setOnline(){
+    const on = navigator.onLine;
+    $('dot').className = 'dot' + (on ? ' on' : '');
+    $('onlineTxt').textContent = on ? 'Online' : 'Offline';
+  }
+  window.addEventListener('online', setOnline);
+  window.addEventListener('offline', setOnline);
+
+  function renderChips(){
+    const wrap = $('chips');
+    wrap.innerHTML = '';
+    FILTERS.forEach(f=>{
+      const b = document.createElement('div');
+      b.className = 'chip' + (state.filter===f ? ' on':'');
+      b.textContent = f;
+      b.onclick = ()=>{ state.filter=f; renderChips(); renderList(); };
+      wrap.appendChild(b);
+    });
+  }
+
+  function matchesFilter(g){
+    if(state.filter==='Todos') return true;
+    if(state.filter==='Hoje') return true; // já é do dia mesmo
+    const country = (g.country||'').toLowerCase();
+    const league = (g.league||'').toLowerCase();
+
+    if(state.filter==='Brasil'){
+      return country.includes('brazil') || league.includes('brasil') || league.includes('brazil');
     }
-
-    function applySearch(){
-      const q = norm($("q").value.trim());
-      if(!q){ render(jogos); return; }
-      const filtered = jogos.filter(j=>{
-        const hay = norm(`${j.home} ${j.away} ${j.league} ${j.tip}`);
-        return hay.includes(q);
-      });
-      render(filtered);
+    if(state.filter==='Europa'){
+      // heurística simples
+      const europeWords = ['england','spain','italy','germany','france','portugal','netherlands','uefa','europe'];
+      return europeWords.some(w => country.includes(w) || league.includes(w));
     }
+    return true;
+  }
 
-    async function loadJogos(){
-      try{
-        statusEl.textContent = "Atualizando…";
-        hintEl.textContent = "Buscando jogos do dia…";
-        // cache-bust (pra sempre pegar o mais novo)
-        const res = await fetch("./jogos.json?ts=" + Date.now(), {cache:"no-store"});
-        if(!res.ok) throw new Error("Não encontrou jogos.json");
-        const data = await res.json();
-        jogos = Array.isArray(data?.games) ? data.games : (Array.isArray(data) ? data : []);
-        hintEl.textContent = `Jogos carregados: ${jogos.length}`;
-        statusEl.textContent = "Online";
-        applySearch();
-      }catch(e){
-        statusEl.textContent = "Offline";
-        hintEl.textContent = "Erro: não foi possível carregar jogos atuais (jogos.json).";
-        listEl.innerHTML = `<div class="empty">Sem jogos. Confirme se o GitHub Actions gerou o jogos.json.</div>`;
-      }
+  function matchesQuery(g){
+    const q = state.q.trim().toLowerCase();
+    if(!q) return true;
+    const hay = `${g.home} ${g.away} ${g.league} ${g.country}`.toLowerCase();
+    return hay.includes(q);
+  }
+
+  function renderList(){
+    const list = $('list');
+    const empty = $('empty');
+
+    const items = state.all.filter(g=>matchesFilter(g) && matchesQuery(g));
+    list.innerHTML = '';
+
+    if(!items.length){
+      empty.style.display = 'block';
+      return;
     }
+    empty.style.display = 'none';
 
-    $("q").addEventListener("input", applySearch);
-    $("btnClear").addEventListener("click", ()=>{ $("q").value=""; applySearch(); });
-    $("btnRefresh").addEventListener("click", loadJogos);
+    items.slice(0, 60).forEach(g=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="teams">${escapeHtml(g.home)} x ${escapeHtml(g.away)}</div>
+        <div class="meta">Liga: ${escapeHtml(g.league || '—')}</div>
+        <div class="meta">${escapeHtml(g.country || '—')} ${g.time ? '• ' + escapeHtml(g.time) : ''}</div>
+        <div class="pill">${escapeHtml(g.tag || 'Jogo do dia')}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
 
-    loadJogos();
-  </script>
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  async function load(){
+    $('err').style.display = 'none';
+    try{
+      const res = await fetch(`./jogos.json?ts=${Date.now()}`, {cache:'no-store'});
+      if(!res.ok) throw new Error('Não consegui carregar jogos.json');
+      const data = await res.json();
+      $('updatedAt').textContent = data.updatedAt || '—';
+      state.all = (data.games || []).map(x=>({
+        home: x.home, away: x.away,
+        league: x.league, country: x.country,
+        time: x.time, tag: x.tag
+      }));
+      renderList();
+    }catch(e){
+      const box = $('err');
+      box.textContent = 'Erro ao carregar jogos: ' + (e.message || e);
+      box.style.display = 'block';
+      state.all = [];
+      renderList();
+    }
+  }
+
+  $('q').addEventListener('input', (e)=>{ state.q = e.target.value; renderList(); });
+  $('clear').onclick = ()=>{ $('q').value=''; state.q=''; renderList(); };
+  $('refresh').onclick = ()=>load();
+
+  setOnline();
+  renderChips();
+  load();
+</script>
 </body>
 </html>
