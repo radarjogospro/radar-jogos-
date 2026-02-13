@@ -1,32 +1,35 @@
 name: Update jogos.json daily
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 9 * * *"   # todo dia 09:00 UTC (qualquer horário; isso dá 06:00 no Brasil UTC-3)
-
-permissions:
-  contents: write
+    - cron: "*/30 * * * *"   # Atualiza a cada 30 minutos
+  workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Update jogos.json
-        run: python scripts/update_jogos.py
+      - name: Install dependencies
+        run: pip install requests
 
-      - name: Commit and push
+      - name: Run script
+        run: python scripts/update_jogos.py
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+
+      - name: Commit and push if changed
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add jogos.json
-          git commit -m "update jogos.json" || exit 0
+          git diff --quiet && git diff --staged --quiet || git commit -m "Atualiza jogos automaticamente"
           git push
