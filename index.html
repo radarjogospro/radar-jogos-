@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="Radar de jogos com busca, filtros, favoritos e histórico." />
+  <title>Radar Jogos PRO</title>
+
+  <!-- Ícone fallback (data URL SVG) -->
+  <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='100%25' height='100%25' rx='26' fill='%230f172a'/%3E%3Ccircle cx='42' cy='48' r='18' fill='%2322c55e'/%3E%3Cpath d='M70 36h30v12H70zM70 58h30v12H70z' fill='%2394a3b8'/%3E%3Cpath d='M26 86h76v14H26z' fill='%231f2a44'/%3E%3C/svg%3E" />
+
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --card:#0b162d;
+      --muted:#94a3b8; --text:#e5e7eb; --line:rgba(148,163,184,.16);
+      --shadow:0 14px 40px rgba(0,0,0,.35); --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background: radial-gradient(1200px 800px at 25% -10%, rgba(34,197,94,.22), transparent 55%),
+                  radial-gradient(900px 600px at 110% 10%, rgba(59,130,246,.20), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:18px 14px 110px}
+    .top{
+      padding:10px 2px 14px;
+      position:sticky; top:0; z-index:9;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,18,32,.92), rgba(11,18,32,.72), transparent);
+    }
+    .title{font-weight:800; font-size:34px; margin:8px 2px 2px; letter-spacing:.3px}
+    .sub{color:var(--muted); font-size:14px; margin:0 2px 12px}
+    .row{display:flex; gap:10px; align-items:center}
+    .search{
+      flex:1; display:flex; gap:10px; align-items:center;
+      background:rgba(15,23,42,.72);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:10px 12px;
+      box-shadow: var(--shadow);
+    }
+    .search input{flex:1;border:0;outline:0;background:transparent;color:var(--text);font-size:15px}
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(15,23,42,.9);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btnPrimary{background:rgba(34,197,94,.18); border-color:rgba(34,197,94,.35)}
+    .chips{display:flex; flex-wrap:wrap; gap:10px; margin:12px 2px 6px}
+    .chip{
+      padding:10px 14px; border-radius:999px;
+      background:rgba(31,42,68,.6);
+      border:1px solid var(--line);
+      font-weight:800; font-size:14px;
+      cursor:pointer; user-select:none;
+    }
+    .chip.on{background:rgba(27,58,43,.75); border-color:rgba(34,197,94,.35)}
+    .hint{color:var(--muted); font-size:13px; margin:10px 2px}
+    .banner{
+      margin:10px 2px; padding:12px 14px;
+      border-radius:16px; border:1px solid var(--line);
+      background:rgba(15,23,42,.65);
+      color:var(--muted); display:none;
+    }
+    .banner strong{color:var(--text)}
+    .grid{display:grid; gap:14px; margin-top:12px}
+    .card{
+      background:rgba(11,22,45,.72);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:14px;
+      box-shadow: var(--shadow);
+      position:relative; overflow:hidden;
+    }
+    .card::before{
+      content:""; position:absolute; inset:-2px; pointer-events:none;
+      background: radial-gradient(500px 260px at 15% 20%, rgba(34,197,94,.16), transparent 55%),
+                  radial-gradient(500px 260px at 90% 0%, rgba(59,130,246,.14), transparent 55%);
+      opacity:.9;
+    }
+    .card > *{position:relative}
+    .match{display:flex; justify-content:space-between; gap:12px; align-items:flex-start}
+    .teams{font-size:26px; font-weight:900; line-height:1.1}
+    .pill{
+      padding:10px 12px; border-radius:999px; font-weight:900; font-size:14px;
+      background:rgba(34,197,94,.16); border:1px solid rgba(34,197,94,.35);
+      min-width:130px; text-align:center;
+    }
+    .meta{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+    .tag{
+      background:rgba(15,23,42,.55);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:800; font-size:13px;
+    }
+    .tag.muted{color:var(--muted)}
+    .riskLow{border-color:rgba(34,197,94,.35)}
+    .riskMid{border-color:rgba(251,191,36,.35)}
+    .riskHigh{border-color:rgba(239,68,68,.35)}
+    .actions{display:flex; gap:10px; margin-top:12px}
+    .btnWide{flex:1; padding:12px 14px; border-radius:16px}
+    .btnGreen{background:rgba(34,197,94,.18); border-color:rgba(34,197,94,.35); font-weight:950}
+    .btnGhost{background:rgba(15,23,42,.55)}
+    .bottomNav{
+      position:fixed; left:0; right:0; bottom:0; z-index:20;
+      padding:12px 14px 18px;
+      background: linear-gradient(to top, rgba(11,18,32,.95), rgba(11,18,32,.75), transparent);
+      backdrop-filter: blur(10px);
+    }
+    .navBar{
+      max-width:980px;margin:0 auto;
+      display:flex; gap:12px;
+      padding:12px; border-radius:22px;
+      background:rgba(15,23,42,.82);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .navBtn{
+      flex:1; text-align:center; padding:12px 10px;
+      border-radius:16px;
+      border:1px solid transparent;
+      font-weight:950;
+      background:rgba(27,58,43,.35);
+      cursor:pointer; user-select:none;
+    }
+    .navBtn.off{background:transparent; border-color:var(--line); color:var(--muted)}
+    .empty{
+      margin:16px 2px; padding:18px 14px;
+      border-radius:16px;
+      border:1px dashed var(--line);
+      color:var(--muted);
+      background:rgba(15,23,42,.35);
+    }
+    .small{font-size:12px;color:var(--muted)}
+    .spinner{
+      width:16px;height:16px;border-radius:50%;
+      border:2px solid rgba(148,163,184,.25);
+      border-top-color: rgba(34,197,94,.85);
+      animation: spin 1s linear infinite;
+      display:inline-block; vertical-align:middle; margin-right:8px;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .toast{
+      position:fixed; left:50%; bottom:96px; transform:translateX(-50%);
+      background:rgba(0,0,0,.65);
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff; padding:10px 12px; border-radius:999px;
+      font-weight:950; display:none; z-index:30;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">Radar Jogos PRO</div>
+      <div class="sub"><span id="statusDot">●</span> <span id="statusText">Carregando…</span> · <span class="small">App pronto (PWA)</span></div>
+
+      <div class="row">
+        <div class="search">
+          <input id="q" placeholder="Buscar jogo, time, liga…" autocomplete="off" />
+          <button class="btn" id="btnClear">Limpar</button>
+        </div>
+        <button class="btn btnPrimary" id="btnRefresh">Atualizar</button>
+      </div>
+
+      <div class="hint">Dica: use a busca e toque em “Copiar palpite”.</div>
+      <div class="chips" id="chips"></div>
+      <div class="banner" id="banner"></div>
+    </div>
+
+    <div class="grid" id="list"></div>
+    <div class="empty" id="empty" style="display:none;"></div>
+  </div>
+
+  <div class="toast" id="toast">Copiado ✅</div>
+
+  <div class="bottomNav">
+    <div class="navBar">
+      <div class="navBtn" id="tabGames">Jogos</div>
+      <div class="navBtn off" id="tabFavs">Favoritos</div>
+      <div class="navBtn off" id="tabHist">Histórico</div>
+    </div>
+  </div>
+
+<script>
+/** =========================
+ *  PWA tudo no mesmo HTML:
+ *  - cria manifest por Blob
+ *  - cria ícones (PNG) por Canvas em memória
+ * ========================= */
+
+const APP_VERSION = "2026-02-13-2"; // altere quando quiser forçar atualização
+const PROXY_URL = ""; // se CORS bloquear, depois eu te passo um Worker e você coloca aqui
+
+function setStatus(text, ok=true){
+  document.getElementById("statusText").textContent = text;
+  document.getElementById("statusDot").style.color = ok ? "#22c55e" : "#ef4444";
+}
+function showBanner(html){
+  const b = document.getElementById("banner");
+  b.innerHTML = html;
+  b.style.display = "block";
+}
+function hideBanner(){ document.getElementById("banner").style.display="none"; }
+
+function toast(msg="Copiado ✅"){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(()=> t.style.display="none", 1500);
+}
+
+function lsGet(key, fallback){
+  try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch{ return fallback; }
+}
+function lsSet(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+
+function normalize(str){
+  return (str || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+function fmtKickoff(utcISO){
+  if(!utcISO) return "—";
+  const d = new Date(utcISO);
+  return d.toLocaleString("pt-BR", { weekday:"short", hour:"2-digit", minute:"2-digit" });
+}
+function nowBR(){
+  const d = new Date();
+  return d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+}
+function safeText(s){ return (s ?? "").toString().replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Copiado ✅");
+  }catch{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    toast("Copiado ✅");
+  }
+}
+
+/** --------- GERAR ICONES (PNG) EM MEMÓRIA --------- */
+function makeIconSVG(){
+  // simples e bonito
+  return `
+  <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+    <defs>
+      <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="#0f172a"/>
+        <stop offset="1" stop-color="#0b1220"/>
+      </linearGradient>
+    </defs>
+    <rect width="512" height="512" rx="110" fill="url(#g)"/>
+    <circle cx="170" cy="190" r="78" fill="#22c55e" opacity="0.95"/>
+    <rect x="248" y="140" width="190" height="58" rx="20" fill="#94a3b8" opacity="0.85"/>
+    <rect x="248" y="220" width="190" height="58" rx="20" fill="#94a3b8" opacity="0.65"/>
+    <rect x="110" y="330" width="292" height="70" rx="26" fill="#1f2a44" opacity="0.9"/>
+    <text x="256" y="380" font-family="system-ui,Segoe UI,Roboto" font-size="44" text-anchor="middle" fill="#e5e7eb" font-weight="800">RJP</text>
+  </svg>`;
+}
+
+function svgToPngDataUrl(svg, size){
+  return new Promise((resolve) => {
+    const img = new Image();
+    const svgBlob = new Blob([svg], {type:"image/svg+xml"});
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, size, size);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+    img.src = url;
+  });
+}
+
+async function installManifestInline(){
+  const svg = makeIconSVG();
+  const icon192 = await svgToPngDataUrl(svg, 192);
+  const icon512 = await svgToPngDataUrl(svg, 512);
+
+  // Manifest gerado em runtime
+  const manifest = {
+    name: "Radar Jogos PRO",
+    short_name: "Radar Jogos",
+    start_url: "./",
+    scope: "./",
+    display: "standalone",
+    background_color: "#0f172a",
+    theme_color: "#0f172a",
+    description: "Radar de jogos com busca, filtros, favoritos e histórico.",
+    icons: []
+  };
+
+  if(icon192) manifest.icons.push({ src: icon192, sizes: "192x192", type: "image/png" });
+  if(icon512) manifest.icons.push({ src: icon512, sizes: "512x512", type: "image/png" });
+
+  const blob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
+  const manifestURL = URL.createObjectURL(blob);
+
+  // cria link rel="manifest"
+  const link = document.createElement("link");
+  link.rel = "manifest";
+  link.href = manifestURL;
+  document.head.appendChild(link);
+
+  // atualiza favicon para PNG se conseguiu
+  if(icon192){
+    const fav = document.getElementById("favicon");
+    fav.href = icon192;
+  }
+}
+
+/** --------- DADOS / ESPN --------- */
+const LEAGUES = [
+  { key:"bra.1", name:"Brasil · Série A", group:"Brasil" },
+  { key:"eng.1", name:"Inglaterra · Premier League", group:"Europa" },
+  { key:"esp.1", name:"Espanha · La Liga", group:"Europa" },
+  { key:"ita.1", name:"Itália · Serie A", group:"Europa" },
+  { key:"fra.1", name:"França · Ligue 1", group:"Europa" },
+  { key:"uefa.champions", name:"UEFA · Champions League", group:"Europa" },
+];
+
+const state = {
+  tab: "games",
+  filter: "Todos",
+  q: "",
+  loading: false,
+  data: [],
+  lastUpdated: null,
+  error: null
+};
+
+const chips = ["Todos","Alta","Brasil","Europa","Gols","BTTS","Vencedor"];
+
+function makeTip(match){
+  let label = "Boa chance";
+  let risk = "Médio";
+  let pick = "Over 1.5 gols";
+  let why = "Linha segura pra consistência.";
+
+  if(match.status === "STATUS_IN_PROGRESS"){
+    const goals = (match.homeScore ?? 0) + (match.awayScore ?? 0);
+    if(goals >= 2){
+      pick = "Over 2.5 gols";
+      label = "Alta probabilidade";
+      risk = "Baixo";
+      why = "Jogo já aberto no placar.";
+    } else {
+      pick = "Over 1.5 gols";
+      label = "Boa chance";
+      risk = "Médio";
+      why = "Partida em andamento.";
+    }
+  }
+
+  if(match.bttsLikely){
+    pick = "Ambas marcam (BTTS)";
+    label = "Boa chance";
+    risk = "Médio";
+    why = "Tendência de ambos marcarem.";
+  }
+
+  const odds =
+    pick.includes("Over 1.5") ? "1.35 ~ 1.70" :
+    pick.includes("Over 2.5") ? "1.70 ~ 2.30" :
+    pick.includes("BTTS") ? "1.60 ~ 2.10" :
+    "1.45 ~ 2.10";
+
+  return {label, risk, pick, why, odds};
+}
+
+function riskClass(r){
+  if(r==="Baixo") return "riskLow";
+  if(r==="Alto") return "riskHigh";
+  return "riskMid";
+}
+
+async function fetchJSON(url){
+  const u = PROXY_URL ? (PROXY_URL + encodeURIComponent(url)) : url;
+  const res = await fetch(u, { cache:"no-store" });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  return await res.json();
+}
+
+function parseESPN(leagueMeta, data){
+  const out = [];
+  const events = data?.events || [];
+  for(const ev of events){
+    const comp = ev?.competitions?.[0];
+    if(!comp) continue;
+
+    const competitors = comp.competitors || [];
+    const homeC = competitors.find(c => c.homeAway === "home");
+    const awayC = competitors.find(c => c.homeAway === "away");
+    if(!homeC || !awayC) continue;
+
+    const status = comp?.status?.type?.name || ev?.status?.type?.name || "STATUS_SCHEDULED";
+    const minute = comp?.status?.displayClock || null;
+    const kickoff = comp?.date || ev?.date || null;
+    const kickoffTs = kickoff ? new Date(kickoff).getTime() : null;
+
+    const home = homeC.team?.displayName || "Home";
+    const away = awayC.team?.displayName || "Away";
+    const homeScore = Number(homeC.score ?? 0);
+    const awayScore = Number(awayC.score ?? 0);
+
+    const id = `espn:${leagueMeta.key}:${ev.id}`;
+
+    const m = {
+      id,
+      leagueKey: leagueMeta.key,
+      leagueName: leagueMeta.name,
+      group: leagueMeta.group,
+      home,
+      away,
+      kickoff,
+      kickoffTs,
+      status,
+      minute: typeof minute === "string" ? minute : null,
+      homeScore,
+      awayScore,
+      spread: null,
+      bttsLikely: false
+    };
+    m.tip = makeTip(m);
+    out.push(m);
+  }
+  return out;
+}
+
+async function loadGames(){
+  state.loading = true;
+  state.error = null;
+  hideBanner();
+  setStatus("Atualizando…", true);
+  render();
+
+  try{
+    const today = new Date();
+    const y = today.getFullYear();
+    const mo = String(today.getMonth()+1).padStart(2,"0");
+    const d = String(today.getDate()).padStart(2,"0");
+    const dates = `${y}${mo}${d}`;
+
+    const jobs = LEAGUES.map(async (lg) => {
+      const url = `https://site.api.espn.com/apis/v2/sports/soccer/${lg.key}/scoreboard?dates=${dates}`;
+      const json = await fetchJSON(url);
+      return parseESPN(lg, json);
+    });
+
+    const results = await Promise.allSettled(jobs);
+    let merged = [];
+    let okCount = 0;
+
+    for(const r of results){
+      if(r.status === "fulfilled"){
+        merged = merged.concat(r.value);
+        okCount++;
+      }
+    }
+
+    if(okCount === 0) throw new Error("Não consegui buscar as ligas (possível CORS).");
+
+    state.data = merged;
+    state.lastUpdated = new Date();
+
+    setStatus(`Online · ${nowBR()}`, true);
+
+    if(okCount < LEAGUES.length){
+      showBanner(`<strong>Aviso:</strong> algumas ligas não carregaram agora. Toque em “Atualizar”.`);
+    } else {
+      hideBanner();
+    }
+
+  }catch(err){
+    state.error = err?.message || String(err);
+    setStatus("Falha ao atualizar", false);
+    showBanner(
+      `<strong>Erro ao buscar jogos.</strong><br/>
+       Motivo: ${safeText(state.error)}<br/><br/>
+       <span class="small">Se for CORS, eu te passo um Proxy/Worker pronto e resolve.</span>`
+    );
+  }finally{
+    state.loading = false;
+    render();
+  }
+}
+
+function toggleFav(id){
+  const favs = lsGet("rjp_favs", []);
+  const set = new Set(favs);
+  if(set.has(id)) set.delete(id); else set.add(id);
+  lsSet("rjp_favs", Array.from(set));
+  render();
+}
+
+function pushHistory(item){
+  const hist = lsGet("rjp_hist", []);
+  hist.unshift({ ...item, at: new Date().toISOString() });
+  lsSet("rjp_hist", hist.slice(0, 80));
+}
+
+function buildChips(){
+  const el = document.getElementById("chips");
+  el.innerHTML = chips.map(c => `<div class="chip ${state.filter===c ? "on":""}" data-chip="${c}">${c}</div>`).join("");
+  el.querySelectorAll("[data-chip]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.filter = btn.getAttribute("data-chip");
+      render();
+    });
+  });
+}
+
+function setTab(tab){
+  state.tab = tab;
+  document.getElementById("tabGames").className = "navBtn " + (tab==="games" ? "" : "off");
+  document.getElementById("tabFavs").className  = "navBtn " + (tab==="favs"  ? "" : "off");
+  document.getElementById("tabHist").className  = "navBtn " + (tab==="hist"  ? "" : "off");
+  render();
+}
+
+function filterMatches(all){
+  let arr = [...all];
+
+  if(state.tab === "favs"){
+    const favIds = new Set(lsGet("rjp_favs", []));
+    arr = arr.filter(m => favIds.has(m.id));
+  }
+
+  if(state.filter === "Brasil") arr = arr.filter(m => m.group === "Brasil");
+  else if(state.filter === "Europa") arr = arr.filter(m => m.group === "Europa");
+  else if(state.filter === "Alta") arr = arr.filter(m => (m.tip?.label||"").includes("Alta"));
+  else if(state.filter === "Gols") arr = arr.filter(m => (m.tip?.pick||"").includes("Over"));
+  else if(state.filter === "BTTS") arr = arr.filter(m => (m.tip?.pick||"").includes("BTTS"));
+  else if(state.filter === "Vencedor") arr = arr.filter(m => (m.tip?.pick||"").includes("Vencedor"));
+
+  if(state.q.trim()){
+    const q = normalize(state.q.trim());
+    arr = arr.filter(m => normalize(`${m.home} ${m.away} ${m.leagueName} ${m.group}`).includes(q));
+  }
+
+  arr.sort((a,b)=>{
+    const pri = (x)=> x.status==="STATUS_IN_PROGRESS" ? 0 : x.status==="STATUS_SCHEDULED" ? 1 : 2;
+    const pa = pri(a), pb = pri(b);
+    if(pa!==pb) return pa-pb;
+    return (a.kickoffTs ?? 9e15) - (b.kickoffTs ?? 9e15);
+  });
+
+  return arr;
+}
+
+function cardHTML(m){
+  const live = m.status === "STATUS_IN_PROGRESS";
+  const statusTag = live
+    ? `AO VIVO ${m.minute ? "· " + safeText(m.minute) : ""} (${m.homeScore}-${m.awayScore})`
+    : (m.status === "STATUS_SCHEDULED" ? fmtKickoff(m.kickoff) : "Finalizado");
+
+  const favIds = new Set(lsGet("rjp_favs", []));
+  const favOn = favIds.has(m.id);
+
+  return `
+    <div class="card">
+      <div class="match">
+        <div>
+          <div class="teams">${safeText(m.home)} <span class="small">x</span> ${safeText(m.away)}</div>
+          <div class="meta">
+            <div class="tag">${safeText(m.leagueName)}</div>
+            <div class="tag muted">${safeText(statusTag)}</div>
+            <div class="tag ${riskClass(m.tip.risk)}">Risco: ${safeText(m.tip.risk)}</div>
+          </div>
+        </div>
+        <div class="pill">${safeText(m.tip.label)}</div>
+      </div>
+
+      <div class="meta" style="margin-top:12px">
+        <div class="tag">Sugestão: <strong>${safeText(m.tip.pick)}</strong></div>
+        <div class="tag muted">Odds alvo: <strong>${safeText(m.tip.odds)}</strong></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btnWide btnGreen" data-fav="${safeText(m.id)}">${favOn ? "★ Favoritado" : "Favoritar"}</button>
+        <button class="btn btnWide btnGhost" data-copy="${safeText(m.id)}">Copiar palpite</button>
+      </div>
+
+      <div class="small" style="margin-top:10px">
+        <span style="color:#94a3b8">Por quê:</span> ${safeText(m.tip.why)}
+      </div>
+    </div>
+  `;
+}
+
+function renderHistory(){
+  const hist = lsGet("rjp_hist", []);
+  const list = document.getElementById("list");
+  const empty = document.getElementById("empty");
+
+  if(hist.length === 0){
+    empty.style.display = "block";
+    empty.innerHTML = `Nenhum palpite copiado ainda.<br/><span class="small">Copie um palpite para aparecer aqui.</span>`;
+    list.innerHTML = "";
+    return;
+  }
+
+  empty.style.display = "none";
+  list.innerHTML = hist.map(h => {
+    const when = new Date(h.at).toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" });
+    return `
+      <div class="card">
+        <div class="match">
+          <div>
+            <div class="teams">${safeText(h.title)}</div>
+            <div class="meta">
+              <div class="tag muted">${safeText(when)}</div>
+              <div class="tag">${safeText(h.pick)}</div>
+            </div>
+          </div>
+          <div class="pill">Histórico</div>
+        </div>
+        <div class="actions">
+          <button class="btn btnWide btnGhost" data-recopy="${safeText(h.text)}">Copiar de novo</button>
+          <button class="btn btnWide" data-clearhist="1">Limpar histórico</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  document.querySelectorAll("[data-recopy]").forEach(b=>{
+    b.addEventListener("click", ()=> copyText(b.getAttribute("data-recopy")));
+  });
+  document.querySelectorAll("[data-clearhist]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      lsSet("rjp_hist", []);
+      render();
+    });
+  });
+}
+
+function render(){
+  if(state.loading) setStatus("Atualizando…", true);
+  else if(state.lastUpdated) setStatus(`Online · ${nowBR()}`, true);
+  else if(state.error) setStatus("Falha ao atualizar", false);
+  else setStatus("Pronto", true);
+
+  const list = document.getElementById("list");
+  const empty = document.getElementById("empty");
+
+  if(state.tab === "hist"){
+    renderHistory();
+    return;
+  }
+
+  const filtered = filterMatches(state.data);
+
+  if(state.loading && state.data.length === 0){
+    list.innerHTML = `<div class="empty"><span class="spinner"></span>Carregando jogos…</div>`;
+    empty.style.display = "none";
+    return;
+  }
+
+  if(filtered.length === 0){
+    list.innerHTML = "";
+    empty.style.display = "block";
+    empty.innerHTML = (state.tab === "favs")
+      ? `Nenhum favorito ainda.<br/><span class="small">Toque em “Favoritar” em algum jogo.</span>`
+      : `Nenhum jogo encontrado.<br/><span class="small">Tente mudar filtros ou limpar a busca.</span>`;
+    return;
+  }
+
+  empty.style.display = "none";
+  list.innerHTML = filtered.map(cardHTML).join("");
+
+  document.querySelectorAll("[data-fav]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      toggleFav(btn.getAttribute("data-fav"));
+    });
+  });
+
+  document.querySelectorAll("[data-copy]").forEach(btn=>{
+    btn.addEventListener("click", async (e)=>{
+      e.stopPropagation();
+      const id = btn.getAttribute("data-copy");
+      const m = state.data.find(x => x.id === id);
+      if(!m) return;
+
+      const live = m.status === "STATUS_IN_PROGRESS";
+      const title = `${m.home} x ${m.away}`;
+      const when = live ? `AO VIVO ${m.homeScore}-${m.awayScore}` : fmtKickoff(m.kickoff);
+
+      const text =
+`📌 Radar Jogos PRO
+${title}
+Liga: ${m.leagueName}
+Quando: ${when}
+Palpite: ${m.tip.pick}
+Odds alvo: ${m.tip.odds}
+Risco: ${m.tip.risk}`;
+
+      await copyText(text);
+      pushHistory({ title, pick: m.tip.pick, text });
+    });
+  });
+}
+
+/** --------- UI --------- */
+function setupUI(){
+  buildChips();
+
+  document.getElementById("btnClear").addEventListener("click", ()=>{
+    state.q = "";
+    document.getElementById("q").value = "";
+    render();
+  });
+
+  document.getElementById("q").addEventListener("input", (e)=>{
+    state.q = e.target.value;
+    render();
+  });
+
+  document.getElementById("btnRefresh").addEventListener("click", ()=>{
+    loadGames();
+  });
+
+  document.getElementById("tabGames").addEventListener("click", ()=> setTab("games"));
+  document.getElementById("tabFavs").addEventListener("click", ()=> setTab("favs"));
+  document.getElementById("tabHist").addEventListener("click", ()=> setTab("hist"));
+}
+
+async function init(){
+  // Manifest + ícones dentro do HTML
+  await installManifestInline();
+
+  setupUI();
+  render();
+  await loadGames();
+
+  // Atualiza sozinho
+  setInterval(()=> { if(state.tab === "games") loadGames(); }, 120000);
+}
+
+init();
+</script>
+</body>
+</html>
