@@ -1,497 +1,429 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Radar Jogos PRO</title>
-  <meta name="theme-color" content="#071c1a" />
   <style>
     :root{
-      --bg1:#061b1a;
-      --bg2:#07122a;
-      --card: rgba(255,255,255,.06);
-      --stroke: rgba(255,255,255,.10);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.62);
-      --accent:#22c55e;
-      --accent2:#10b981;
-      --danger:#ef4444;
-      --shadow: 0 18px 40px rgba(0,0,0,.38);
+      --bg1:#063a34; --bg2:#021a1f;
+      --card:#0b1c2a; --card2:#0a2232;
+      --text:#eaf3ff; --muted:#a9c0d6;
+      --pill:#0f2f2a; --pill2:#173746;
+      --accent:#28d17c; --danger:#b24b5a;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
       --radius: 22px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial;
+      margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
       color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 20% 0%, rgba(16,185,129,.20), transparent 60%),
-        radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.18), transparent 55%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      overflow-x:hidden;
+      background: radial-gradient(1200px 700px at 30% 10%, #0c5c52 0%, var(--bg1) 30%, var(--bg2) 100%);
+      min-height:100vh;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:22px 16px 110px}
-    .top{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;margin-top:8px;margin-bottom:14px}
-    .brand{font-weight:900;letter-spacing:.6px;font-size:clamp(34px,6vw,54px);line-height:1.05;text-align:center}
-    .status{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:650}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(34,197,94,.85)}
-    .panel{margin-top:14px;background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;backdrop-filter:blur(10px)}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .search{flex:1 1 260px;display:flex;gap:10px;align-items:center;padding:12px 12px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:16px}
-    .search input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:15px}
-    .btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:var(--text);padding:12px 14px;border-radius:16px;font-weight:800;letter-spacing:.2px;cursor:pointer;user-select:none}
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(16,185,129,.85));border-color:rgba(34,197,94,.40);color:#06201a;box-shadow:0 10px 26px rgba(16,185,129,.28)}
-    .btn.ghost{background:rgba(255,255,255,.06)}
-    .btn.icon{width:46px;height:46px;display:grid;place-items:center;padding:0;border-radius:16px;font-size:18px}
-    .meta{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.35}
-    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .chip{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--text);font-weight:800;cursor:pointer;user-select:none}
-    .chip.active{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.40);box-shadow:0 10px 26px rgba(16,185,129,.10)}
-    .list{margin-top:16px;display:flex;flex-direction:column;gap:12px}
-    .card{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:16px;box-shadow:0 14px 32px rgba(0,0,0,.22);position:relative;overflow:hidden}
-    .card::before{content:"";position:absolute;inset:-2px;background:radial-gradient(400px 120px at 20% 0%, rgba(16,185,129,.18), transparent 60%);pointer-events:none}
-    .card h3{margin:0 0 6px;font-size:22px;letter-spacing:.2px}
-    .sub{color:var(--muted);font-weight:700;margin-bottom:10px}
-    .badges{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);font-weight:900;color:var(--text);cursor:pointer;user-select:none}
-    .badge.green{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.40)}
-    .badge.red{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.28)}
-    .badge.small{padding:8px 10px;font-weight:900;font-size:13px;cursor:default}
-    .right{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
-    .empty{color:var(--muted);text-align:center;padding:26px 10px;border:1px dashed rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.04)}
-    .bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px;background:linear-gradient(180deg,rgba(6,27,26,0),rgba(6,27,26,.85) 35%,rgba(6,27,26,.95));backdrop-filter:blur(10px)}
-    .barInner{max-width:980px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px;box-shadow:0 18px 45px rgba(0,0,0,.28)}
-    .barBtn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 10px;border-radius:999px;border:0;background:transparent;color:var(--text);font-weight:900;cursor:pointer;user-select:none}
-    .barBtn.active{background:rgba(16,185,129,.18);border:1px solid rgba(16,185,129,.35);box-shadow:0 12px 28px rgba(16,185,129,.12)}
-    .menuWrap{position:relative}
-    .menu{position:absolute;right:0;bottom:58px;width:250px;background:rgba(8, 14, 32, .92);border:1px solid rgba(255,255,255,.14);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.45);overflow:hidden;display:none}
-    .menu.open{display:block}
-    .menu button{width:100%;text-align:left;padding:13px 14px;border:0;background:transparent;color:var(--text);font-weight:850;cursor:pointer}
-    .menu button:hover{background:rgba(255,255,255,.06)}
-    .menu .sep{height:1px;background:rgba(255,255,255,.10)}
-    .modalBg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:50}
-    .modalBg.open{display:flex}
-    .modal{width:min(980px, 100%);background:rgba(8, 14, 32, .96);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 30px 70px rgba(0,0,0,.55);overflow:hidden}
-    .modalHeader{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.10)}
-    .modalHeader strong{font-size:16px}
-    .modalBody{padding:14px;max-height:70vh;overflow:auto}
-    .hint{color:var(--muted);font-size:12px;margin-top:10px}
+    .wrap{max-width:780px;margin:0 auto;padding:22px 14px 120px;}
+    h1{margin:18px 0 6px; font-size:44px; line-height:1.05; text-align:center; letter-spacing:.5px;}
+    .online{display:flex; gap:10px; align-items:center; justify-content:center; color:var(--muted); margin-bottom:14px;}
+    .dot{width:12px;height:12px;border-radius:999px;background:#22c55e; box-shadow:0 0 20px rgba(34,197,94,.6)}
+    .panel{
+      background: rgba(8,22,28,.55);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+    .search{flex:1; min-width:220px; display:flex; gap:10px; align-items:center;}
+    input{
+      width:100%; padding:14px 14px; border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      color: var(--text);
+      outline:none;
+      font-size:16px;
+    }
+    .btn{
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      font-weight:700;
+      cursor:pointer;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn.primary{
+      background: linear-gradient(180deg, #34ea8d 0%, #18b867 100%);
+      border:none;
+      color:#06221a;
+    }
+    .btn.ghost{background: rgba(255,255,255,.06);}
+    .meta{color:var(--muted); margin-top:10px; line-height:1.35}
+    .tabs{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+    .tab{
+      padding:10px 14px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-weight:800; cursor:pointer;
+      user-select:none; -webkit-user-select:none;
+    }
+    .tab.active{background: rgba(40,209,124,.18); border-color: rgba(40,209,124,.35)}
+    .note{margin-top:10px; color:#b7d2c4; font-size:13px}
+    .list{margin-top:16px; display:flex; flex-direction:column; gap:14px;}
+    .card{
+      background: radial-gradient(900px 400px at 20% 10%, rgba(40,209,124,.16) 0%, rgba(255,255,255,.04) 40%, rgba(0,0,0,.10) 100%),
+                  linear-gradient(180deg, rgba(11,28,42,.90), rgba(8,18,30,.92));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 26px;
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+    .title{font-size:34px; font-weight:900; letter-spacing:.3px; margin:2px 0 10px; line-height:1.05;}
+    .sub{color:var(--muted); font-weight:700; margin-top:2px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:999px;
+      background: rgba(13,63,44,.55);
+      border:1px solid rgba(40,209,124,.25);
+      font-weight:900;
+      user-select:none; -webkit-user-select:none;
+    }
+    .pill.danger{
+      background: rgba(178,75,90,.18);
+      border-color: rgba(178,75,90,.4);
+    }
+    .pill.gray{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.10);
+      font-weight:800;
+    }
+    .grid{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; align-items:center}
+    .actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+    .btn.small{padding:10px 12px; font-weight:900}
+    .odds{
+      margin-top:12px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+    }
+    .odds h3{margin:0 0 8px; font-size:14px; letter-spacing:.3px; color:#cfe8ff}
+    .odds .line{display:flex; justify-content:space-between; gap:10px; font-weight:800; color:var(--muted); margin:6px 0}
+    .odds .val{color:var(--text)}
+    .bottom{
+      position:fixed; left:0; right:0; bottom:0;
+      padding:14px 12px;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(2,10,14,.55) 35%, rgba(2,10,14,.92) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .bar{
+      max-width:780px; margin:0 auto; display:flex; gap:12px;
+      background: rgba(8,18,30,.70);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      padding:10px;
+      box-shadow: var(--shadow);
+    }
+    .bar .btn{flex:1; border-radius:18px; padding:14px 14px; font-weight:900}
+    .bar .btn.primary{color:#06221a}
+    .modal{
+      position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center;
+      background: rgba(0,0,0,.45);
+    }
+    .modal.show{display:flex}
+    .sheet{
+      width:min(780px, 96vw);
+      background: rgba(8,18,30,.95);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      padding:14px;
+      margin:0 0 14px 0;
+      box-shadow: var(--shadow);
+    }
+    .sheet h2{margin:4px 0 12px; font-size:18px}
+    .sheet .item{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 12px; border-radius:16px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:10px;
+      font-weight:900;
+      user-select:none; -webkit-user-select:none;
+    }
+    .sheet .item span{color:var(--muted); font-weight:800}
+    .badge-live{color:#9ff7c7}
+    .badge-ft{color:#ffb4c2}
+    .muted{color:var(--muted)}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="top">
-      <div class="brand">Radar Jogos<br/>PRO</div>
-      <div class="status"><span class="dot"></span><span>Online</span></div>
-    </div>
+    <h1>Radar Jogos<br/>PRO</h1>
+    <div class="online"><div class="dot"></div> Online</div>
 
     <div class="panel">
       <div class="row">
         <div class="search">
-          <input id="q" placeholder="Buscar jogo, time, liga ou país..." autocomplete="off" />
+          <input id="q" placeholder="Buscar jogo, time, liga ou país..." />
+          <button class="btn" id="clear">Limpar</button>
         </div>
-        <button class="btn ghost" id="clearBtn">Limpar</button>
-        <button class="btn primary" id="refreshBtn">Atualizar</button>
+        <button class="btn primary" id="refresh">Atualizar</button>
       </div>
 
-      <div class="meta" id="meta">
-        Fonte automática (GitHub Action). Última atualização: —
+      <div class="meta" id="meta">Carregando...</div>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="todos">Todos</div>
+        <div class="tab" data-tab="brasil">Brasil</div>
+        <div class="tab" data-tab="europa">Europa</div>
+        <div class="tab" data-tab="hoje">Hoje</div>
+        <div class="tab" data-tab="live">Ao vivo</div>
       </div>
 
-      <div class="chips" id="chips"></div>
-      <div class="hint">* Probabilidades/odds aqui são <b>estimativas</b> (odd justa), não odds de casa.</div>
+      <div class="note">* Probabilidades/odds aqui são <b>estimativas (odd justa)</b>, não odds de casa.</div>
     </div>
 
     <div class="list" id="list"></div>
   </div>
 
-  <div class="bar">
-    <div class="barInner">
-      <button class="barBtn active" id="tabJogos">🗓️ Jogos</button>
-
-      <div class="menuWrap">
-        <button class="barBtn" id="menuBtn">⋯ Menu</button>
-        <div class="menu" id="menu">
-          <button id="openLive">🔴 Ao vivo</button>
-          <div class="sep"></div>
-          <button id="openFav">⭐ Favoritos</button>
-          <button id="openHist">🕘 Histórico</button>
-          <div class="sep"></div>
-          <button id="clearHist" style="color:rgba(239,68,68,.95)">🧹 Limpar histórico</button>
-          <button id="clearFav" style="color:rgba(239,68,68,.95)">🗑️ Limpar favoritos</button>
-        </div>
-      </div>
+  <div class="bottom">
+    <div class="bar">
+      <button class="btn primary" id="goJogos">🗓️ Jogos</button>
+      <button class="btn" id="openMenu">⋯ Menu</button>
     </div>
   </div>
 
-  <div class="modalBg" id="modalBg" aria-hidden="true">
-    <div class="modal">
-      <div class="modalHeader">
-        <strong id="modalTitle">—</strong>
-        <button class="btn icon" id="closeModal">✕</button>
-      </div>
-      <div class="modalBody" id="modalBody"></div>
+  <div class="modal" id="modal">
+    <div class="sheet">
+      <h2>Menu</h2>
+      <div class="item" data-nav="jogos">Jogos <span>lista principal</span></div>
+      <div class="item" data-nav="favoritos">Favoritos <span>salvos</span></div>
+      <div class="item" data-nav="historico">Histórico <span>vistos</span></div>
+      <div class="item" data-nav="config">Configurações <span>ajustes</span></div>
+      <button class="btn ghost" id="closeMenu" style="width:100%;">Fechar</button>
     </div>
   </div>
 
 <script>
-(() => {
-  const DATA_URL = './jogos.json?cache=' + Date.now();
-  const STORAGE_FAV = 'rj_favs_v1';
-  const STORAGE_HIST = 'rj_hist_v1';
+  const state = {
+    tab: "todos",
+    view: "jogos", // jogos | favoritos | historico | config
+    data: null,
+    favorites: new Set(JSON.parse(localStorage.getItem("fav") || "[]")),
+    history: new Set(JSON.parse(localStorage.getItem("hist") || "[]")),
+  };
 
-  const chipsEl = document.getElementById('chips');
-  const listEl  = document.getElementById('list');
-  const metaEl  = document.getElementById('meta');
-  const qEl     = document.getElementById('q');
-  const clearBtn = document.getElementById('clearBtn');
-  const refreshBtn = document.getElementById('refreshBtn');
+  const liveShort = new Set(["1H","HT","2H","ET","P","BT","LIVE"]);
+  const finishedShort = new Set(["FT","AET","PEN"]);
 
-  const menuBtn = document.getElementById('menuBtn');
-  const menuEl  = document.getElementById('menu');
-
-  const modalBg = document.getElementById('modalBg');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalBody = document.getElementById('modalBody');
-  const closeModal = document.getElementById('closeModal');
-
-  const openFav = document.getElementById('openFav');
-  const openHist = document.getElementById('openHist');
-  const openLive = document.getElementById('openLive');
-  const clearHist = document.getElementById('clearHist');
-  const clearFav = document.getElementById('clearFav');
-
-  const state = { raw: [], view: [], filter: 'Todos', q: '' };
-
-  const chipDefs = [
-    { id:'Todos', label:'Todos' },
-    { id:'Brasil', label:'Brasil' },
-    { id:'Europa', label:'Europa' },
-    { id:'Hoje', label:'Hoje' },
-    { id:'Ao vivo', label:'Ao vivo' }
-  ];
-
-  const EUROPA = new Set([
-    'England','Scotland','Wales','Northern Ireland','Ireland',
-    'Spain','Portugal','France','Germany','Italy','Netherlands','Belgium',
-    'Switzerland','Austria','Poland','Czech Republic','Slovakia','Hungary',
-    'Denmark','Norway','Sweden','Finland','Iceland',
-    'Greece','Turkey','Romania','Bulgaria','Serbia','Croatia','Slovenia',
-    'Ukraine','Russia'
-  ]);
-
-  const LIVE_STATUSES = new Set(["1H","2H","HT","ET","P","LIVE"]);
-
-  function safeJsonParse(v, fallback){ try { return JSON.parse(v); } catch { return fallback; } }
-  function loadFavs(){ return safeJsonParse(localStorage.getItem(STORAGE_FAV), []); }
-  function saveFavs(arr){ localStorage.setItem(STORAGE_FAV, JSON.stringify(arr)); }
-  function loadHist(){ return safeJsonParse(localStorage.getItem(STORAGE_HIST), []); }
-  function saveHist(arr){ localStorage.setItem(STORAGE_HIST, JSON.stringify(arr)); }
-
-  function gameKey(g){
-    return `${g.date}|${g.time}|${g.home}|${g.away}|${g.league}|${g.country}`;
+  function saveLocal(){
+    localStorage.setItem("fav", JSON.stringify([...state.favorites]));
+    localStorage.setItem("hist", JSON.stringify([...state.history]));
   }
 
-  function isTodayBR(dateStr){
-    const now = new Date();
-    const br = new Date(now.toLocaleString('en-US', { timeZone:'America/Sao_Paulo' }));
-    const y = br.getFullYear();
-    const m = String(br.getMonth()+1).padStart(2,'0');
-    const d = String(br.getDate()).padStart(2,'0');
-    return dateStr === `${y}-${m}-${d}`;
+  function statusLabel(g){
+    const s = g.status || "";
+    if (liveShort.has(s)) {
+      const m = (g.minute !== null && g.minute !== undefined) ? `${g.minute}'` : "Ao vivo";
+      return { text: `Ao vivo • ${m}`, cls: "pill" };
+    }
+    if (finishedShort.has(s)) return { text: "Final", cls: "pill danger" };
+    if (s === "NS") return { text: "Não iniciado", cls: "pill gray" };
+    return { text: s || "—", cls: "pill gray" };
   }
 
-  function applyFilters(){
-    const q = state.q.trim().toLowerCase();
-    const f = state.filter;
+  function isEurope(country){
+    const c = (country || "").toLowerCase();
+    const eu = ["england","spain","italy","germany","france","portugal","netherlands","belgium","scotland","turkey","greece","switzerland","austria","sweden","norway","denmark","poland","czech","croatia","serbia","romania","ukraine","ireland","wales"];
+    return eu.some(x => c.includes(x));
+  }
 
-    let data = [...state.raw];
+  function pickGames(){
+    const q = (document.getElementById("q").value || "").trim().toLowerCase();
+    const games = (state.data?.games || []);
 
-    if (f === 'Brasil'){
-      data = data.filter(g => (g.country || '').toLowerCase() === 'brazil');
-    } else if (f === 'Europa'){
-      data = data.filter(g => EUROPA.has(g.country));
-    } else if (f === 'Hoje'){
-      data = data.filter(g => isTodayBR(g.date));
-    } else if (f === 'Ao vivo'){
-      data = data.filter(g => g.isLive || LIVE_STATUSES.has(String(g.status||'').toUpperCase()));
+    // view
+    let base = games;
+    if (state.view === "favoritos") {
+      base = games.filter(g => state.favorites.has(String(g.id)));
+    } else if (state.view === "historico") {
+      base = games.filter(g => state.history.has(String(g.id)));
+    } else if (state.view === "config") {
+      base = [];
     }
 
-    if (q){
-      data = data.filter(g => {
-        const s = `${g.home} ${g.away} ${g.league} ${g.country}`.toLowerCase();
-        return s.includes(q);
+    // tab
+    const today = state.data?.date; // já vem no BRT
+    base = base.filter(g => {
+      if (state.tab === "brasil") return (g.country || "").toLowerCase().includes("brazil");
+      if (state.tab === "europa") return isEurope(g.country);
+      if (state.tab === "hoje") return (g.date === today);
+      if (state.tab === "live") return liveShort.has(g.status);
+      return true;
+    });
+
+    // por padrão em "Jogos": mostra Live + Próximos (não mostra finalizados)
+    if (state.view === "jogos" && state.tab !== "hoje") {
+      base = base.filter(g => !finishedShort.has(g.status));
+    }
+
+    // search
+    if (q) {
+      base = base.filter(g => {
+        const hay = `${g.home} ${g.away} ${g.league} ${g.country}`.toLowerCase();
+        return hay.includes(q);
       });
     }
 
-    data.sort((a,b) => {
-      const A = `${a.date} ${a.time}`; const B = `${b.date} ${b.time}`;
-      return A.localeCompare(B);
-    });
-
-    state.view = data;
-  }
-
-  function renderChips(){
-    chipsEl.innerHTML = '';
-    chipDefs.forEach(c => {
-      const b = document.createElement('button');
-      b.className = 'chip' + (state.filter === c.id ? ' active' : '');
-      b.textContent = c.label;
-      b.onclick = () => {
-        state.filter = c.id;
-        renderChips();
-        render();
-      };
-      chipsEl.appendChild(b);
-    });
-  }
-
-  function statusBadge(g){
-    const st = String(g.status || '').toUpperCase();
-    if (!st) return null;
-    if (st === 'FT' || st === 'AET' || st === 'PEN') return {txt:'Final', cls:'red'};
-    if (st === 'NS') return {txt:'Não começou', cls:'green'};
-    if (st === 'HT') return {txt:'Intervalo', cls:'green'};
-    if (LIVE_STATUSES.has(st) || g.isLive) return {txt:'Ao vivo', cls:'green'};
-    return {txt:st, cls:'green'};
-  }
-
-  function fmtProb(model, key){
-    const obj = model?.[key];
-    if (!obj) return null;
-    return `${key.toUpperCase().replace('OVER','O').replace('UNDER','U')} ${obj.pct}% (odd ${obj.fairOdds})`;
+    return base;
   }
 
   function render(){
-    applyFilters();
+    const list = document.getElementById("list");
+    list.innerHTML = "";
 
-    if (!state.view.length){
-      listEl.innerHTML = `<div class="empty">Nada por aqui. Tenta “Todos”, “Hoje” ou “Ao vivo”.</div>`;
+    // Config view
+    if (state.view === "config") {
+      list.innerHTML = `
+        <div class="card">
+          <div class="title" style="font-size:26px;">Configurações</div>
+          <div class="sub">Em breve: alertas, ligas favoritas, notificações.</div>
+          <div class="odds" style="margin-top:14px;">
+            <h3>Status</h3>
+            <div class="muted">Versão atual roda por GitHub Pages + GitHub Actions.</div>
+          </div>
+        </div>
+      `;
       return;
     }
 
-    const favs = new Set(loadFavs());
-    listEl.innerHTML = '';
+    const games = pickGames();
 
-    state.view.forEach(g => {
-      const key = gameKey(g);
-      const isFav = favs.has(key);
+    if (!games.length) {
+      list.innerHTML = `<div class="card"><div class="title" style="font-size:26px;">Nada por aqui</div><div class="sub">Tenta mudar o filtro ou buscar outro termo.</div></div>`;
+      return;
+    }
 
-      const card = document.createElement('div');
-      card.className = 'card';
+    for (const g of games){
+      const st = statusLabel(g);
+      const fav = state.favorites.has(String(g.id));
+      const isFT = finishedShort.has(g.status);
+      const score = (g.score && (g.score.home !== null) && (g.score.away !== null))
+        ? `${g.score.home} x ${g.score.away}`
+        : "— x —";
 
-      const title = document.createElement('h3');
-      title.textContent = `${g.home} x ${g.away}`;
+      const p = g.prob || {};
+      const fo = (p.fairOdds || {});
+      const oddsBox = `
+        <div class="odds">
+          <h3>Probabilidades (estimativas)</h3>
+          <div class="line"><span>Over 1,5</span><span class="val">${p.over15 ?? "—"}% • odd ${fo.over15 ?? "—"}</span></div>
+          <div class="line"><span>Over 2,5</span><span class="val">${p.over25 ?? "—"}% • odd ${fo.over25 ?? "—"}</span></div>
+          <div class="line"><span>Under 1,5</span><span class="val">${p.under15 ?? "—"}% • odd ${fo.under15 ?? "—"}</span></div>
+          <div class="line"><span>Under 2,5</span><span class="val">${p.under25 ?? "—"}% • odd ${fo.under25 ?? "—"}</span></div>
+          <div class="muted" style="font-size:12px; margin-top:8px;">${p.note || ""}</div>
+        </div>
+      `;
 
-      const timeTxt = (g.time || '').slice(0,5);
-      const scoreTxt = (Number.isInteger(g.scoreHome) && Number.isInteger(g.scoreAway)) ? ` • Placar: ${g.scoreHome}-${g.scoreAway}` : '';
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="title">${g.home} x ${g.away}</div>
+        <div class="sub">Liga: ${g.league || "—"} • ${g.country || "—"} • ${g.time || "—"}</div>
 
-      const sub = document.createElement('div');
-      sub.className = 'sub';
-      sub.textContent = `Liga: ${g.league || '-'} • ${g.country || '-'} • ${timeTxt || '-'}${scoreTxt}`;
+        <div class="grid">
+          <span class="${st.cls}">${st.text}</span>
+          <span class="pill gray">Placar: <b>${score}</b></span>
+          ${g.tag ? `<span class="pill">${g.tag}</span>` : ``}
+        </div>
 
-      const badges = document.createElement('div');
-      badges.className = 'badges';
+        <div class="actions">
+          <button class="btn small primary" data-seen="${g.id}">Marcar como visto</button>
+          <button class="btn small" data-fav="${g.id}">${fav ? "★ Favorito" : "☆ Favoritar"}</button>
+          ${isFT ? `<span class="pill danger">Final</span>` : ``}
+        </div>
 
-      const right = document.createElement('div');
-      right.className = 'right';
+        ${oddsBox}
+      `;
 
-      const fav = document.createElement('div');
-      fav.className = 'badge small ' + (isFav ? 'green' : '');
-      fav.textContent = isFav ? '⭐ Favorito' : '☆ Favoritar';
-      fav.style.cursor = 'pointer';
-      fav.onclick = () => toggleFav(g);
-      right.appendChild(fav);
-
-      const st = statusBadge(g);
-      if (st){
-        const s = document.createElement('div');
-        s.className = 'badge small ' + (st.cls === 'red' ? 'red' : 'green');
-        s.textContent = st.txt;
-        right.appendChild(s);
-      }
-
-      // Probabilidades/odds justas (estimadas)
-      const m = g.model || {};
-      const p1 = fmtProb(m, 'over15');
-      const p2 = fmtProb(m, 'under15');
-      const p3 = fmtProb(m, 'over25');
-      const p4 = fmtProb(m, 'under25');
-
-      const pWrap = document.createElement('div');
-      pWrap.className = 'badges';
-      pWrap.style.marginTop = '10px';
-
-      [p1,p2,p3,p4].filter(Boolean).forEach(txt => {
-        const b = document.createElement('div');
-        b.className = 'badge small';
-        b.textContent = txt;
-        pWrap.appendChild(b);
+      // handlers
+      card.querySelector("[data-seen]")?.addEventListener("click", () => {
+        state.history.add(String(g.id));
+        saveLocal();
+        render();
       });
 
-      const tap = document.createElement('div');
-      tap.className = 'badge green';
-      tap.textContent = 'Marcar como visto';
-      tap.onclick = () => addToHistory(g);
+      card.querySelector("[data-fav]")?.addEventListener("click", () => {
+        const id = String(g.id);
+        if (state.favorites.has(id)) state.favorites.delete(id);
+        else state.favorites.add(id);
+        saveLocal();
+        render();
+      });
 
-      badges.appendChild(tap);
-      badges.appendChild(right);
-
-      card.appendChild(title);
-      card.appendChild(sub);
-      card.appendChild(badges);
-      card.appendChild(pWrap);
-
-      listEl.appendChild(card);
-    });
-  }
-
-  function toggleFav(g){
-    const key = gameKey(g);
-    const favs = loadFavs();
-    const set = new Set(favs);
-    if (set.has(key)) set.delete(key);
-    else set.add(key);
-    saveFavs([...set]);
-    render();
-  }
-
-  function addToHistory(g){
-    const key = gameKey(g);
-    const hist = loadHist();
-    const next = [key, ...hist.filter(k => k !== key)].slice(0, 200);
-    saveHist(next);
-  }
-
-  function openModal(title, itemsKeys){
-    modalTitle.textContent = title;
-
-    if (!itemsKeys.length){
-      modalBody.innerHTML = `<div class="empty">Nada por aqui ainda.</div>`;
-    } else {
-      const map = new Map(state.raw.map(g => [gameKey(g), g]));
-      const rows = itemsKeys.map(k => map.get(k)).filter(Boolean);
-
-      if (!rows.length){
-        modalBody.innerHTML = `<div class="empty">Esses itens não estão na lista atual (pode ser outro dia).</div>`;
-      } else {
-        modalBody.innerHTML = rows.map(g => {
-          const timeTxt = (g.time || '').slice(0,5);
-          const st = statusBadge(g);
-          const scoreTxt = (Number.isInteger(g.scoreHome) && Number.isInteger(g.scoreAway)) ? ` • ${g.scoreHome}-${g.scoreAway}` : '';
-          return `
-            <div class="card" style="margin-bottom:12px">
-              <h3 style="margin:0 0 6px">${g.home} x ${g.away}</h3>
-              <div class="sub">Liga: ${g.league || '-'} • ${g.country || '-'} • ${timeTxt || '-'}${scoreTxt}</div>
-              <div class="badges">
-                <span class="badge small green" data-action="fav" data-key="${encodeURIComponent(gameKey(g))}">⭐ Alternar favorito</span>
-                ${st ? `<span class="badge small ${st.cls === 'red' ? 'red' : 'green'}">${st.txt}</span>` : ''}
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        modalBody.querySelectorAll('[data-action="fav"]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const key = decodeURIComponent(btn.getAttribute('data-key'));
-            const g = map.get(key);
-            if (g) toggleFav(g);
-          });
-        });
-      }
+      list.appendChild(card);
     }
-
-    modalBg.classList.add('open');
-    modalBg.setAttribute('aria-hidden', 'false');
   }
 
-  function closeModalNow(){
-    modalBg.classList.remove('open');
-    modalBg.setAttribute('aria-hidden', 'true');
-  }
+  async function load(){
+    const meta = document.getElementById("meta");
+    meta.textContent = "Carregando jogos…";
 
-  function closeMenu(){ menuEl.classList.remove('open'); }
-
-  async function loadData(){
-    refreshBtn.textContent = 'Atualizando…';
-    refreshBtn.disabled = true;
+    // cache busting pra sempre pegar o mais novo
+    const url = `./jogos.json?_=${Date.now()}`;
 
     try{
-      const res = await fetch(DATA_URL, { cache: 'no-store' });
-      if(!res.ok) throw new Error('Falha ao carregar jogos.json');
-      const data = await res.json();
+      const r = await fetch(url, { cache: "no-store" });
+      const data = await r.json();
+      state.data = data;
 
-      const updatedAt = data.updatedAt || '-';
-      const source = data.source || '-';
-      const total = (data.games || []).length;
+      const err = data.error ? ` • ERRO: ${data.error}` : "";
+      meta.innerHTML = `Fonte automática (GitHub Action). Última atualização: <b>${data.updatedAt || "—"}</b> • Fonte: <b>${data.source || "—"}</b> • Jogos: <b>${data.gamesCount ?? (data.games?.length ?? 0)}</b>${err}`;
 
-      metaEl.textContent = `Fonte automática (GitHub Action). Última atualização: ${updatedAt} • Fonte: ${source} • Jogos: ${total}`;
-
-      state.raw = (data.games || []).map(g => ({
-        home: g.home || '',
-        away: g.away || '',
-        league: g.league || '',
-        country: g.country || '',
-        date: g.date || '',
-        time: g.time || '',
-        status: g.status || '',
-        scoreHome: g.scoreHome,
-        scoreAway: g.scoreAway,
-        isLive: !!g.isLive,
-        isFinished: !!g.isFinished,
-        model: g.model || null
-      }));
-
-      renderChips();
       render();
-    } catch(e){
-      metaEl.textContent = 'Erro ao carregar dados. Tenta novamente.';
-      listEl.innerHTML = `<div class="empty">Não consegui carregar <b>jogos.json</b>. Verifica se o Action rodou e se o arquivo existe.</div>`;
-      console.error(e);
-    } finally {
-      refreshBtn.textContent = 'Atualizar';
-      refreshBtn.disabled = false;
+    }catch(e){
+      meta.textContent = "Falha ao carregar jogos.json";
+      document.getElementById("list").innerHTML = `<div class="card"><div class="title" style="font-size:26px;">Erro</div><div class="sub">${String(e)}</div></div>`;
     }
   }
 
-  // Events
-  qEl.addEventListener('input', () => { state.q = qEl.value; render(); });
+  // UI
+  document.getElementById("refresh").addEventListener("click", load);
+  document.getElementById("clear").addEventListener("click", () => { document.getElementById("q").value=""; render(); });
+  document.getElementById("q").addEventListener("input", () => render());
 
-  clearBtn.addEventListener('click', () => {
-    qEl.value = '';
-    state.q = '';
-    state.filter = 'Todos';
-    renderChips();
-    render();
+  document.querySelectorAll(".tab").forEach(t => {
+    t.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      state.tab = t.dataset.tab;
+      state.view = "jogos";
+      render();
+    });
   });
 
-  refreshBtn.addEventListener('click', () => loadData());
+  // Bottom bar
+  document.getElementById("goJogos").addEventListener("click", () => { state.view="jogos"; render(); });
 
-  menuBtn.addEventListener('click', (e) => { e.stopPropagation(); menuEl.classList.toggle('open'); });
-  document.addEventListener('click', () => closeMenu());
+  // Menu modal
+  const modal = document.getElementById("modal");
+  document.getElementById("openMenu").addEventListener("click", () => modal.classList.add("show"));
+  document.getElementById("closeMenu").addEventListener("click", () => modal.classList.remove("show"));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("show"); });
 
-  openFav.addEventListener('click', () => { closeMenu(); openModal('⭐ Favoritos', loadFavs()); });
-  openHist.addEventListener('click', () => { closeMenu(); openModal('🕘 Histórico', loadHist()); });
-  openLive.addEventListener('click', () => {
-    closeMenu();
-    state.filter = 'Ao vivo';
-    renderChips();
-    render();
+  document.querySelectorAll(".sheet .item").forEach(it => {
+    it.addEventListener("click", () => {
+      const nav = it.dataset.nav;
+      state.view = nav;
+      modal.classList.remove("show");
+      render();
+    });
   });
 
-  clearHist.addEventListener('click', () => { closeMenu(); localStorage.removeItem(STORAGE_HIST); openModal('🕘 Histórico', []); });
-  clearFav.addEventListener('click', () => { closeMenu(); localStorage.removeItem(STORAGE_FAV); openModal('⭐ Favoritos', []); render(); });
-
-  closeModal.addEventListener('click', closeModalNow);
-  modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModalNow(); });
-
-  // Start
-  renderChips();
-  loadData();
-})();
+  load();
 </script>
 </body>
 </html>
