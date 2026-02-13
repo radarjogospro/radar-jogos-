@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar Jogos PRO</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0b1220;
+  color:#fff;
+}
+
+header{
+  padding:20px;
+  text-align:center;
+  background:#111a2f;
+}
+
+h1{
+  margin:0;
+}
+
+.controls{
+  padding:15px;
+  text-align:center;
+}
+
+input{
+  padding:10px;
+  width:70%;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  padding:10px 15px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn-green{
+  background:#16a34a;
+  color:#fff;
+}
+
+.btn-gray{
+  background:#374151;
+  color:#fff;
+}
+
+.games{
+  padding:20px;
+}
+
+.card{
+  background:#111a2f;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:10px;
+}
+
+.badge{
+  font-size:12px;
+  background:#16a34a;
+  padding:4px 8px;
+  border-radius:6px;
+  display:inline-block;
+  margin-top:5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Radar Jogos PRO</h1>
+  <p id="status">● Online</p>
+</header>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="Buscar jogo ou time...">
+  <br>
+  <button class="btn-gray" onclick="clearSearch()">Limpar</button>
+  <button class="btn-green" onclick="loadGames()">Atualizar</button>
+</div>
+
+<div class="games" id="games"></div>
+
+<script>
+
+let gamesData = [
+  {home:"Flamengo", away:"Palmeiras", league:"Brasil", tip:"Over 2.5 Gols"},
+  {home:"Real Madrid", away:"Barcelona", league:"Europa", tip:"Ambos Marcam"},
+  {home:"Manchester City", away:"Liverpool", league:"Europa", tip:"City Vence"},
+  {home:"Benfica", away:"Porto", league:"Europa", tip:"Over 2.5 Gols"},
+  {home:"Grêmio", away:"Inter", league:"Brasil", tip:"Ambos Marcam"}
+];
+
+function loadGames(){
+  const container = document.getElementById("games");
+  container.innerHTML = "";
+  
+  gamesData.forEach(game=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML = `
+      <strong>${game.home} x ${game.away}</strong><br>
+      Liga: ${game.league}<br>
+      <span class="badge">${game.tip}</span>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function clearSearch(){
+  document.getElementById("search").value="";
+  loadGames();
+}
+
+document.getElementById("search").addEventListener("input", function(){
+  const value = this.value.toLowerCase();
+  const container = document.getElementById("games");
+  container.innerHTML="";
+
+  gamesData
+  .filter(g => 
+    g.home.toLowerCase().includes(value) ||
+    g.away.toLowerCase().includes(value) ||
+    g.league.toLowerCase().includes(value)
+  )
+  .forEach(game=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML = `
+      <strong>${game.home} x ${game.away}</strong><br>
+      Liga: ${game.league}<br>
+      <span class="badge">${game.tip}</span>
+    `;
+    container.appendChild(card);
+  });
+});
+
+loadGames();
+
+</script>
+
+</body>
+</html>
