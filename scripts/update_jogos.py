@@ -3,61 +3,96 @@ import json
 import requests
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import subprocess
 
-# ===== CONFIG =====
-API_KEY = os.environ.get("API_FOOTBALL_KEY")
-BASE_URL = "https://v3.football.api-sports.io/fixtures"
+API_HOST = "v3.football.api-sports.io"
+BASE_URL = f"https://{API_HOST}"
 TZ_BR = ZoneInfo("America/Sao_Paulo")
 
-headers = {
-    "x-apisports-key": API_KEY
-}
+def br_now_iso():
+    return datetime.now(TZ_BR).strftime("%Y-%m-%d %H:%M BRT")
 
-# ===== DATA DE HOJE (BRASIL) =====
-today_br = datetime.now(TZ_BR).strftime("%Y-%m-%d")
+def to_br_date_time(iso_utc: str):
+    """
+    iso_utc: exemplo "2026-02-13T21:00:00+00:00"
+    retorna ("YYYY-MM-DD", "HH:MM") em America/Sao_Paulo
+    """
+    if not iso_utc:
+        return "", ""
+    try:
+        dt = datetime.fromisoformat(iso_utc.replace("Z", "+00:00"))
+        dt_br = dt.astimezone(TZ_BR)
+        return dt_br.strftime("%Y-%m-%d"), dt_br.strftime("%H:%M")
+    except Exception:
+        return "", ""
 
-params = {
-    "date": today_br
-}
+def main():
+    api_key = os.getenv("APIFOOTBALL_KEY", "").strip()
+    if not api_key:
+        raise SystemExit("ERRO: secret APIFOOTBALL_KEY não encontrado.")
 
-response = requests.get(BASE_URL, headers=headers, params=params)
-data_api = response.json()
+    headers = {
+        "x-apisports-key": api_key,
+        "x-rapidapi-host": API_HOST
+    }
 
-games = []
+    # Pega jogos do "dia" no fuso BR (o endpoint usa date YYYY-MM-DD)
+    today_br = datetime.now(TZ_BR).strftime("%Y-%m-%d")
 
-if "response" in data_api:
-    for item in data_api["response"]:
+    # Endpoint fixtures por data (1 request)
+    url = f"{BASE_URL}/fixtures"
+    params = {"date": today_br}
 
-        fixture_date_utc = item["fixture"]["date"]
-        dt_utc = datetime.fromisoformat(fixture_date_utc.replace("Z", "+00:00"))
-        dt_br = dt_utc.astimezone(TZ_BR)
+    r = requests.get(url, headers=headers, params=params, timeout=40)
+    if r.status_code != 200:
+        raise SystemExit(f"ERRO API-Football: HTTP {r.status_code} - {r.text[:300]}")
 
-        game = {
-            "home": item["teams"]["home"]["name"],
-            "away": item["teams"]["away"]["name"],
-            "league": item["league"]["name"],
-            "country": item["league"]["country"],
-            "date": dt_br.strftime("%Y-%m-%d"),
-            "time": dt_br.strftime("%H:%M"),
-            "status": item["fixture"]["status"]["short"]
-        }
+    data = r.json()
+    resp = data.get("response", [])
 
-        games.append(game)
+    games = []
+    for item in resp:
+        fixture = item.get("fixture", {}) or {}
+        teams = item.get("teams", {}) or {}
+        league = item.get("league", {}) or {}
 
-# ===== JSON FINAL =====
-output = {
-    "updatedAt": datetime.now(TZ_BR).strftime("%Y-%m-%d %H:%M BRT"),
-    "source": "API-Football",
-    "games": games
-}
+        home = (teams.get("home", {}) or {}).get("name", "") or ""
+        away = (teams.get("away", {}) or {}).get("name", "") or ""
 
-with open("jogos.json", "w", encoding="utf-8") as f:
-    json.dump(output, f, ensure_ascii=False, indent=2)
+        league_name = league.get("name", "") or ""
+        country = league.get("country", "") or ""
 
-# ===== COMMIT AUTOMÁTICO =====
-subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"])
-subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"])
-subprocess.run(["git", "add", "jogos.json"])
-subprocess.run(["git", "commit", "-m", "Update jogos.json (horário Brasil)"])
-subprocess.run(["git", "push"])
+        # date em UTC vem em fixture.date
+        fixture_date = fixture.get("date", "") or ""
+        date_br, time_br = to_br_date_time(fixture_date)
+
+        status = ((fixture.get("status", {}) or {}).get("short", "") or "").upper()
+
+        if not home or not away:
+            continue
+
+        games.append({
+            "home": home,
+            "away": away,
+            "league": league_name,
+            "country": country if country else "World",
+            "date": date_br if date_br else today_br,
+            "time": time_br if time_br else "",
+            "status": status
+        })
+
+    # ordena por horário
+    games.sort(key=lambda g: f"{g.get('date','')} {g.get('time','')}" )
+
+    out = {
+        "updatedAt": br_now_iso(),
+        "source": "API-Football",
+        "games": games
+    }
+
+    with open("jogos.json", "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+
+    print(f"OK: jogos.json gerado com {len(games)} jogos. Data BR: {today_br}")
+
+if __name__ == "__main__":
+    main()
