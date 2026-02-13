@@ -1,202 +1,287 @@
 import os
 import json
 import math
-import time
+from datetime import datetime, timedelta, timezone
+
 import requests
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
-API_BASE = "https://v3.football.api-sports.io"
 
 
-def poisson_over_probs(lmbda: float):
-    # Probabilidades (modelo Poisson simples, total de gols)
-    # Over 1.5 = 1 - P(0) - P(1)
-    # Over 2.5 = 1 - P(0) - P(1) - P(2)
-    p0 = math.exp(-lmbda)
-    p1 = p0 * lmbda
-    p2 = p1 * lmbda / 2.0
+API_KEY = os.getenv("API_FOOTBALL_KEY", "").strip()
+BASE_URL = "https://v3.football.api-sports.io"
 
-    over15 = 1.0 - (p0 + p1)
-    over25 = 1.0 - (p0 + p1 + p2)
-    under15 = 1.0 - over15
-    under25 = 1.0 - over25
+TZ_OFFSET_HOURS = -3  # BRT
+TZ = timezone(timedelta(hours=TZ_OFFSET_HOURS))
 
-    def clamp(x):  # só pra segurança
-        return max(0.0, min(1.0, x))
+# Janela de jogos: pega do "agora - 90min" até "agora + 12h" (e sempre inclui ao vivo)
+PAST_GRACE_MIN = 90
+FUTURE_WINDOW_HOURS = 12
+
+# Para não estourar o FREE: calcula probabilidades só para os primeiros N jogos após filtros (Brasil/Europa/ao vivo priorizados)
+MAX_PROB_GAMES = 25
+
+
+def api_get(path: str, params: dict):
+    if not API_KEY:
+        raise RuntimeError("API_FOOTBALL_KEY não configurada (GitHub Secrets).")
+    headers = {"x-apisports-key": API_KEY}
+    r = requests.get(f"{BASE_URL}{path}", headers=headers, params=params, timeout=30)
+    r.raise_for_status()
+    return r.json()
+
+
+def now_brt():
+    return datetime.now(TZ)
+
+
+def iso_brt(dt: datetime) -> str:
+    return dt.astimezone(TZ).strftime("%Y-%m-%d %H:%M BRT")
+
+
+def poisson_cdf(k: int, lam: float) -> float:
+    # P(X <= k)
+    if lam <= 0:
+        return 1.0 if k >= 0 else 0.0
+    s = 0.0
+    for i in range(0, k + 1):
+        s += math.exp(-lam) * (lam ** i) / math.factorial(i)
+    return s
+
+
+def prob_over(threshold: float, lam_total: float) -> float:
+    # threshold: 1.5 => over = P(total >= 2)
+    # total goals is integer; over 1.5 means >=2; over 2.5 means >=3
+    if threshold == 1.5:
+        return 1.0 - poisson_cdf(1, lam_total)
+    if threshold == 2.5:
+        return 1.0 - poisson_cdf(2, lam_total)
+    return 0.0
+
+
+def prob_under(threshold: float, lam_total: float) -> float:
+    # under 1.5 => <=1; under 2.5 => <=2
+    if threshold == 1.5:
+        return poisson_cdf(1, lam_total)
+    if threshold == 2.5:
+        return poisson_cdf(2, lam_total)
+    return 0.0
+
+
+def fair_odd(p: float) -> float:
+    if p <= 0:
+        return 999.0
+    return 1.0 / p
+
+
+def safe_round_odd(x: float) -> float:
+    # arredondamento estilo casa (2 casas)
+    return round(x + 1e-9, 2)
+
+
+def team_last3_stats(team_id: int, season: int) -> dict:
+    # últimos 3 jogos finalizados do time
+    data = api_get("/fixtures", {
+        "team": team_id,
+        "season": season,
+        "last": 3,
+        "status": "FT-AET-PEN",  # finalizados
+        "timezone": "America/Sao_Paulo",
+    })
+    fixtures = data.get("response", [])
+    if not fixtures:
+        return {"gf": 0.0, "ga": 0.0, "n": 0}
+
+    gf = 0
+    ga = 0
+    n = 0
+    for fx in fixtures:
+        teams = fx.get("teams", {})
+        goals = fx.get("goals", {})
+
+        home = teams.get("home", {})
+        away = teams.get("away", {})
+        gh = goals.get("home")
+        ga_ = goals.get("away")
+
+        if gh is None or ga_ is None:
+            continue
+
+        if home.get("id") == team_id:
+            gf += int(gh)
+            ga += int(ga_)
+            n += 1
+        elif away.get("id") == team_id:
+            gf += int(ga_)
+            ga += int(gh)
+            n += 1
+
+    if n == 0:
+        return {"gf": 0.0, "ga": 0.0, "n": 0}
+
+    return {"gf": gf / n, "ga": ga / n, "n": n}
+
+
+def estimate_probs(home_stats: dict, away_stats: dict) -> dict:
+    # modelo simples: lambda_home = média(gf_home, ga_away)
+    #               lambda_away = média(gf_away, ga_home)
+    if home_stats.get("n", 0) == 0 or away_stats.get("n", 0) == 0:
+        return {}
+
+    lam_home = (home_stats["gf"] + away_stats["ga"]) / 2.0
+    lam_away = (away_stats["gf"] + home_stats["ga"]) / 2.0
+    lam_total = max(0.05, lam_home + lam_away)
+
+    p_o15 = prob_over(1.5, lam_total)
+    p_o25 = prob_over(2.5, lam_total)
+    p_u15 = prob_under(1.5, lam_total)
+    p_u25 = prob_under(2.5, lam_total)
 
     return {
-        "over15": clamp(over15),
-        "over25": clamp(over25),
-        "under15": clamp(under15),
-        "under25": clamp(under25),
+        "over15": {"p": round(p_o15 * 100, 1), "odd": safe_round_odd(fair_odd(p_o15))},
+        "over25": {"p": round(p_o25 * 100, 1), "odd": safe_round_odd(fair_odd(p_o25))},
+        "under15": {"p": round(p_u15 * 100, 1), "odd": safe_round_odd(fair_odd(p_u15))},
+        "under25": {"p": round(p_u25 * 100, 1), "odd": safe_round_odd(fair_odd(p_u25))},
+        "model": "last3_poisson",
+        "lam_total": round(lam_total, 2),
     }
 
 
-def fair_odds(p: float):
-    if p <= 0:
-        return None
-    return round(1.0 / p, 2)
-
-
-def safe_get(d, path, default=None):
-    cur = d
-    for k in path:
-        if isinstance(cur, dict) and k in cur:
-            cur = cur[k]
-        else:
-            return default
-    return cur
+def is_live(status_short: str) -> bool:
+    # API-Football: 1H, HT, 2H, ET, P, BT etc
+    return status_short in {"1H", "HT", "2H", "ET", "P", "BT"}
 
 
 def main():
-    key = os.getenv("APIFOOTBALL_KEY", "").strip()
-    if not key:
-        # Não quebra action: gera JSON com erro e sai 0 (pra não ficar vermelho)
-        payload = {
-            "updatedAt": datetime.now(tz=ZoneInfo("America/Sao_Paulo")).strftime("%Y-%m-%d %H:%M:%S BRT"),
-            "source": "API-Football",
-            "error": "APIFOOTBALL_KEY não encontrado nas Secrets do GitHub",
-            "games": []
-        }
-        with open("jogos.json", "w", encoding="utf-8") as f:
-            json.dump(payload, f, ensure_ascii=False, indent=2)
-        print("ERRO: APIFOOTBALL_KEY não encontrado.")
-        return
+    now = now_brt()
+    start = now - timedelta(minutes=PAST_GRACE_MIN)
+    end = now + timedelta(hours=FUTURE_WINDOW_HOURS)
 
-    tz = "America/Sao_Paulo"
-    now_sp = datetime.now(tz=ZoneInfo(tz))
-    today = now_sp.strftime("%Y-%m-%d")
+    today = now.strftime("%Y-%m-%d")
 
-    headers = {
-        "x-apisports-key": key,
-        "accept": "application/json",
-    }
-
-    # Puxa SOMENTE o dia (BRT) e já pede timezone São Paulo
-    url = f"{API_BASE}/fixtures"
-    params = {
-        "date": today,
-        "timezone": tz,
-    }
-
-    try:
-        r = requests.get(url, headers=headers, params=params, timeout=25)
-        if r.status_code != 200:
-            raise RuntimeError(f"HTTP {r.status_code}: {r.text[:300]}")
-        data = r.json()
-    except Exception as e:
-        payload = {
-            "updatedAt": now_sp.strftime("%Y-%m-%d %H:%M:%S BRT"),
-            "source": "API-Football",
-            "error": f"Falha ao consultar fixtures: {str(e)}",
-            "games": []
-        }
-        with open("jogos.json", "w", encoding="utf-8") as f:
-            json.dump(payload, f, ensure_ascii=False, indent=2)
-        print("ERRO ao consultar API:", e)
-        return
-
-    # Modelo simples de probabilidade de gols (sem odds de casa)
-    # Você pode ajustar depois (2.4, 2.6, 2.8) conforme quiser.
-    BASE_LAMBDA_TOTAL_GOALS = 2.6
-    probs = poisson_over_probs(BASE_LAMBDA_TOTAL_GOALS)
-
-    games = []
-    for item in data.get("response", []):
-        fixture = item.get("fixture", {}) or {}
-        teams = item.get("teams", {}) or {}
-        league = item.get("league", {}) or {}
-        goals = item.get("goals", {}) or {}
-        status = safe_get(fixture, ["status", "short"], "") or ""
-        minute = safe_get(fixture, ["status", "elapsed"], None)
-
-        dt_iso = fixture.get("date")  # já vem no timezone pedido (SP)
-        # dt_iso ex: 2026-02-13T21:00:00-03:00
-        date_str = today
-        time_str = ""
-        try:
-            dt = datetime.fromisoformat(dt_iso.replace("Z", "+00:00"))
-            # garante timezone SP
-            dt_sp = dt.astimezone(ZoneInfo(tz))
-            date_str = dt_sp.strftime("%Y-%m-%d")
-            time_str = dt_sp.strftime("%H:%M")
-        except Exception:
-            # fallback
-            time_str = safe_get(fixture, ["date"], "")[:16]
-
-        home = safe_get(teams, ["home", "name"], "Home")
-        away = safe_get(teams, ["away", "name"], "Away")
-
-        country = league.get("country") or ""
-        league_name = league.get("name") or ""
-        league_id = league.get("id")
-        fixture_id = fixture.get("id")
-
-        gh = goals.get("home")
-        ga = goals.get("away")
-        if gh is None:
-            gh = 0
-        if ga is None:
-            ga = 0
-
-        # Tags / destaque simples
-        tag = "Jogo do dia" if league_name and ("Brazil" in country or "Brasileiro" in league_name) else ""
-
-        game = {
-            "id": fixture_id,
-            "home": home,
-            "away": away,
-            "league": league_name,
-            "leagueId": league_id,
-            "country": country,
-            "date": date_str,
-            "time": time_str,
-            "timezone": "BRT",
-            "status": status,   # NS, 1H, HT, 2H, FT, etc.
-            "minute": minute,   # pode ser None
-            "score": {
-                "home": gh,
-                "away": ga
-            },
-            "tag": tag,
-            "prob": {
-                "over15": round(probs["over15"] * 100, 1),
-                "over25": round(probs["over25"] * 100, 1),
-                "under15": round(probs["under15"] * 100, 1),
-                "under25": round(probs["under25"] * 100, 1),
-                "fairOdds": {
-                    "over15": fair_odds(probs["over15"]),
-                    "over25": fair_odds(probs["over25"]),
-                    "under15": fair_odds(probs["under15"]),
-                    "under25": fair_odds(probs["under25"]),
-                },
-                "note": "Estimativa (odd justa) via modelo Poisson simples; não é odd de casa."
-            }
-        }
-        games.append(game)
-
-    # Ordena: ao vivo primeiro, depois por horário
-    live_status = {"1H", "HT", "2H", "ET", "P", "BT", "LIVE"}
-    def sort_key(g):
-        is_live = 0 if g.get("status") in live_status else 1
-        return (is_live, g.get("time") or "99:99", g.get("league") or "", g.get("home") or "")
-
-    games.sort(key=sort_key)
-
-    payload = {
-        "updatedAt": now_sp.strftime("%Y-%m-%d %H:%M:%S BRT"),
-        "source": "API-Football",
+    # 1) Busca jogos do dia (timezone SP)
+    day_data = api_get("/fixtures", {
         "date": today,
         "timezone": "America/Sao_Paulo",
-        "gamesCount": len(games),
-        "games": games
+    })
+    day_fixtures = day_data.get("response", [])
+
+    # 2) Busca ao vivo separado (garante pegar mesmo se a janela cortar)
+    live_data = api_get("/fixtures", {
+        "live": "all",
+        "timezone": "America/Sao_Paulo",
+    })
+    live_fixtures = live_data.get("response", [])
+
+    # Index live por id
+    live_ids = set()
+    for fx in live_fixtures:
+        fid = fx.get("fixture", {}).get("id")
+        if fid:
+            live_ids.add(fid)
+
+    games = []
+    for fx in day_fixtures:
+        fixture = fx.get("fixture", {})
+        teams = fx.get("teams", {})
+        league = fx.get("league", {})
+        goals = fx.get("goals", {})
+
+        fid = fixture.get("id")
+        dt_str = fixture.get("date")  # ISO
+        if not dt_str:
+            continue
+
+        # parse ISO
+        dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00")).astimezone(TZ)
+
+        status_short = fixture.get("status", {}).get("short", "")
+        live = (fid in live_ids) or is_live(status_short)
+
+        # filtro janela: se não for ao vivo, só se estiver na janela
+        if not live:
+            if dt < start or dt > end:
+                continue
+
+        home = teams.get("home", {})
+        away = teams.get("away", {})
+
+        item = {
+            "id": fid,
+            "date": dt.strftime("%Y-%m-%d"),
+            "time": dt.strftime("%H:%M"),
+            "ts": int(dt.timestamp()),
+            "status": status_short,
+            "live": bool(live),
+            "home": home.get("name", ""),
+            "away": away.get("name", ""),
+            "homeId": home.get("id"),
+            "awayId": away.get("id"),
+            "league": league.get("name", ""),
+            "leagueId": league.get("id"),
+            "country": league.get("country", ""),
+            "season": league.get("season"),
+            "round": league.get("round", ""),
+        }
+
+        # placar só se ao vivo
+        if live:
+            gh = goals.get("home")
+            ga_ = goals.get("away")
+            if gh is not None and ga_ is not None:
+                item["score"] = {"home": gh, "away": ga_}
+
+        games.append(item)
+
+    # Ordena: ao vivo primeiro, depois por horário
+    games.sort(key=lambda g: (0 if g["live"] else 1, g["ts"]))
+
+    # 3) Probabilidades (limitadas)
+    # pega os primeiros MAX_PROB_GAMES (prioriza ao vivo e BR/Europa pela ordenação + filtro da UI)
+    # mas aqui é geral: não explode requisições.
+    team_cache = {}
+    prob_done = 0
+
+    for g in games:
+        if prob_done >= MAX_PROB_GAMES:
+            break
+
+        home_id = g.get("homeId")
+        away_id = g.get("awayId")
+        season = g.get("season")
+
+        if not home_id or not away_id or not season:
+            continue
+
+        # cache
+        key_h = (home_id, season)
+        key_a = (away_id, season)
+        if key_h not in team_cache:
+            team_cache[key_h] = team_last3_stats(home_id, season)
+        if key_a not in team_cache:
+            team_cache[key_a] = team_last3_stats(away_id, season)
+
+        probs = estimate_probs(team_cache[key_h], team_cache[key_a])
+        if probs:
+            g["probs"] = probs
+            prob_done += 1
+
+    out = {
+        "updatedAt": iso_brt(now),
+        "source": "API-Football",
+        "window": {
+            "from": iso_brt(start),
+            "to": iso_brt(end),
+            "note": "Lista mostra jogos dentro da janela (agora-90min até +12h) + ao vivo.",
+        },
+        "counts": {
+            "games": len(games),
+            "probGames": prob_done,
+            "maxProbGames": MAX_PROB_GAMES,
+        },
+        "games": games,
     }
 
     with open("jogos.json", "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-
-    print("OK - jogos.json gerado:", len(games), "jogos")
+        json.dump(out, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
