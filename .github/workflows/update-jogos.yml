@@ -3,7 +3,7 @@ name: Update jogos.json hourly
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"  # 1x por hora (UTC)
+    - cron: "0 * * * *" # de hora em hora (mantendo como você pediu)
 
 permissions:
   contents: write
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -31,11 +31,11 @@ jobs:
         run: |
           python scripts/update_jogos.py
 
-      - name: Commit and push (if changed)
+      - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add jogos.json
-          git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "Update jogos.json"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Update jogos.json (API-Football)"
           git push
