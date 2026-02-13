@@ -4,181 +4,114 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Radar Jogos PRO</title>
-
+  <meta name="theme-color" content="#0f172a" />
   <style>
-    :root{
-      --bg:#0b1220; --panel:#111a2f; --card:#0f1a33;
-      --text:#e5e7eb; --muted:#9ca3af; --green:#16a34a; --gray:#374151;
-      --shadow:0 14px 40px rgba(0,0,0,.35);
-      --radius:16px;
-    }
+    :root{--bg:#0b1220;--panel:#0f172a;--card:#111a2f;--muted:#94a3b8;--text:#e5e7eb;--accent:#16a34a;--shadow:0 14px 40px rgba(0,0,0,.35);--radius:22px}
     *{box-sizing:border-box}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background: radial-gradient(1200px 800px at 30% -10%, rgba(22,163,74,.18), transparent 55%),
-                  radial-gradient(900px 600px at 110% 10%, rgba(59,130,246,.12), transparent 50%),
-                  var(--bg);
-      color:var(--text);
-    }
-    header{padding:26px 18px; text-align:center}
-    h1{margin:0; font-size:38px; letter-spacing:.5px}
-    #status{margin:10px 0 0; color:var(--muted); font-weight:600}
-    .dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--green); margin-right:8px}
-    .wrap{max-width:720px; margin:0 auto; padding:0 16px 22px}
-    .controls{
-      background:rgba(17,26,47,.75); border:1px solid rgba(255,255,255,.06);
-      box-shadow:var(--shadow); border-radius:22px; padding:16px; backdrop-filter: blur(10px);
-    }
-    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-    input{
-      flex:1; min-width:220px; padding:14px 14px; border-radius:14px; border:none;
-      outline:none; background:#fff; color:#111827; font-size:16px;
-    }
-    button{
-      padding:12px 14px; border:none; border-radius:14px; cursor:pointer;
-      font-weight:800; font-size:15px;
-    }
-    .btn-green{background:var(--green); color:#fff}
-    .btn-gray{background:var(--gray); color:#fff}
-    .hint{margin:10px 2px 0; color:var(--muted); font-size:14px}
-    .error{
-      margin-top:12px; padding:12px 14px; border-radius:14px;
-      background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.2);
-      color:#fecaca; display:none;
-    }
-    .list{margin-top:18px; display:grid; gap:12px}
-    .card{
-      background:rgba(17,26,47,.8); border:1px solid rgba(255,255,255,.06);
-      box-shadow:var(--shadow); border-radius:var(--radius);
-      padding:16px;
-    }
-    .title{font-size:22px; font-weight:900}
-    .meta{color:var(--muted); margin-top:4px; font-weight:700}
-    .badge{
-      display:inline-block; margin-top:10px; padding:7px 10px; border-radius:12px;
-      background:rgba(22,163,74,.95); color:#fff; font-weight:900; font-size:14px;
-    }
-    .empty{
-      margin-top:14px; padding:18px; border-radius:18px;
-      border:1px dashed rgba(255,255,255,.16);
-      color:var(--muted); text-align:center;
-    }
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(1200px 800px at 20% -10%, rgba(22,163,74,.18), transparent 60%),radial-gradient(900px 600px at 110% 10%, rgba(59,130,246,.10), transparent 60%),var(--bg);color:var(--text)}
+    .wrap{max-width:760px;margin:0 auto;padding:18px}
+    header{padding:14px 0 8px;text-align:center}
+    h1{margin:6px 0 6px;font-size:44px;letter-spacing:.5px}
+    .status{display:inline-flex;gap:10px;align-items:center;color:var(--muted);font-weight:600}
+    .dot{width:10px;height:10px;border-radius:999px;background:#22c55e;box-shadow:0 0 0 6px rgba(34,197,94,.12)}
+    .panel{margin:18px auto 16px;background:rgba(15,23,42,.68);border:1px solid rgba(148,163,184,.16);border-radius:28px;padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .search{flex:1;min-width:220px}
+    input{width:100%;height:48px;border-radius:14px;border:1px solid rgba(148,163,184,.20);background:#0b1220;color:var(--text);padding:0 14px;font-size:16px;outline:none}
+    input::placeholder{color:#9aa7bd}
+    .btn{height:44px;border:none;border-radius:14px;padding:0 16px;font-weight:800;color:#eaf2ff;background:rgba(148,163,184,.14);cursor:pointer}
+    .btn-green{background:linear-gradient(180deg, #22c55e, #16a34a)}
+    .hint{margin:10px 2px 0;color:var(--muted);font-size:14px}
+    .list{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+    .card{background:rgba(17,26,47,.80);border:1px solid rgba(148,163,184,.14);border-radius:22px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+    .title{font-size:22px;font-weight:900;margin:0 0 6px}
+    .meta{color:var(--muted);font-weight:700}
+    .pill{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:999px;background:rgba(22,163,74,.16);border:1px solid rgba(34,197,94,.35);color:#bbf7d0;font-weight:900}
+    .empty{opacity:.9;border:1px dashed rgba(148,163,184,.22);background:rgba(15,23,42,.35);text-align:center;padding:18px;border-radius:22px;color:var(--muted)}
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>Radar Jogos PRO</h1>
-    <div id="status"><span class="dot"></span><span id="stText">Online</span></div>
-  </header>
-
   <div class="wrap">
-    <div class="controls">
+    <header>
+      <h1>Radar Jogos PRO</h1>
+      <div class="status"><span class="dot"></span><span id="statusTxt">Online</span></div>
+    </header>
+
+    <div class="panel">
       <div class="row">
-        <input id="search" type="text" placeholder="Buscar jogo ou time..." />
-        <button class="btn-gray" id="btnClear">Limpar</button>
-        <button class="btn-green" id="btnRefresh">Atualizar</button>
+        <div class="search">
+          <input id="q" placeholder="Buscar jogo ou time..." />
+        </div>
+        <button class="btn" id="btnClear">Limpar</button>
+        <button class="btn btn-green" id="btnRefresh">Atualizar</button>
       </div>
-      <div class="hint">Dica: edite o arquivo <b>jogos.json</b> no GitHub pra trocar os jogos do dia.</div>
-      <div class="error" id="errBox"></div>
+      <div class="hint" id="hintTxt">Carregando jogos atuais…</div>
     </div>
 
-    <div class="list" id="games"></div>
-    <div class="empty" id="empty" style="display:none;">Nenhum jogo encontrado.</div>
+    <div class="list" id="list"></div>
   </div>
 
-<script>
-  const $ = (id)=>document.getElementById(id);
+  <script>
+    const $ = (id)=>document.getElementById(id);
+    const listEl = $("list");
+    const hintEl = $("hintTxt");
+    const statusEl = $("statusTxt");
+    let jogos = [];
 
-  let gamesData = [];
-  let filtered = [];
+    function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
 
-  function setStatus(text, ok=true){
-    $("stText").textContent = text;
-    document.querySelector(".dot").style.background = ok ? "var(--green)" : "#ef4444";
-  }
+    function render(items){
+      listEl.innerHTML = "";
+      if(!items.length){
+        listEl.innerHTML = `<div class="empty">Nenhum jogo encontrado.</div>`;
+        return;
+      }
+      for(const j of items){
+        const el = document.createElement("div");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="title">${j.home} x ${j.away}</div>
+          <div class="meta">Liga: ${j.league || "—"} · ${j.time || ""}</div>
+          <div class="pill">${j.tip || "Sugestão"}</div>
+        `;
+        listEl.appendChild(el);
+      }
+    }
 
-  function showError(msg){
-    const el = $("errBox");
-    el.style.display = "block";
-    el.textContent = msg;
-  }
-  function hideError(){
-    const el = $("errBox");
-    el.style.display = "none";
-    el.textContent = "";
-  }
-
-  function render(list){
-    const container = $("games");
-    container.innerHTML = "";
-
-    $("empty").style.display = list.length ? "none" : "block";
-
-    list.forEach(g=>{
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="title">${escapeHtml(g.home)} x ${escapeHtml(g.away)}</div>
-        <div class="meta">Liga: ${escapeHtml(g.league || "-")}</div>
-        <div class="badge">${escapeHtml(g.tip || "Palpite")}</div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function escapeHtml(s){
-    return String(s ?? "").replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-
-  function applySearch(){
-    const q = $("search").value.trim().toLowerCase();
-    if(!q){
-      filtered = [...gamesData];
+    function applySearch(){
+      const q = norm($("q").value.trim());
+      if(!q){ render(jogos); return; }
+      const filtered = jogos.filter(j=>{
+        const hay = norm(`${j.home} ${j.away} ${j.league} ${j.tip}`);
+        return hay.includes(q);
+      });
       render(filtered);
-      return;
     }
-    filtered = gamesData.filter(g=>{
-      return (g.home||"").toLowerCase().includes(q) ||
-             (g.away||"").toLowerCase().includes(q) ||
-             (g.league||"").toLowerCase().includes(q) ||
-             (g.tip||"").toLowerCase().includes(q);
-    });
-    render(filtered);
-  }
 
-  async function loadGames(){
-    hideError();
-    setStatus("Atualizando…", true);
-
-    try{
-      // cache-bust pra não ficar preso no cache do GitHub Pages
-      const url = `./jogos.json?v=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-
-      if(!res.ok) throw new Error("Não encontrei jogos.json (verifique se ele existe na raiz do repo).");
-
-      const data = await res.json();
-      if(!Array.isArray(data)) throw new Error("jogos.json precisa ser uma lista (array) de jogos.");
-
-      gamesData = data;
-      applySearch();
-      setStatus("Online", true);
-    }catch(e){
-      setStatus("Falha ao atualizar", false);
-      showError("Erro ao buscar jogos: " + (e?.message || e));
-      // fallback: mantém o que já estava na tela (se tiver)
+    async function loadJogos(){
+      try{
+        statusEl.textContent = "Atualizando…";
+        hintEl.textContent = "Buscando jogos do dia…";
+        // cache-bust (pra sempre pegar o mais novo)
+        const res = await fetch("./jogos.json?ts=" + Date.now(), {cache:"no-store"});
+        if(!res.ok) throw new Error("Não encontrou jogos.json");
+        const data = await res.json();
+        jogos = Array.isArray(data?.games) ? data.games : (Array.isArray(data) ? data : []);
+        hintEl.textContent = `Jogos carregados: ${jogos.length}`;
+        statusEl.textContent = "Online";
+        applySearch();
+      }catch(e){
+        statusEl.textContent = "Offline";
+        hintEl.textContent = "Erro: não foi possível carregar jogos atuais (jogos.json).";
+        listEl.innerHTML = `<div class="empty">Sem jogos. Confirme se o GitHub Actions gerou o jogos.json.</div>`;
+      }
     }
-  }
 
-  $("btnRefresh").addEventListener("click", loadGames);
-  $("btnClear").addEventListener("click", ()=>{ $("search").value=""; applySearch(); });
-  $("search").addEventListener("input", applySearch);
+    $("q").addEventListener("input", applySearch);
+    $("btnClear").addEventListener("click", ()=>{ $("q").value=""; applySearch(); });
+    $("btnRefresh").addEventListener("click", loadJogos);
 
-  // primeira carga
-  loadGames();
-</script>
+    loadJogos();
+  </script>
 </body>
 </html>
