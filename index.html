@@ -31,324 +31,60 @@
         linear-gradient(160deg, var(--bg1), var(--bg2));
       overflow-x:hidden;
     }
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px 16px 110px;
-    }
-
-    /* Header */
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:10px;
-      margin-top:8px;
-      margin-bottom:14px;
-      position:relative;
-    }
-    .brand{
-      font-weight: 900;
-      letter-spacing:.6px;
-      font-size: clamp(34px, 6vw, 54px);
-      line-height:1.05;
-      text-align:center;
-    }
-    .status{
-      display:flex; align-items:center; gap:10px;
-      color: var(--muted);
-      font-weight: 650;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:50%;
-      background: var(--accent);
-      box-shadow: 0 0 18px rgba(34,197,94,.85);
-    }
-
-    /* Card controls */
-    .panel{
-      margin-top: 14px;
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      backdrop-filter: blur(10px);
-    }
-    .row{
-      display:flex; gap:10px; align-items:center;
-      flex-wrap:wrap;
-    }
-    .search{
-      flex: 1 1 260px;
-      display:flex; gap:10px; align-items:center;
-      padding: 12px 12px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-    }
-    .search input{
-      width:100%;
-      border:0;
-      outline:0;
-      background:transparent;
-      color: var(--text);
-      font-size: 15px;
-    }
-    .btn{
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-weight: 800;
-      letter-spacing:.2px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .btn:active{transform: translateY(1px)}
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(16,185,129,.85));
-      border-color: rgba(34,197,94,.40);
-      color: #06201a;
-      box-shadow: 0 10px 26px rgba(16,185,129,.28);
-    }
-    .btn.ghost{
-      background: rgba(255,255,255,.06);
-    }
-    .btn.icon{
-      width:46px; height:46px;
-      display:grid; place-items:center;
-      padding:0;
-      border-radius: 16px;
-      font-size: 18px;
-    }
-
-    .meta{
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    /* Filters */
-    .chips{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top: 14px;
-    }
-    .chip{
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight: 800;
-      cursor:pointer;
-      user-select:none;
-    }
-    .chip.active{
-      background: rgba(16,185,129,.18);
-      border-color: rgba(16,185,129,.40);
-      box-shadow: 0 10px 26px rgba(16,185,129,.10);
-    }
-
-    /* List */
-    .list{
-      margin-top: 16px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-    .card{
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 22px;
-      padding: 16px;
-      box-shadow: 0 14px 32px rgba(0,0,0,.22);
-      position:relative;
-      overflow:hidden;
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(400px 120px at 20% 0%, rgba(16,185,129,.18), transparent 60%);
-      pointer-events:none;
-    }
-    .card h3{
-      margin:0 0 6px;
-      font-size: 22px;
-      letter-spacing:.2px;
-    }
-    .sub{
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .badges{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-weight: 900;
-      color: var(--text);
-      cursor:pointer;
-      user-select:none;
-    }
-    .badge.green{
-      background: rgba(16,185,129,.18);
-      border-color: rgba(16,185,129,.40);
-    }
-    .badge.red{
-      background: rgba(239,68,68,.14);
-      border-color: rgba(239,68,68,.28);
-    }
-    .badge.small{
-      padding: 8px 10px;
-      font-weight: 900;
-      font-size: 13px;
-    }
-    .right{
-      margin-left:auto;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .empty{
-      color: var(--muted);
-      text-align:center;
-      padding: 26px 10px;
-      border: 1px dashed rgba(255,255,255,.18);
-      border-radius: 18px;
-      background: rgba(255,255,255,.04);
-    }
-
-    /* Bottom bar */
-    .bar{
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      padding: 12px 14px;
-      background: linear-gradient(180deg, rgba(6,27,26,0), rgba(6,27,26,.85) 35%, rgba(6,27,26,.95));
-      backdrop-filter: blur(10px);
-    }
-    .barInner{
-      max-width: 980px;
-      margin: 0 auto;
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:space-between;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 999px;
-      padding: 10px;
-      box-shadow: 0 18px 45px rgba(0,0,0,.28);
-    }
-    .barBtn{
-      flex: 1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding: 12px 10px;
-      border-radius: 999px;
-      border: 0;
-      background: transparent;
-      color: var(--text);
-      font-weight: 900;
-      cursor:pointer;
-      user-select:none;
-    }
-    .barBtn.active{
-      background: rgba(16,185,129,.18);
-      border: 1px solid rgba(16,185,129,.35);
-      box-shadow: 0 12px 28px rgba(16,185,129,.12);
-    }
-
-    /* Menu */
-    .menuWrap{ position: relative; }
-    .menu{
-      position:absolute;
-      right:0;
-      bottom: 58px;
-      width: 230px;
-      background: rgba(8, 14, 32, .92);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-      overflow:hidden;
-      display:none;
-    }
+    .wrap{max-width:980px;margin:0 auto;padding:22px 16px 110px}
+    .top{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;margin-top:8px;margin-bottom:14px}
+    .brand{font-weight:900;letter-spacing:.6px;font-size:clamp(34px,6vw,54px);line-height:1.05;text-align:center}
+    .status{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:650}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(34,197,94,.85)}
+    .panel{margin-top:14px;background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;backdrop-filter:blur(10px)}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .search{flex:1 1 260px;display:flex;gap:10px;align-items:center;padding:12px 12px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:16px}
+    .search input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:15px}
+    .btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:var(--text);padding:12px 14px;border-radius:16px;font-weight:800;letter-spacing:.2px;cursor:pointer;user-select:none}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(16,185,129,.85));border-color:rgba(34,197,94,.40);color:#06201a;box-shadow:0 10px 26px rgba(16,185,129,.28)}
+    .btn.ghost{background:rgba(255,255,255,.06)}
+    .btn.icon{width:46px;height:46px;display:grid;place-items:center;padding:0;border-radius:16px;font-size:18px}
+    .meta{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.35}
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .chip{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--text);font-weight:800;cursor:pointer;user-select:none}
+    .chip.active{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.40);box-shadow:0 10px 26px rgba(16,185,129,.10)}
+    .list{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+    .card{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:16px;box-shadow:0 14px 32px rgba(0,0,0,.22);position:relative;overflow:hidden}
+    .card::before{content:"";position:absolute;inset:-2px;background:radial-gradient(400px 120px at 20% 0%, rgba(16,185,129,.18), transparent 60%);pointer-events:none}
+    .card h3{margin:0 0 6px;font-size:22px;letter-spacing:.2px}
+    .sub{color:var(--muted);font-weight:700;margin-bottom:10px}
+    .badges{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);font-weight:900;color:var(--text);cursor:pointer;user-select:none}
+    .badge.green{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.40)}
+    .badge.red{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.28)}
+    .badge.small{padding:8px 10px;font-weight:900;font-size:13px;cursor:default}
+    .right{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+    .empty{color:var(--muted);text-align:center;padding:26px 10px;border:1px dashed rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.04)}
+    .bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px;background:linear-gradient(180deg,rgba(6,27,26,0),rgba(6,27,26,.85) 35%,rgba(6,27,26,.95));backdrop-filter:blur(10px)}
+    .barInner{max-width:980px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px;box-shadow:0 18px 45px rgba(0,0,0,.28)}
+    .barBtn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 10px;border-radius:999px;border:0;background:transparent;color:var(--text);font-weight:900;cursor:pointer;user-select:none}
+    .barBtn.active{background:rgba(16,185,129,.18);border:1px solid rgba(16,185,129,.35);box-shadow:0 12px 28px rgba(16,185,129,.12)}
+    .menuWrap{position:relative}
+    .menu{position:absolute;right:0;bottom:58px;width:250px;background:rgba(8, 14, 32, .92);border:1px solid rgba(255,255,255,.14);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.45);overflow:hidden;display:none}
     .menu.open{display:block}
-    .menu button{
-      width:100%;
-      text-align:left;
-      padding: 13px 14px;
-      border:0;
-      background: transparent;
-      color: var(--text);
-      font-weight: 850;
-      cursor:pointer;
-    }
-    .menu button:hover{ background: rgba(255,255,255,.06); }
-    .menu .sep{
-      height:1px;
-      background: rgba(255,255,255,.10);
-    }
-
-    /* Modal */
-    .modalBg{
-      position: fixed;
-      inset:0;
-      background: rgba(0,0,0,.55);
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      padding: 16px;
-      z-index: 50;
-    }
+    .menu button{width:100%;text-align:left;padding:13px 14px;border:0;background:transparent;color:var(--text);font-weight:850;cursor:pointer}
+    .menu button:hover{background:rgba(255,255,255,.06)}
+    .menu .sep{height:1px;background:rgba(255,255,255,.10)}
+    .modalBg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:50}
     .modalBg.open{display:flex}
-    .modal{
-      width: min(980px, 100%);
-      background: rgba(8, 14, 32, .96);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 22px;
-      box-shadow: 0 30px 70px rgba(0,0,0,.55);
-      overflow:hidden;
-    }
-    .modalHeader{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 14px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .modalHeader strong{ font-size: 16px; }
-    .modalBody{
-      padding: 14px;
-      max-height: 70vh;
-      overflow:auto;
-    }
-    .mini{
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 6px;
-    }
+    .modal{width:min(980px, 100%);background:rgba(8, 14, 32, .96);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 30px 70px rgba(0,0,0,.55);overflow:hidden}
+    .modalHeader{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.10)}
+    .modalHeader strong{font-size:16px}
+    .modalBody{padding:14px;max-height:70vh;overflow:auto}
+    .hint{color:var(--muted);font-size:12px;margin-top:10px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div class="brand">Radar Jogos<br/>PRO</div>
-      <div class="status"><span class="dot"></span><span id="onlineTxt">Online</span></div>
+      <div class="status"><span class="dot"></span><span>Online</span></div>
     </div>
 
     <div class="panel">
@@ -361,16 +97,16 @@
       </div>
 
       <div class="meta" id="meta">
-        Fonte automática diária (GitHub Action). Última atualização: —
+        Fonte automática (GitHub Action). Última atualização: —
       </div>
 
       <div class="chips" id="chips"></div>
+      <div class="hint">* Probabilidades/odds aqui são <b>estimativas</b> (odd justa), não odds de casa.</div>
     </div>
 
     <div class="list" id="list"></div>
   </div>
 
-  <!-- Bottom bar -->
   <div class="bar">
     <div class="barInner">
       <button class="barBtn active" id="tabJogos">🗓️ Jogos</button>
@@ -378,6 +114,8 @@
       <div class="menuWrap">
         <button class="barBtn" id="menuBtn">⋯ Menu</button>
         <div class="menu" id="menu">
+          <button id="openLive">🔴 Ao vivo</button>
+          <div class="sep"></div>
           <button id="openFav">⭐ Favoritos</button>
           <button id="openHist">🕘 Histórico</button>
           <div class="sep"></div>
@@ -388,7 +126,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modalBg" id="modalBg" aria-hidden="true">
     <div class="modal">
       <div class="modalHeader">
@@ -401,7 +138,6 @@
 
 <script>
 (() => {
-  // ======= CONFIG =======
   const DATA_URL = './jogos.json?cache=' + Date.now();
   const STORAGE_FAV = 'rj_favs_v1';
   const STORAGE_HIST = 'rj_hist_v1';
@@ -423,23 +159,18 @@
 
   const openFav = document.getElementById('openFav');
   const openHist = document.getElementById('openHist');
+  const openLive = document.getElementById('openLive');
   const clearHist = document.getElementById('clearHist');
   const clearFav = document.getElementById('clearFav');
 
-  const tabJogos = document.getElementById('tabJogos');
-
-  const state = {
-    raw: [],
-    view: [],
-    filter: 'Todos',
-    q: ''
-  };
+  const state = { raw: [], view: [], filter: 'Todos', q: '' };
 
   const chipDefs = [
     { id:'Todos', label:'Todos' },
     { id:'Brasil', label:'Brasil' },
     { id:'Europa', label:'Europa' },
-    { id:'Hoje', label:'Hoje' }
+    { id:'Hoje', label:'Hoje' },
+    { id:'Ao vivo', label:'Ao vivo' }
   ];
 
   const EUROPA = new Set([
@@ -451,13 +182,11 @@
     'Ukraine','Russia'
   ]);
 
-  function safeJsonParse(v, fallback){
-    try { return JSON.parse(v); } catch { return fallback; }
-  }
+  const LIVE_STATUSES = new Set(["1H","2H","HT","ET","P","LIVE"]);
 
+  function safeJsonParse(v, fallback){ try { return JSON.parse(v); } catch { return fallback; } }
   function loadFavs(){ return safeJsonParse(localStorage.getItem(STORAGE_FAV), []); }
   function saveFavs(arr){ localStorage.setItem(STORAGE_FAV, JSON.stringify(arr)); }
-
   function loadHist(){ return safeJsonParse(localStorage.getItem(STORAGE_HIST), []); }
   function saveHist(arr){ localStorage.setItem(STORAGE_HIST, JSON.stringify(arr)); }
 
@@ -466,7 +195,6 @@
   }
 
   function isTodayBR(dateStr){
-    // dateStr: YYYY-MM-DD in São Paulo (we already generate in SP)
     const now = new Date();
     const br = new Date(now.toLocaleString('en-US', { timeZone:'America/Sao_Paulo' }));
     const y = br.getFullYear();
@@ -487,6 +215,8 @@
       data = data.filter(g => EUROPA.has(g.country));
     } else if (f === 'Hoje'){
       data = data.filter(g => isTodayBR(g.date));
+    } else if (f === 'Ao vivo'){
+      data = data.filter(g => g.isLive || LIVE_STATUSES.has(String(g.status||'').toUpperCase()));
     }
 
     if (q){
@@ -496,7 +226,6 @@
       });
     }
 
-    // ordena por data + hora
     data.sort((a,b) => {
       const A = `${a.date} ${a.time}`; const B = `${b.date} ${b.time}`;
       return A.localeCompare(B);
@@ -520,22 +249,27 @@
     });
   }
 
-  function badgeStatus(status){
-    // status vem da API-Football: FT, NS, 1H, HT, 2H, AET, PEN, PST, CANC, SUSP...
-    if(!status) return null;
-    const st = String(status).toUpperCase();
-    if (st === 'FT') return { txt:'Final', cls:'red' };
-    if (st === 'NS') return { txt:'Não começou', cls:'green' };
-    if (st === 'HT') return { txt:'Intervalo', cls:'green' };
-    if (st === '1H' || st === '2H' || st === 'LIVE') return { txt:'Ao vivo', cls:'green' };
-    return { txt: st, cls:'green' };
+  function statusBadge(g){
+    const st = String(g.status || '').toUpperCase();
+    if (!st) return null;
+    if (st === 'FT' || st === 'AET' || st === 'PEN') return {txt:'Final', cls:'red'};
+    if (st === 'NS') return {txt:'Não começou', cls:'green'};
+    if (st === 'HT') return {txt:'Intervalo', cls:'green'};
+    if (LIVE_STATUSES.has(st) || g.isLive) return {txt:'Ao vivo', cls:'green'};
+    return {txt:st, cls:'green'};
+  }
+
+  function fmtProb(model, key){
+    const obj = model?.[key];
+    if (!obj) return null;
+    return `${key.toUpperCase().replace('OVER','O').replace('UNDER','U')} ${obj.pct}% (odd ${obj.fairOdds})`;
   }
 
   function render(){
     applyFilters();
 
     if (!state.view.length){
-      listEl.innerHTML = `<div class="empty">Nada por aqui. Tenta “Todos” ou limpa o filtro.</div>`;
+      listEl.innerHTML = `<div class="empty">Nada por aqui. Tenta “Todos”, “Hoje” ou “Ao vivo”.</div>`;
       return;
     }
 
@@ -552,18 +286,15 @@
       const title = document.createElement('h3');
       title.textContent = `${g.home} x ${g.away}`;
 
+      const timeTxt = (g.time || '').slice(0,5);
+      const scoreTxt = (Number.isInteger(g.scoreHome) && Number.isInteger(g.scoreAway)) ? ` • Placar: ${g.scoreHome}-${g.scoreAway}` : '';
+
       const sub = document.createElement('div');
       sub.className = 'sub';
-      const timeTxt = (g.time || '').slice(0,5);
-      sub.textContent = `Liga: ${g.league || '-'} • ${g.country || '-'} • ${timeTxt || '-'}`;
+      sub.textContent = `Liga: ${g.league || '-'} • ${g.country || '-'} • ${timeTxt || '-'}${scoreTxt}`;
 
       const badges = document.createElement('div');
       badges.className = 'badges';
-
-      const b1 = document.createElement('div');
-      b1.className = 'badge green';
-      b1.textContent = 'Jogo do dia';
-      b1.onclick = () => addToHistory(g);
 
       const right = document.createElement('div');
       right.className = 'right';
@@ -571,11 +302,11 @@
       const fav = document.createElement('div');
       fav.className = 'badge small ' + (isFav ? 'green' : '');
       fav.textContent = isFav ? '⭐ Favorito' : '☆ Favoritar';
+      fav.style.cursor = 'pointer';
       fav.onclick = () => toggleFav(g);
-
       right.appendChild(fav);
 
-      const st = badgeStatus(g.status);
+      const st = statusBadge(g);
       if (st){
         const s = document.createElement('div');
         s.className = 'badge small ' + (st.cls === 'red' ? 'red' : 'green');
@@ -583,12 +314,36 @@
         right.appendChild(s);
       }
 
-      badges.appendChild(b1);
+      // Probabilidades/odds justas (estimadas)
+      const m = g.model || {};
+      const p1 = fmtProb(m, 'over15');
+      const p2 = fmtProb(m, 'under15');
+      const p3 = fmtProb(m, 'over25');
+      const p4 = fmtProb(m, 'under25');
+
+      const pWrap = document.createElement('div');
+      pWrap.className = 'badges';
+      pWrap.style.marginTop = '10px';
+
+      [p1,p2,p3,p4].filter(Boolean).forEach(txt => {
+        const b = document.createElement('div');
+        b.className = 'badge small';
+        b.textContent = txt;
+        pWrap.appendChild(b);
+      });
+
+      const tap = document.createElement('div');
+      tap.className = 'badge green';
+      tap.textContent = 'Marcar como visto';
+      tap.onclick = () => addToHistory(g);
+
+      badges.appendChild(tap);
       badges.appendChild(right);
 
       card.appendChild(title);
       card.appendChild(sub);
       card.appendChild(badges);
+      card.appendChild(pWrap);
 
       listEl.appendChild(card);
     });
@@ -607,7 +362,6 @@
   function addToHistory(g){
     const key = gameKey(g);
     const hist = loadHist();
-    // guarda no topo, sem duplicar
     const next = [key, ...hist.filter(k => k !== key)].slice(0, 200);
     saveHist(next);
   }
@@ -618,29 +372,27 @@
     if (!itemsKeys.length){
       modalBody.innerHTML = `<div class="empty">Nada por aqui ainda.</div>`;
     } else {
-      // monta um mapa das partidas atuais para “reviver” os dados
       const map = new Map(state.raw.map(g => [gameKey(g), g]));
       const rows = itemsKeys.map(k => map.get(k)).filter(Boolean);
 
       if (!rows.length){
         modalBody.innerHTML = `<div class="empty">Esses itens não estão na lista atual (pode ser outro dia).</div>`;
       } else {
-        const html = rows.map(g => {
+        modalBody.innerHTML = rows.map(g => {
           const timeTxt = (g.time || '').slice(0,5);
-          const st = badgeStatus(g.status);
-          const stHtml = st ? `<span class="badge small ${st.cls === 'red' ? 'red' : 'green'}">${st.txt}</span>` : '';
+          const st = statusBadge(g);
+          const scoreTxt = (Number.isInteger(g.scoreHome) && Number.isInteger(g.scoreAway)) ? ` • ${g.scoreHome}-${g.scoreAway}` : '';
           return `
             <div class="card" style="margin-bottom:12px">
               <h3 style="margin:0 0 6px">${g.home} x ${g.away}</h3>
-              <div class="sub">Liga: ${g.league || '-'} • ${g.country || '-'} • ${timeTxt || '-'}</div>
+              <div class="sub">Liga: ${g.league || '-'} • ${g.country || '-'} • ${timeTxt || '-'}${scoreTxt}</div>
               <div class="badges">
                 <span class="badge small green" data-action="fav" data-key="${encodeURIComponent(gameKey(g))}">⭐ Alternar favorito</span>
-                ${stHtml}
+                ${st ? `<span class="badge small ${st.cls === 'red' ? 'red' : 'green'}">${st.txt}</span>` : ''}
               </div>
             </div>
           `;
         }).join('');
-        modalBody.innerHTML = html;
 
         modalBody.querySelectorAll('[data-action="fav"]').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -661,9 +413,7 @@
     modalBg.setAttribute('aria-hidden', 'true');
   }
 
-  function closeMenu(){
-    menuEl.classList.remove('open');
-  }
+  function closeMenu(){ menuEl.classList.remove('open'); }
 
   async function loadData(){
     refreshBtn.textContent = 'Atualizando…';
@@ -678,7 +428,7 @@
       const source = data.source || '-';
       const total = (data.games || []).length;
 
-      metaEl.textContent = `Fonte automática diária (GitHub Action). Última atualização: ${updatedAt} • Fonte: ${source} • Jogos: ${total}`;
+      metaEl.textContent = `Fonte automática (GitHub Action). Última atualização: ${updatedAt} • Fonte: ${source} • Jogos: ${total}`;
 
       state.raw = (data.games || []).map(g => ({
         home: g.home || '',
@@ -687,7 +437,12 @@
         country: g.country || '',
         date: g.date || '',
         time: g.time || '',
-        status: g.status || ''
+        status: g.status || '',
+        scoreHome: g.scoreHome,
+        scoreAway: g.scoreAway,
+        isLive: !!g.isLive,
+        isFinished: !!g.isFinished,
+        model: g.model || null
       }));
 
       renderChips();
@@ -702,11 +457,8 @@
     }
   }
 
-  // ======= Events =======
-  qEl.addEventListener('input', () => {
-    state.q = qEl.value;
-    render();
-  });
+  // Events
+  qEl.addEventListener('input', () => { state.q = qEl.value; render(); });
 
   clearBtn.addEventListener('click', () => {
     qEl.value = '';
@@ -718,49 +470,25 @@
 
   refreshBtn.addEventListener('click', () => loadData());
 
-  menuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menuEl.classList.toggle('open');
-  });
-
+  menuBtn.addEventListener('click', (e) => { e.stopPropagation(); menuEl.classList.toggle('open'); });
   document.addEventListener('click', () => closeMenu());
 
-  openFav.addEventListener('click', () => {
+  openFav.addEventListener('click', () => { closeMenu(); openModal('⭐ Favoritos', loadFavs()); });
+  openHist.addEventListener('click', () => { closeMenu(); openModal('🕘 Histórico', loadHist()); });
+  openLive.addEventListener('click', () => {
     closeMenu();
-    openModal('⭐ Favoritos', loadFavs());
-  });
-
-  openHist.addEventListener('click', () => {
-    closeMenu();
-    openModal('🕘 Histórico', loadHist());
-  });
-
-  clearHist.addEventListener('click', () => {
-    closeMenu();
-    localStorage.removeItem(STORAGE_HIST);
-    openModal('🕘 Histórico', []);
-  });
-
-  clearFav.addEventListener('click', () => {
-    closeMenu();
-    localStorage.removeItem(STORAGE_FAV);
-    openModal('⭐ Favoritos', []);
+    state.filter = 'Ao vivo';
+    renderChips();
     render();
   });
 
+  clearHist.addEventListener('click', () => { closeMenu(); localStorage.removeItem(STORAGE_HIST); openModal('🕘 Histórico', []); });
+  clearFav.addEventListener('click', () => { closeMenu(); localStorage.removeItem(STORAGE_FAV); openModal('⭐ Favoritos', []); render(); });
+
   closeModal.addEventListener('click', closeModalNow);
-  modalBg.addEventListener('click', (e) => {
-    if (e.target === modalBg) closeModalNow();
-  });
+  modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModalNow(); });
 
-  tabJogos.addEventListener('click', () => {
-    // aqui é só “voltar” pra tela principal (a lista já está na tela)
-    closeMenu();
-    closeModalNow();
-    tabJogos.classList.add('active');
-  });
-
-  // start
+  // Start
   renderChips();
   loadData();
 })();
