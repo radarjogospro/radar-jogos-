@@ -32,7 +32,7 @@ jobs:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         run: node scripts/update-jogos.js
 
-      - name: Commit and push
+      - name: Commit and push (safe)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -41,17 +41,23 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # pega atualizações remotas antes de tentar commitar/push
+          # garante que só o jogos.json entra no stash (evita erro de unstaged no rebase)
+          git add jogos.json || true
+          git stash push -m "tmp-jogos" -- jogos.json || true
+
+          # atualiza branch local
           git pull --rebase origin main
 
-          git add jogos.json
+          # volta o jogos.json gerado pelo script
+          git stash pop || true
 
-          # se não mudou nada, sai limpo
+          # se não mudou nada no jogos.json, encerra limpo
+          git add jogos.json || true
           git diff --staged --quiet && echo "No changes in jogos.json" && exit 0
 
           git commit -m "chore: update jogos.json"
 
-          # push com retry (evita travar por corrida)
+          # push com retry (corridas entre execuções)
           for i in 1 2 3; do
             echo "Push attempt $i..."
             if git push origin HEAD:main; then
