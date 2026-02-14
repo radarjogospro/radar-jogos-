@@ -6,18 +6,18 @@
   <title>Radar Jogos PRO</title>
   <style>
     :root{
-      --bg1:#053a34;
-      --bg2:#07151b;
-      --card:#0a1f28cc;
-      --card2:#0a1f2888;
-      --stroke:#1e3a44;
-      --text:#e9f2f3;
-      --muted:#a9c0c6;
-      --green:#24d18b;
-      --green2:#0ea56d;
-      --pill:#0f2a33;
-      --danger:#b14b4b;
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --bg:#06141b;
+      --bg2:#05352f;
+      --card:#0b232d;
+      --card2:#0a1b23;
+      --stroke:rgba(255,255,255,.08);
+      --text:#eaf4f6;
+      --muted:rgba(234,244,246,.68);
+      --muted2:rgba(234,244,246,.52);
+      --accent:#22d48a;
+      --accent2:#12b976;
+      --danger:#b85a5a;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
       --radius: 22px;
     }
     *{box-sizing:border-box}
@@ -25,187 +25,217 @@
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
+      background:
+        radial-gradient(900px 420px at 50% -120px, rgba(34,212,138,.35), transparent 60%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
       min-height:100vh;
-      background: radial-gradient(1200px 600px at 50% -50%, #1aa07a55, transparent 65%),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
     }
-    .wrap{max-width: 720px; margin: 0 auto; padding: 22px 16px 120px;}
-    header{
-      text-align:center;
-      padding: 22px 10px 12px;
+    .wrap{max-width: 760px; margin:0 auto; padding: 14px 14px 110px;}
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      padding: 12px 0 10px;
+      background: linear-gradient(180deg, rgba(5,53,47,.72), rgba(6,20,27,.18));
+      backdrop-filter: blur(12px);
     }
-    h1{
-      margin: 0;
-      font-size: 46px;
-      line-height: 1.05;
-      letter-spacing: .5px;
-      text-shadow: 0 8px 30px rgba(0,0,0,.45);
+    .brand{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.16);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .online{
-      display:inline-flex; align-items:center; gap:10px;
-      margin-top:10px;
-      color:var(--muted);
-      font-weight:600;
-      opacity:.95;
+    .brand .title{
+      display:flex; flex-direction:column; gap:2px;
+      line-height:1.05;
+    }
+    .brand h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:.2px;
+    }
+    .status{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--muted);
     }
     .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: var(--green);
-      box-shadow: 0 0 0 6px rgba(36,209,139,.12);
+      width:10px; height:10px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(34,212,138,.14);
     }
-
+    .quick{
+      display:flex; gap:10px; align-items:center;
+    }
+    .iconBtn{
+      border:none;
+      cursor:pointer;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 900;
+      border:1px solid var(--stroke);
+      user-select:none;
+    }
     .panel{
-      margin-top: 18px;
-      background: linear-gradient(180deg, rgba(10,31,40,.78), rgba(10,31,40,.55));
-      border:1px solid rgba(255,255,255,.08);
+      margin-top: 12px;
+      padding: 14px;
       border-radius: var(--radius);
-      padding: 16px;
+      background: linear-gradient(180deg, rgba(11,35,45,.78), rgba(10,27,35,.60));
+      border:1px solid var(--stroke);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-
     .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
     .search{
       flex:1;
       min-width: 210px;
       padding: 14px 14px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.22);
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.20);
       color: var(--text);
       outline: none;
-      font-size: 16px;
+      font-size: 15px;
     }
     .btn{
       padding: 12px 14px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.08);
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
       color:var(--text);
-      font-weight: 700;
+      font-weight: 900;
       cursor:pointer;
       user-select:none;
     }
     .btn.primary{
-      background: linear-gradient(180deg, var(--green), var(--green2));
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
       border:none;
       color:#062019;
-      box-shadow: 0 10px 24px rgba(36,209,139,.18);
+      box-shadow: 0 12px 30px rgba(34,212,138,.18);
     }
     .meta{
       margin-top: 10px;
       color: var(--muted);
       line-height: 1.35;
-      font-weight: 600;
+      font-weight: 750;
+      font-size: 13px;
     }
-
-    .tabs{margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap}
-    .tab{
-      padding: 10px 14px;
+    .chips{margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap}
+    .chip{
+      padding: 10px 13px;
       border-radius: 999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight: 800;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      font-weight: 950;
       cursor:pointer;
       user-select:none;
+      font-size: 13px;
     }
-    .tab.active{
-      background: rgba(36,209,139,.16);
-      border-color: rgba(36,209,139,.30);
+    .chip.active{
+      border-color: rgba(34,212,138,.35);
+      background: rgba(34,212,138,.12);
     }
-    .note{
-      margin-top: 12px;
-      color: rgba(233,242,243,.75);
-      font-weight: 650;
-      font-size: 14px;
+    .hint{
+      margin-top: 10px;
+      color: var(--muted2);
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1.35;
     }
-
-    .list{margin-top: 18px; display:flex; flex-direction:column; gap:14px;}
+    .list{margin-top: 14px; display:flex; flex-direction:column; gap:12px;}
     .card{
-      background: linear-gradient(180deg, rgba(13,35,45,.85), rgba(10,31,40,.65));
-      border:1px solid rgba(255,255,255,.08);
       border-radius: 26px;
-      padding: 18px 16px;
-      box-shadow: 0 14px 42px rgba(0,0,0,.28);
+      border:1px solid var(--stroke);
+      background:
+        radial-gradient(700px 260px at 20% -40%, rgba(34,212,138,.22), transparent 55%),
+        linear-gradient(180deg, rgba(11,35,45,.88), rgba(10,27,35,.72));
+      box-shadow: 0 16px 55px rgba(0,0,0,.33);
+      padding: 16px;
     }
-    .title{
-      font-size: 40px;
-      line-height: 1.02;
+    .match{
+      font-size: 28px;
+      font-weight: 950;
+      line-height: 1.05;
       margin: 0 0 8px;
-      letter-spacing: .2px;
+      letter-spacing:.2px;
     }
     .sub{
       margin:0;
       color: var(--muted);
-      font-weight: 700;
-      font-size: 18px;
-    }
-    .pills{display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; align-items:center}
-    .pill{
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
       font-weight: 800;
-      color: var(--text);
+      font-size: 14px;
     }
-    .pill.live{background: rgba(36,209,139,.14); border-color: rgba(36,209,139,.25)}
-    .pill.final{background: rgba(177,75,75,.14); border-color: rgba(177,75,75,.28)}
-    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px;}
-    .btn.small{padding: 11px 14px; border-radius: 16px; font-weight: 900}
-    .btn.ghost{background: rgba(255,255,255,.06)}
-    .btn.danger{background: rgba(177,75,75,.18); border-color: rgba(177,75,75,.30)}
+    .pills{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; align-items:center}
+    .pill{
+      padding: 9px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      font-weight: 950;
+      font-size: 12px;
+    }
+    .pill.live{border-color: rgba(34,212,138,.35); background: rgba(34,212,138,.12)}
+    .pill.final{border-color: rgba(184,90,90,.32); background: rgba(184,90,90,.14)}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;}
+    .btn.small{padding: 11px 14px; border-radius: 14px; font-weight: 950; font-size: 13px}
     .btn.star{display:flex; align-items:center; gap:8px}
     .section{
-      margin-top: 14px;
-      background: rgba(0,0,0,.16);
+      margin-top: 12px;
+      border-radius: 18px;
       border:1px solid rgba(255,255,255,.07);
-      border-radius: 20px;
-      padding: 14px;
+      background: rgba(0,0,0,.14);
+      padding: 12px;
     }
     .section h3{
       margin:0 0 10px;
-      font-size: 18px;
-      letter-spacing:.2px;
-      color: rgba(233,242,243,.90);
+      font-size: 13px;
+      letter-spacing:.3px;
+      color: rgba(234,244,246,.86);
+      text-transform: uppercase;
     }
     .grid{
       display:grid;
       grid-template-columns: 1fr auto;
       gap: 8px 12px;
       align-items:center;
-      font-weight: 800;
-      color: rgba(233,242,243,.85);
+      font-weight: 900;
+      color: rgba(234,244,246,.82);
+      font-size: 13px;
     }
-    .grid .mut{color: rgba(169,192,198,.95); font-weight: 900}
+    .grid .mut{color: rgba(234,244,246,.62)}
     .empty{
       text-align:center;
-      padding: 26px 12px;
-      color: rgba(233,242,243,.75);
-      font-weight: 800;
-      border:1px dashed rgba(255,255,255,.12);
+      padding: 22px 12px;
+      color: rgba(234,244,246,.72);
+      font-weight: 900;
+      border:1px dashed rgba(255,255,255,.14);
       border-radius: 22px;
-      background: rgba(0,0,0,.12);
+      background: rgba(0,0,0,.10);
     }
 
-    /* bottom bar */
+    /* Bottom Nav */
     .bottom{
       position: fixed;
       left:0; right:0; bottom: 12px;
       display:flex;
       justify-content:center;
       pointer-events:none;
+      z-index: 60;
     }
     .bottom .bar{
-      width: min(720px, calc(100% - 24px));
+      width: min(760px, calc(100% - 24px));
       display:flex; gap: 10px;
-      background: rgba(8,22,28,.58);
-      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(8,22,28,.60);
+      border: 1px solid var(--stroke);
       border-radius: 24px;
       padding: 10px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
       pointer-events:auto;
     }
     .bigbtn{
@@ -213,22 +243,24 @@
       border-radius: 20px;
       padding: 14px 14px;
       font-weight: 950;
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.06);
       color: var(--text);
       display:flex; align-items:center; justify-content:center; gap:10px;
       cursor:pointer;
       user-select:none;
+      font-size: 14px;
     }
     .bigbtn.primary{
-      background: linear-gradient(180deg, rgba(36,209,139,.95), rgba(14,165,109,.92));
+      background: linear-gradient(180deg, rgba(34,212,138,.95), rgba(18,185,118,.92));
       color:#062019;
       border:none;
     }
+
+    /* Modal Sheet */
     .modal{
-      position: fixed;
-      inset:0;
-      background: rgba(0,0,0,.45);
+      position: fixed; inset:0;
+      background: rgba(0,0,0,.50);
       display:none;
       align-items: flex-end;
       justify-content:center;
@@ -237,15 +269,15 @@
     }
     .modal.open{display:flex;}
     .sheet{
-      width: min(720px, 100%);
-      background: rgba(10,31,40,.92);
-      border:1px solid rgba(255,255,255,.10);
+      width: min(760px, 100%);
+      background: rgba(10,27,35,.94);
+      border:1px solid var(--stroke);
       border-radius: 26px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.5);
+      box-shadow: 0 22px 80px rgba(0,0,0,.55);
       padding: 14px;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
     }
-    .sheet h2{margin: 6px 6px 12px; font-size: 20px;}
+    .sheet h2{margin: 6px 6px 12px; font-size: 16px; letter-spacing:.2px;}
     .item{
       width:100%;
       display:flex;
@@ -257,11 +289,12 @@
       border:1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.05);
       color: var(--text);
-      font-weight: 900;
+      font-weight: 950;
       cursor:pointer;
       margin: 10px 0;
+      font-size: 14px;
     }
-    .item .right{color: rgba(169,192,198,.95); font-weight: 900}
+    .item .right{color: rgba(234,244,246,.55); font-weight: 900}
     .close{
       margin-top: 10px;
       width:100%;
@@ -273,35 +306,53 @@
       font-weight: 950;
       cursor:pointer;
     }
+    .tag{
+      font-weight: 950;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-size: 11px;
+      color: rgba(234,244,246,.78);
+    }
+    .tag.live{border-color: rgba(34,212,138,.35); background: rgba(34,212,138,.12); color: rgba(234,244,246,.88)}
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <header>
-      <h1>Radar Jogos<br/>PRO</h1>
-      <div class="online"><span class="dot"></span>Online</div>
-    </header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="title">
+          <h1>Radar Jogos PRO</h1>
+          <div class="status"><span class="dot"></span> Online</div>
+        </div>
+        <div class="quick">
+          <button class="iconBtn" id="openMenu">… Menu</button>
+        </div>
+      </div>
+    </div>
 
     <section class="panel">
       <div class="row">
-        <input id="q" class="search" placeholder="Buscar jogo, time, liga ou país..." />
+        <input id="q" class="search" placeholder="Buscar time, liga ou país..." />
         <button id="clear" class="btn">Limpar</button>
         <button id="refresh" class="btn primary">Atualizar</button>
       </div>
 
       <div id="meta" class="meta">Carregando…</div>
 
-      <div class="tabs">
-        <div class="tab active" data-tab="all">Todos</div>
-        <div class="tab" data-tab="br">Brasil</div>
-        <div class="tab" data-tab="eu">Europa</div>
-        <div class="tab" data-tab="today">Hoje</div>
-        <div class="tab" data-tab="live">Ao vivo</div>
+      <div class="chips">
+        <div class="chip active" data-tab="smart">Ao vivo + Próximos</div>
+        <div class="chip" data-tab="live">Ao vivo</div>
+        <div class="chip" data-tab="today">Hoje</div>
+        <div class="chip" data-tab="br">Brasil</div>
+        <div class="chip" data-tab="eu">Europa</div>
+        <div class="chip" data-tab="all">Todos</div>
       </div>
 
-      <div class="note">
-        * Probabilidades/odds aqui são <b>estimativas</b> (odd justa), baseadas nos <b>últimos 3 jogos</b> (quando disponível). Em modo FREE, calculamos para um número limitado de jogos por atualização.
+      <div class="hint">
+        * Odds/probabilidades são estimativas com base nos últimos 3 jogos quando disponível. No FREE, a API limita e nem todos os jogos recebem cálculo.
       </div>
     </section>
 
@@ -311,17 +362,18 @@
   <div class="bottom">
     <div class="bar">
       <button class="bigbtn primary" id="goGames">🗓️ Jogos</button>
-      <button class="bigbtn" id="openMenu">… Menu</button>
+      <button class="bigbtn" id="goFav">★ Favoritos</button>
+      <button class="bigbtn" id="goHist">⏱️ Histórico</button>
     </div>
   </div>
 
   <div class="modal" id="modal">
     <div class="sheet">
       <h2>Menu</h2>
-      <button class="item" data-view="games"><span>Jogos</span><span class="right">lista principal</span></button>
+      <button class="item" data-view="games"><span>Jogos</span><span class="right">principal</span></button>
       <button class="item" data-view="fav"><span>Favoritos</span><span class="right">salvos</span></button>
       <button class="item" data-view="hist"><span>Histórico</span><span class="right">vistos</span></button>
-      <button class="item" data-view="cfg"><span>Configurações</span><span class="right">ajustes</span></button>
+      <button class="item" data-view="cfg"><span>Configurações</span><span class="right">em breve</span></button>
       <button class="close" id="closeMenu">Fechar</button>
     </div>
   </div>
@@ -332,8 +384,8 @@
 
     const state = {
       data: null,
-      tab: 'all',
-      view: 'games', // games | fav | hist | cfg
+      tab: 'smart',     // smart | live | today | br | eu | all
+      view: 'games',    // games | fav | hist | cfg
       q: '',
       fav: new Set(JSON.parse(localStorage.getItem('fav_ids')||'[]')),
       seen: new Set(JSON.parse(localStorage.getItem('seen_ids')||'[]')),
@@ -347,43 +399,34 @@
     function normalize(s){ return (s||'').toString().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,''); }
 
     function isEurope(country){
-      const c = (country||'').toLowerCase();
-      // heurística simples
-      return ['england','spain','italy','germany','france','portugal','netherlands','belgium','turkey','greece','scotland','wales','ireland','sweden','norway','denmark','finland','austria','switzerland','poland','czech','croatia','serbia','ukraine','russia','romania','bulgaria','hungary'].some(k=>c.includes(k));
+      const c = normalize(country);
+      return ['england','spain','italy','germany','france','portugal','netherlands','belgium','turkey','greece','scotland','wales','ireland','sweden','norway','denmark','finland','austria','switzerland','poland','czech','croatia','serbia','ukraine','romania','bulgaria','hungary'].some(k=>c.includes(k));
     }
 
-    function parseBrtDateTime(game){
-      // game.date = YYYY-MM-DD, game.time = HH:MM (BRT)
-      const [y,m,d] = game.date.split('-').map(Number);
-      const [hh,mm] = game.time.split(':').map(Number);
-      // Date em UTC, mas só precisamos comparar "dia" em BRT: usamos o próprio date do JSON.
-      return {y,m,d,hh,mm};
+    function formatTimeSP(ts){
+      return new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(new Date(ts*1000));
     }
 
-    function todayYMD(){
-      // pega data local do dispositivo (você está em BR)
-      const dt = new Date();
-      const y = dt.getFullYear();
-      const m = String(dt.getMonth()+1).padStart(2,'0');
-      const d = String(dt.getDate()).padStart(2,'0');
-      return `${y}-${m}-${d}`;
+    function formatDateSP(ts){
+      return new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        year:'numeric', month:'2-digit', day:'2-digit'
+      }).format(new Date(ts*1000)); // dd/mm/yyyy
     }
 
-    function gameMatchesTab(g){
-      if(state.tab === 'all') return true;
-      if(state.tab === 'br') return normalize(g.country).includes('brazil');
-      if(state.tab === 'eu') return isEurope(g.country);
-      if(state.tab === 'today') return g.date === todayYMD();
-      if(state.tab === 'live') return !!g.live;
-      return true;
+    function ymdSP(ts){
+      const d = new Date(ts*1000);
+      const parts = new Intl.DateTimeFormat('en-CA', { timeZone:'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit' }).format(d);
+      return parts; // YYYY-MM-DD
     }
 
-    function gameMatchesView(g){
-      if(state.view === 'games') return true;
-      if(state.view === 'fav') return state.fav.has(g.id);
-      if(state.view === 'hist') return state.seen.has(g.id);
-      if(state.view === 'cfg') return false;
-      return true;
+    function todayYMD_SP(){
+      const d = new Date();
+      return new Intl.DateTimeFormat('en-CA', { timeZone:'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit' }).format(d);
     }
 
     function gameMatchesQuery(g){
@@ -393,48 +436,75 @@
       return text.includes(q);
     }
 
+    function gameMatchesView(g){
+      if(state.view === 'games') return true;
+      if(state.view === 'fav') return state.fav.has(g.id);
+      if(state.view === 'hist') return state.seen.has(g.id);
+      return false;
+    }
+
+    function gameMatchesTab(g){
+      if(state.tab === 'all') return true;
+      if(state.tab === 'br') return normalize(g.country).includes('brazil');
+      if(state.tab === 'eu') return isEurope(g.country);
+      if(state.tab === 'today') return ymdSP(g.ts) === todayYMD_SP();
+      if(state.tab === 'live') return !!g.live;
+
+      // smart: ao vivo + próximos (e tolerância 2h pra trás)
+      if(state.tab === 'smart'){
+        const now = Date.now()/1000;
+        const withinPast = (g.ts >= (now - (2*3600)));
+        const withinFuture = (g.ts <= (now + (18*3600)));
+        return g.live || (withinPast && withinFuture && (g.status !== 'FT' && g.status !== 'AET' && g.status !== 'PEN'));
+      }
+      return true;
+    }
+
     function statusLabel(g){
       if(g.live) return 'Ao vivo';
       if(g.status === 'FT' || g.status === 'AET' || g.status === 'PEN') return 'Final';
       if(g.status === 'NS') return 'Não iniciado';
       if(g.status) return g.status;
-      return 'PST';
+      return 'Agendado';
     }
 
-    function statusPillClass(g){
+    function statusClass(g){
       if(g.live) return 'pill live';
       if(g.status === 'FT' || g.status === 'AET' || g.status === 'PEN') return 'pill final';
       return 'pill';
     }
 
     function oddsRow(label, obj){
-      if(!obj) return `
-        <div class="mut">${label}</div>
-        <div>—% • odd —</div>
-      `;
-      return `
-        <div class="mut">${label}</div>
-        <div>${obj.p}% • odd ${obj.odd}</div>
-      `;
+      if(!obj) return `<div class="mut">${label}</div><div>—% • odd —</div>`;
+      return `<div class="mut">${label}</div><div>${obj.p}% • odd ${obj.odd}</div>`;
     }
 
     function card(g){
+      const time = formatTimeSP(g.ts);
+      const date = formatDateSP(g.ts);
       const showScore = !!g.live && g.score && (g.score.home !== null && g.score.away !== null);
       const probs = g.probs || null;
 
       return `
         <article class="card">
-          <h2 class="title">${g.home} x ${g.away}</h2>
-          <p class="sub">Liga: ${g.league} • ${g.country} • ${g.time}</p>
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+            <div>
+              <div class="match">${g.home} x ${g.away}</div>
+              <p class="sub">${g.league} • ${g.country} • ${time} <span class="tag" style="margin-left:8px">${date}</span></p>
+            </div>
+            ${g.live ? `<span class="tag live">LIVE</span>` : ``}
+          </div>
 
           <div class="pills">
-            <span class="${statusPillClass(g)}">${statusLabel(g)}${g.live ? ' • Ao vivo' : ''}</span>
+            <span class="${statusClass(g)}">${statusLabel(g)}</span>
             ${showScore ? `<span class="pill">Placar: ${g.score.home} x ${g.score.away}</span>` : ``}
           </div>
 
           <div class="actions">
             <button class="btn small primary" data-act="seen" data-id="${g.id}">Marcar como visto</button>
-            <button class="btn small ghost star" data-act="fav" data-id="${g.id}">${state.fav.has(g.id) ? '★ Favorito' : '☆ Favoritar'}</button>
+            <button class="btn small star" data-act="fav" data-id="${g.id}">
+              ${state.fav.has(g.id) ? '★ Favorito' : '☆ Favoritar'}
+            </button>
           </div>
 
           <div class="section">
@@ -457,12 +527,12 @@
       if(state.view === 'cfg'){
         list.innerHTML = `
           <div class="card">
-            <h2 class="title" style="font-size:34px">Configurações</h2>
-            <p class="sub">Em breve: alertas, ligas favoritas, notificações.</p>
+            <div class="match" style="font-size:22px">Configurações</div>
+            <p class="sub">Em breve: alertas, ligas favoritas, notificações, modo PRO.</p>
             <div class="section">
               <h3>Status</h3>
-              <div class="muted" style="color:rgba(169,192,198,.95); font-weight:900;">
-                Versão atual roda por GitHub Pages + GitHub Actions.
+              <div style="color:rgba(234,244,246,.70); font-weight:850; font-size:13px; line-height:1.4">
+                Rodando via GitHub Pages + GitHub Actions. Próximo passo: API paga + mais cálculos.
               </div>
             </div>
           </div>
@@ -473,21 +543,20 @@
       const games = (state.data?.games || [])
         .filter(gameMatchesTab)
         .filter(gameMatchesView)
-        .filter(gameMatchesQuery);
+        .filter(gameMatchesQuery)
+        .sort((a,b)=> (a.live===b.live ? (a.ts-b.ts) : (a.live?-1:1)));
 
       if(!games.length){
-        list.innerHTML = `<div class="empty">Nada encontrado.</div>`;
+        list.innerHTML = `<div class="empty">Nada para mostrar agora. Troque o filtro para “Hoje” ou “Todos”.</div>`;
         return;
       }
 
       list.innerHTML = games.map(card).join('');
 
-      // bind
       $$('[data-act="fav"]').forEach(btn=>{
         btn.onclick = ()=>{
           const id = Number(btn.getAttribute('data-id'));
-          if(state.fav.has(id)) state.fav.delete(id);
-          else state.fav.add(id);
+          state.fav.has(id) ? state.fav.delete(id) : state.fav.add(id);
           saveLocal();
           render();
         };
@@ -505,27 +574,27 @@
     async function load(){
       const meta = $('#meta');
       meta.textContent = 'Carregando…';
-
-      // cache-bust
       const url = `jogos.json?v=${Date.now()}`;
       const res = await fetch(url, {cache:'no-store'});
       const data = await res.json();
       state.data = data;
 
+      const total = (data.games?.length ?? data.counts?.games ?? 0);
+      const prob = (data.counts?.probGames ?? 0);
+
       meta.innerHTML = `
-        Fonte automática (GitHub Action). Última atualização: <b>${data.updatedAt}</b> •
-        Fonte: <b>${data.source}</b> •
-        Jogos: <b>${data.counts?.games ?? 0}</b>
+        Última atualização: <b>${data.updatedAt}</b> • Fonte: <b>${data.source}</b> •
+        Jogos no arquivo: <b>${total}</b> • Odds calculadas: <b>${prob}</b>
       `;
       render();
     }
 
-    // tabs
-    $$('.tab').forEach(t=>{
-      t.onclick = ()=>{
-        $$('.tab').forEach(x=>x.classList.remove('active'));
-        t.classList.add('active');
-        state.tab = t.getAttribute('data-tab');
+    // chips
+    $$('.chip').forEach(c=>{
+      c.onclick = ()=>{
+        $$('.chip').forEach(x=>x.classList.remove('active'));
+        c.classList.add('active');
+        state.tab = c.getAttribute('data-tab');
         render();
       };
     });
@@ -542,6 +611,11 @@
     };
     $('#refresh').onclick = load;
 
+    // bottom nav
+    $('#goGames').onclick = ()=>{ state.view='games'; render(); };
+    $('#goFav').onclick = ()=>{ state.view='fav'; render(); };
+    $('#goHist').onclick = ()=>{ state.view='hist'; render(); };
+
     // menu
     const modal = $('#modal');
     $('#openMenu').onclick = ()=> modal.classList.add('open');
@@ -555,11 +629,6 @@
         render();
       };
     });
-
-    $('#goGames').onclick = ()=>{
-      state.view = 'games';
-      render();
-    };
 
     load();
   </script>
