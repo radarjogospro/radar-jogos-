@@ -186,7 +186,7 @@
     }
     .dotmini{width:8px; height:8px; border-radius:50%; background: var(--accent); box-shadow: 0 0 0 6px rgba(34,212,138,.12);}
 
-    /* ===== WINDOW PICKER (1/2/3/6/12/24h) ===== */
+    /* ===== WINDOW PICKER ===== */
     .windowbar{
       margin-top: 12px;
       border:1px solid rgba(255,255,255,.08);
@@ -279,7 +279,7 @@
       outline:none;
     }
 
-    /* ===== PRO PANEL (replaces the old hint) ===== */
+    /* ===== PRO PANEL ===== */
     .proPanel{
       margin-top: 12px;
       border-radius: 18px;
@@ -346,23 +346,23 @@
         linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.10), rgba(255,255,255,.05));
       background-size: 220% 100%;
       animation: shimmer 1.2s var(--ease) infinite;
-      height: 220px;
+      height: 200px; /* menor */
     }
     @keyframes shimmer{
       0%{background-position: 0% 0%}
       100%{background-position: 220% 0%}
     }
 
-    /* ===== CARD ===== */
+    /* ===== CARD (COMPACTADO) ===== */
     .card{
-      border-radius: 26px;
+      border-radius: 24px; /* menor */
       border:1px solid rgba(255,255,255,.10);
       background:
-        radial-gradient(900px 280px at 12% -30%, rgba(255,255,255,.06), transparent 55%),
-        radial-gradient(900px 280px at 85% 0%, rgba(120,140,255,.12), transparent 55%),
-        radial-gradient(900px 280px at 42% 0%, var(--glow), transparent 60%),
+        radial-gradient(900px 240px at 12% -30%, rgba(255,255,255,.06), transparent 55%),
+        radial-gradient(900px 240px at 85% 0%, rgba(120,140,255,.12), transparent 55%),
+        radial-gradient(900px 240px at 42% 0%, var(--glow), transparent 60%),
         linear-gradient(180deg, rgba(11,35,45,.92), rgba(9,28,37,.74));
-      box-shadow: 0 18px 60px rgba(0,0,0,.34);
+      box-shadow: 0 16px 52px rgba(0,0,0,.34);
       padding: 0;
       position:relative;
       overflow:hidden;
@@ -374,10 +374,10 @@
     .card::before{
       content:"";
       position:absolute;
-      left:-40px; top:-30px;
-      width: 240px; height: 150px;
-      border-radius: 28px;
-      opacity:.22;
+      left:-44px; top:-36px;
+      width: 220px; height: 132px; /* menor */
+      border-radius: 26px;
+      opacity:.20;
       background:
         radial-gradient(circle at 30% 40%, rgba(255,255,255,.35), transparent 55%),
         radial-gradient(circle at 70% 30%, rgba(255,255,255,.22), transparent 50%),
@@ -388,7 +388,7 @@
       pointer-events:none;
     }
 
-    .cardInner{padding: 16px;}
+    .cardInner{padding: 14px;} /* menor */
     .head{
       display:flex;
       align-items:flex-start;
@@ -396,17 +396,18 @@
       gap:12px;
     }
     .match{
-      font-size: 26px;
+      font-size: 22px; /* menor */
       font-weight: 980;
-      line-height: 1.05;
-      margin: 0 0 8px;
-      letter-spacing:.2px;
+      line-height: 1.06;
+      margin: 0 0 6px;
+      letter-spacing:.15px;
+      word-break: break-word;
     }
     .sub{
       margin:0;
       color: var(--muted);
       font-weight: 850;
-      font-size: 14px;
+      font-size: 13px; /* menor */
       line-height:1.2;
     }
     .rightHead{
@@ -414,7 +415,7 @@
       flex-direction:column;
       align-items:flex-end;
       gap:10px;
-      min-width: 92px;
+      min-width: 88px;
     }
     .badgeLive{
       display:flex; align-items:center; gap:8px;
@@ -426,6 +427,7 @@
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.14);
       text-transform: uppercase;
+      white-space:nowrap;
     }
     .liveDot{
       width:10px; height:10px; border-radius:50%;
@@ -433,9 +435,11 @@
       box-shadow: 0 0 0 6px rgba(255,77,77,.14);
     }
 
-    .pillrow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; align-items:center}
+    .pillrow{
+      display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; align-items:center
+    }
     .pill{
-      padding: 9px 12px;
+      padding: 8px 11px; /* menor */
       border-radius: 999px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
@@ -450,14 +454,15 @@
     .pill.warn{border-color: rgba(251,191,36,.26); background: rgba(251,191,36,.12)}
     .pill .miniDot{width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:.85}
 
+    /* ===== ACTIONS (sem "visto") ===== */
     .actions{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:10px;
-      margin-top: 12px;
+      margin-top: 10px;
     }
     .btn.small{
-      padding: 12px 14px;
+      padding: 11px 14px; /* menor */
       border-radius: 16px;
       font-weight: 980;
       font-size: 13px;
@@ -689,7 +694,6 @@
         <div class="chip" data-tab="all">🌍 Todos</div>
       </div>
 
-      <!-- Janela de tempo (1/2/3/6/12/24h) -->
       <div class="windowbar">
         <div class="left">
           <span class="tag">Janela</span>
@@ -712,7 +716,6 @@
         </div>
       </div>
 
-      <!-- No lugar da mensagem que você circulou -->
       <div class="proPanel">
         <div class="proHead">
           <div class="h">✨ Painel PRO</div>
@@ -813,7 +816,7 @@
       showInsights: (localStorage.getItem('show_insights') ?? '1') === '1',
       compact: (localStorage.getItem('compact') ?? '0') === '1',
       cardTab: JSON.parse(localStorage.getItem('card_tabs')||'{}'),
-      insightsOpen: JSON.parse(localStorage.getItem('insights_open')||'{}') // {id:true/false}
+      insightsOpen: JSON.parse(localStorage.getItem('insights_open')||'{}')
     };
 
     function saveLocal(){
@@ -873,7 +876,6 @@
         day:'2-digit', month:'2-digit', year:'numeric'
       }).format(new Date(ts*1000));
     }
-
     function tsFromDateTime_SP(dateStr, timeStr){
       if(!dateStr) return null;
       const t = (timeStr && /^\d\d:\d\d$/.test(timeStr)) ? timeStr : '00:00';
@@ -935,11 +937,9 @@
       return false;
     }
 
-    // filtro por janela (usado principalmente no "Ao vivo + Próximos")
     function inWindow(g){
       const now = Date.now()/1000;
       const futureLimit = now + (state.windowHours * 3600);
-      // deixa um “respiro” no passado pra pegar ao vivo/recente
       const pastLimit = now - (8 * 3600);
       return (g.ts >= pastLimit && g.ts <= futureLimit);
     }
@@ -1051,10 +1051,11 @@
       const showScore = !!g.live && g.score && (g.score.home !== null && g.score.away !== null);
 
       const open = state.insightsOpen[g.id] ?? false;
-
       const allowOpen = state.showInsights && !state.compact;
 
-      const scorePill = showScore ? `<span class="pill"><span class="miniDot" style="background:var(--danger)"></span>Placar: ${g.score.home} x ${g.score.away}</span>` : ``;
+      const scorePill = showScore
+        ? `<span class="pill"><span class="miniDot" style="background:var(--danger)"></span>Placar: ${g.score.home} x ${g.score.away}</span>`
+        : ``;
 
       return `
         <article class="card">
@@ -1074,20 +1075,17 @@
               ${scorePill}
             </div>
 
+            <!-- AÇÕES: Favoritar + Detalhes (no lugar do "visto") -->
             <div class="actions">
-              <button class="btn small primary" data-act="seen" data-id="${g.id}">Marcar como visto</button>
-              <button class="btn small" data-act="fav" data-id="${g.id}">
+              <button class="btn small" data-act="details" data-id="${g.id}">
+                ${allowOpen && open ? 'Ocultar detalhes' : 'Detalhes'}
+              </button>
+              <button class="btn small ${state.fav.has(g.id) ? 'primary' : ''}" data-act="fav" data-id="${g.id}">
                 ${state.fav.has(g.id) ? '★ Favorito' : '☆ Favoritar'}
               </button>
             </div>
 
             ${state.showInsights ? `
-              ${state.compact ? `` : `
-                <button class="collapseBtn" data-act="toggleInsightsCard" data-id="${g.id}">
-                  <span>${open ? 'Ocultar insights' : 'Ver insights'}</span>
-                  <span style="opacity:.7">${open ? '▲' : '▼'}</span>
-                </button>
-              `}
               ${allowOpen && open ? insightsBlock(g) : ``}
               ${state.compact ? `
                 <div class="section" style="opacity:.92">
@@ -1110,9 +1108,9 @@
     function renderEmpty(){
       const list = $('#list');
       const tips = [
-        `Você está no filtro <b>${state.tab === 'date' ? 'Calendário' : state.tab === 'smart' ? 'Ao vivo + Próximos' : state.tab}</b>.`,
-        `Janela atual: <b>${state.windowHours}h</b>.`,
-        `Se “Próx 24h” estiver zerado, pode ser porque o JSON está com datas de ontem (vamos corrigir no jogos.js depois).`
+        `Filtro: <b>${state.tab === 'date' ? 'Calendário' : state.tab === 'smart' ? 'Ao vivo + Próximos' : state.tab}</b>.`,
+        `Janela: <b>${state.windowHours}h</b>.`,
+        `Se “Próx 24h” estiver zerado, pode ser porque o JSON está com datas antigas (vamos corrigir no jogos.js depois).`
       ].join('<br>');
 
       list.innerHTML = `
@@ -1147,7 +1145,7 @@
       if(state.view === 'cfg'){
         list.innerHTML = `
           <div class="card"><div class="cardInner">
-            <div class="match" style="font-size:22px">Configurações</div>
+            <div class="match" style="font-size:20px">Configurações</div>
             <p class="sub">Em breve: alertas, ligas favoritas, notificações, modo PRO.</p>
             <div class="section">
               <div class="sectionHead">
@@ -1185,10 +1183,11 @@
           render();
         };
       });
-      $$('[data-act="seen"]').forEach(btn=>{
+
+      $$('[data-act="details"]').forEach(btn=>{
         btn.onclick = ()=>{
           const id = Number(btn.getAttribute('data-id'));
-          state.seen.add(id);
+          state.insightsOpen[id] = !(state.insightsOpen[id] ?? false);
           saveLocal();
           render();
         };
@@ -1200,16 +1199,6 @@
           const id = Number(t.getAttribute('data-id'));
           const tab = t.getAttribute('data-ctab');
           state.cardTab[id] = tab;
-          saveLocal();
-          render();
-        };
-      });
-
-      // toggle insights per card
-      $$('[data-act="toggleInsightsCard"]').forEach(b=>{
-        b.onclick = ()=>{
-          const id = Number(b.getAttribute('data-id'));
-          state.insightsOpen[id] = !(state.insightsOpen[id] ?? false);
           saveLocal();
           render();
         };
@@ -1232,7 +1221,6 @@
     function skeletonOn(){
       const list = $('#list');
       list.innerHTML = `
-        <div class="skeleton"></div>
         <div class="skeleton"></div>
         <div class="skeleton"></div>
       `;
@@ -1259,7 +1247,6 @@
         Jogos no arquivo: <b>${total}</b> • Hoje: <b>${c.todayCount}</b> • Próx 24h: <b>${c.next24}</b> • Ao vivo: <b>${c.live}</b>
       `;
 
-      // mini texto do painel pro (sem falar “FREE”)
       $('#proMini').textContent = `Janela ativa: ${state.windowHours}h • Fuso: BRT`;
 
       render();
@@ -1279,11 +1266,8 @@
           saveLocal();
           $('#windowHint').textContent = `Próximas ${state.windowHours}h • BRT`;
           $('#proMini').textContent = `Janela ativa: ${state.windowHours}h • Fuso: BRT`;
-
-          // deixa “Ao vivo + Próximos” bem coerente com a janela escolhida
-          if(state.tab === 'smart') render();
-          else render(); // atualiza os contadores/UX mesmo fora do smart
           renderWindowPills();
+          render();
         };
       });
 
