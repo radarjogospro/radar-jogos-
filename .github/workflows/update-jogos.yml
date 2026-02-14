@@ -3,7 +3,7 @@ name: Update jogos.json hourly
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *" # de hora em hora (UTC)
+    - cron: "0 * * * *"
 
 permissions:
   contents: write
@@ -15,26 +15,29 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: "20"
+          python-version: "3.11"
+
+      - name: Install dependencies (if requirements.txt exists)
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
 
       - name: Run update script
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-        run: |
-          node scripts/update-jogos.js
+        run: python scripts/update_jogos.py
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add jogos.json
-          git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "Update jogos.json"
+          git diff --cached --quiet || git commit -m "Update jogos.json"
           git push
