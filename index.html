@@ -306,7 +306,7 @@
     }
     .teams{
       font-weight: 950;
-      font-size: 18px; /* menor e mais “app” */
+      font-size: 18px;
       line-height: 1.15;
       letter-spacing:.15px;
     }
@@ -545,6 +545,7 @@
         <div class="statusline">
           <span class="dot" id="onlineDot"></span>
           <span id="onlineTxt">Online</span>
+          <span style="opacity:.55; font-weight:900;" id="verTxt">v1.5</span>
         </div>
       </div>
       <button class="btn menu" id="openMenu">… Menu</button>
@@ -613,6 +614,10 @@
             <b>⭐ Favoritos</b>
             <span>Salva jogos/ligas no celular (localStorage). Layout e menu já preparados.</span>
           </div>
+          <div class="proCard">
+            <b>🕘 Histórico</b>
+            <span>Agora funciona: ao tocar em <b>Detalhes</b>, o jogo entra no seu histórico (localStorage).</span>
+          </div>
         </div>
       </div>
 
@@ -627,7 +632,7 @@
   <div class="bottomNav">
     <div class="navBtn active" id="navGames">🗓️ Jogos</div>
     <div class="navBtn" id="navFav">⭐ Favoritos</div>
-    <div class="navBtn" id="navHist" style="opacity:.65">🕘 Histórico</div>
+    <div class="navBtn" id="navHist">🕘 Histórico</div>
   </div>
 
   <div class="modalOverlay" id="menuOverlay" aria-hidden="true">
@@ -643,6 +648,12 @@
         <div class="menuItem" id="menuGoGames">
           <span>🗓️ Jogos</span><small>lista principal</small>
         </div>
+        <div class="menuItem" id="menuGoHist">
+          <span>🕘 Histórico</span><small>vistos recentemente</small>
+        </div>
+        <div class="menuItem" id="menuClearHist">
+          <span>🧹 Limpar histórico</span><small>zera a lista</small>
+        </div>
         <div class="menuItem" id="menuAbout">
           <span>ℹ️ Sobre</span><small>versão e fonte</small>
         </div>
@@ -652,17 +663,22 @@
 
   <script>
     /*********************
-     * Radar Jogos PRO - UI + filtros + ao vivo com placar
-     * Requer jogos.json com:
-     * - updatedAt, source, games[]
-     * - games: {home, away, league, country, date, time, kickoffTs?, status, isLive?, elapsed?, scoreHome?, scoreAway?}
+     * Radar Jogos PRO - v1.5
+     * - Mantém UI 1.0 (layout idêntico)
+     * - Auto-refresh inteligente no modo Ao vivo (30s)
+     * - Histórico real (Detalhes salva no histórico)
+     * - Placar ao vivo robusto
      *********************/
 
     const TZ = "America/Sao_Paulo"; // BRT
-    const LS_KEY = "rjpro_state_v4";
+    const LS_KEY = "rjpro_state_v5";
+    const LS_HIST = "rjpro_history_v1";
+
+    const APP_VERSION = "1.5";
+    const LIVE_AUTO_REFRESH_MS = 30000; // 30s (somente em Ao vivo)
 
     const state = {
-      mode: "upcoming",    // upcoming | live | favorites
+      mode: "upcoming",    // upcoming | live | favorites | history
       region: "all",       // brazil | europe | all
       windowH: 24,
       calendarOn: false,
@@ -673,6 +689,7 @@
 
     let data = null;
     let allGames = [];
+    let liveTimer = null;
 
     // ---------- helpers
     const $ = (id) => document.getElementById(id);
@@ -694,6 +711,44 @@
       }catch(e){}
     }
 
+    function getHistory(){
+      try{
+        const raw = localStorage.getItem(LS_HIST);
+        if(!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      }catch(e){
+        return [];
+      }
+    }
+
+    function saveHistory(arr){
+      try{
+        localStorage.setItem(LS_HIST, JSON.stringify(arr));
+      }catch(e){}
+    }
+
+    function pushHistory(g){
+      const id = gameId(g);
+      const now = Date.now();
+      const item = {
+        id,
+        ts: now,
+        title: `${g.home||""} x ${g.away||""}`,
+        league: g.league || "—",
+        country: g.country || "—",
+        date: g.date || null,
+        time: g.time || null,
+        kickoffTs: (typeof g.kickoffTs === "number") ? g.kickoffTs : null
+      };
+
+      let hist = getHistory();
+      hist = hist.filter(x => x && x.id !== id);
+      hist.unshift(item);
+      hist = hist.slice(0, 80); // limite
+      saveHistory(hist);
+    }
+
     function fmtBrtDate(d){
       const fmt = new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, day:"2-digit", month:"2-digit", year:"numeric" });
       return fmt.format(d);
@@ -703,12 +758,10 @@
       return fmt.format(d);
     }
     function brtNow(){
-      // cria Date "agora", mas formata sempre em BRT nos formatters
       return new Date();
     }
 
     function brtDayKey(d){
-      // YYYY-MM-DD em BRT
       const parts = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year:"numeric", month:"2-digit", day:"2-digit" }).formatToParts(d);
       const y = parts.find(p=>p.type==="year").value;
       const m = parts.find(p=>p.type==="month").value;
@@ -721,7 +774,6 @@
       if(state.region==="all") return true;
       if(state.region==="brazil") return c.includes("brazil") || c.includes("brasil");
       if(state.region==="europe"){
-        // heurística: países europeus + "europe"
         const europeCountries = ["england","scotland","wales","ireland","northern ireland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","iceland","poland","czech","slovakia","hungary","romania","bulgaria","greece","turkey","croatia","serbia","slovenia","ukraine","russia","estonia","latvia","lithuania"];
         if(c.includes("europe")) return true;
         return europeCountries.some(x => c.includes(x));
@@ -738,10 +790,7 @@
 
     function getKickoffMs(g){
       if(typeof g.kickoffTs === "number") return g.kickoffTs;
-      // fallback: date + time (assumir BRT como “exibição”)
       if(g.date && g.time){
-        // Interpretar como horário local BRT. Para não depender de lib, usamos um truque:
-        // cria ISO e ajusta -03:00 (BRT sem DST)
         const iso = `${g.date}T${g.time}:00-03:00`;
         const d = new Date(iso);
         const ms = d.getTime();
@@ -754,7 +803,6 @@
       if(g.isLive === true) return true;
       const st = (g.status||"").toUpperCase();
       if(["1H","2H","HT","ET","P","LIVE","IN_PLAY"].includes(st)) return true;
-      // se tem elapsed e status não FT
       if(typeof g.elapsed === "number" && st !== "FT") return true;
       return false;
     }
@@ -765,7 +813,6 @@
     }
 
     function liveSortScore(g){
-      // maior = mais urgente
       const st = (g.status||"").toUpperCase();
       const el = (typeof g.elapsed === "number") ? g.elapsed : 0;
       if(st==="2H") return 3000 + el;
@@ -778,10 +825,24 @@
     }
 
     function minutesText(g){
-      if(typeof g.elapsed === "number" && g.elapsed > 0) return `${g.elapsed}'`;
       const st = (g.status||"").toUpperCase();
+
+      // Prioridade: elapsed se existir
+      if(typeof g.elapsed === "number" && g.elapsed >= 0){
+        if(st === "HT") return "HT";
+        if(st === "FT") return "FT";
+        // tenta deixar bonito em 45+ / 90+ se vier algo estranho? mantemos simples
+        if(g.elapsed === 45 && st === "1H") return "45'";
+        if(g.elapsed === 90 && st === "2H") return "90'";
+        return `${g.elapsed}'`;
+      }
+
       if(st==="HT") return "HT";
       if(st==="FT") return "FT";
+      if(st==="1H") return "1ºT";
+      if(st==="2H") return "2ºT";
+      if(st==="ET") return "ET";
+      if(st==="P")  return "PEN";
       return st || "—";
     }
 
@@ -793,30 +854,26 @@
     }
 
     function gameId(g){
-      // prefer ID da API; senão cria hash leve
       if(g.id) return String(g.id);
       return `${g.home||""}__${g.away||""}__${g.league||""}__${g.date||""}__${g.time||""}`;
     }
 
     // ---------- UI bindings
     function setActiveChip(){
-      // mode
       $("chipUpcoming").classList.toggle("active", state.mode==="upcoming");
       $("chipUpcoming").classList.toggle("green", true);
 
       $("chipLive").classList.toggle("active", state.mode==="live");
 
-      // calendar
       $("chipCalendar").classList.toggle("active", state.calendarOn);
 
-      // region
       $("chipBrazil").classList.toggle("active", state.region==="brazil");
       $("chipEurope").classList.toggle("active", state.region==="europe");
       $("chipAll").classList.toggle("active", state.region==="all");
 
-      // nav
-      $("navGames").classList.toggle("active", state.mode!=="favorites");
+      $("navGames").classList.toggle("active", state.mode==="upcoming" || state.mode==="live");
       $("navFav").classList.toggle("active", state.mode==="favorites");
+      $("navHist").classList.toggle("active", state.mode==="history");
     }
 
     function renderWindowChips(){
@@ -853,12 +910,10 @@
       for(const day of days){
         const opt = document.createElement("option");
         opt.value = day;
-        // exibir DD/MM/YYYY
         const d = new Date(`${day}T12:00:00-03:00`);
         opt.textContent = fmtBrtDate(d);
         sel.appendChild(opt);
       }
-      // seta default
       if(!state.date) state.date = days[0];
       sel.value = state.date;
       $("dateBadge").textContent = sel.options[sel.selectedIndex]?.textContent || "—";
@@ -894,26 +949,26 @@
         if(k && k >= now && k <= (now + 24*3600*1000)) next24++;
       }
 
+      const autoTxt = (state.mode === "live") ? ` • Auto: <b>ON</b>` : ` • Auto: <b>OFF</b>`;
+
       $("meta").innerHTML =
-        `Última atualização: <b>${upd}</b> • Fonte: <b>${src}</b><br>` +
+        `Última atualização: <b>${upd}</b> • Fonte: <b>${src}</b>${autoTxt}<br>` +
         `Jogos no arquivo: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo: <b>${liveCount}</b>`;
     }
 
-    // ---------- rendering
+    // ---------- filtering
     function filterUpcoming(){
       const now = brtNow().getTime();
       const max = now + state.windowH * 3600 * 1000;
       return allGames.filter(g => {
         if(!regionMatch(g) || !qMatch(g)) return false;
-        if(isLiveGame(g)) return false; // não mistura
+        if(isLiveGame(g)) return false;
         const k = getKickoffMs(g);
         if(!k) return false;
         if(isFinished(g)) return false;
-        // se calendário ligado, filtra só por data BRT selecionada
+
         if(state.calendarOn && state.date){
           if(g.date !== state.date) return false;
-          // dentro do dia selecionado, ainda respeita janela? -> sim, mas se escolher data futura, janela vira “dentro do dia”
-          // regra: se calendário ligado, ignorar janela e mostrar a data toda
           return true;
         }
         return (k >= now && k <= max);
@@ -965,7 +1020,7 @@
 
             <div class="badgeLive">
               ${live ? `<div class="liveTag"><span class="ldot"></span>AO VIVO</div>` : ``}
-              ${live && (score || mins) ? `
+              ${live ? `
                 <div class="scorePill">
                   <span>${score ? score : "—"}</span>
                   <span class="min">• ${mins}</span>
@@ -1022,19 +1077,21 @@
         </div>
       `;
 
-      // actions
       el.querySelector('[data-act="fav"]').onclick = () => {
         state.favorites[id] = !state.favorites[id];
         saveState();
         render();
       };
+
       el.querySelector('[data-act="details"]').onclick = () => {
-        // por enquanto, “detalhes” é um scroll no próprio card, sem abrir modal (mais leve no celular)
+        // v1.5: salva no histórico
+        pushHistory(g);
+
+        // mantém o comportamento leve (scroll no card)
         const tabs = el.querySelector('[data-tabs]');
         tabs.scrollIntoView({behavior:"smooth", block:"center"});
       };
 
-      // tabs
       const tabs = el.querySelectorAll(".tab");
       const contents = el.querySelectorAll(".tabContent");
       tabs.forEach(t => {
@@ -1060,7 +1117,6 @@
       const map = new Map(allGames.map(g => [gameId(g), g]));
       const favGames = favIds.map(id => map.get(id)).filter(Boolean);
 
-      // ordenar: ao vivo primeiro, depois por kickoff
       favGames.sort((a,b) => {
         const la = isLiveGame(a), lb = isLiveGame(b);
         if(la && !lb) return -1;
@@ -1076,11 +1132,76 @@
       }
     }
 
+    function renderHistory(){
+      const hist = getHistory();
+      if(hist.length === 0){
+        renderEmpty("Histórico vazio. Toque em <b>Detalhes</b> em qualquer jogo para ele aparecer aqui.");
+        return;
+      }
+
+      // Se ainda temos allGames, tentamos “re-hidratar” (pegar placar/ao vivo atual).
+      const map = new Map(allGames.map(g => [gameId(g), g]));
+
+      const items = hist.map(h => {
+        const g = map.get(h.id);
+        if(g) return g;
+        // fallback: cria um “game” mínimo só para listar (sem quebrar)
+        return {
+          id: h.id,
+          home: (h.title||"").split(" x ")[0] || "—",
+          away: (h.title||"").split(" x ")[1] || "—",
+          league: h.league || "—",
+          country: h.country || "—",
+          date: h.date || null,
+          time: h.time || null,
+          kickoffTs: h.kickoffTs || null,
+          status: "—",
+          isLive: false
+        };
+      });
+
+      const root = $("list");
+      root.innerHTML = "";
+      for(const g of items){
+        root.appendChild(renderGameCard(g));
+      }
+    }
+
+    // ---------- auto refresh (live)
+    function stopLiveAuto(){
+      if(liveTimer){
+        clearInterval(liveTimer);
+        liveTimer = null;
+      }
+    }
+
+    function startLiveAuto(){
+      stopLiveAuto();
+      liveTimer = setInterval(async () => {
+        // só atualiza se continuar no modo live
+        if(state.mode !== "live") return;
+        try{
+          await loadJogosJson(true);
+          updateMeta();
+          render();
+        }catch(e){}
+      }, LIVE_AUTO_REFRESH_MS);
+    }
+
+    function syncAutoRefresh(){
+      if(state.mode === "live"){
+        startLiveAuto();
+      } else {
+        stopLiveAuto();
+      }
+      updateMeta();
+    }
+
+    // ---------- main render
     function render(){
       setActiveChip();
       updateMeta();
 
-      // calendar box visibility
       $("calendarBox").style.display = state.calendarOn ? "block" : "none";
       if(state.calendarOn){
         fillDateSelect();
@@ -1088,13 +1209,18 @@
         $("dateBadge").textContent = $("dateSelect").options[$("dateSelect").selectedIndex]?.textContent || "—";
       }
 
+      if(!data && state.mode !== "history"){
+        renderEmpty("Sem dados ainda. Clique em Atualizar.");
+        return;
+      }
+
       if(state.mode==="favorites"){
         renderFavorites();
         return;
       }
 
-      if(!data){
-        renderEmpty("Sem dados ainda. Clique em Atualizar.");
+      if(state.mode==="history"){
+        renderHistory();
         return;
       }
 
@@ -1129,14 +1255,26 @@
 
     // ---------- events
     function wire(){
-      $("chipUpcoming").onclick = () => { state.mode="upcoming"; saveState(); render(); };
-      $("chipLive").onclick = () => { state.mode="live"; state.calendarOn=false; saveState(); render(); };
+      $("chipUpcoming").onclick = () => {
+        state.mode="upcoming";
+        saveState();
+        syncAutoRefresh();
+        render();
+      };
+
+      $("chipLive").onclick = () => {
+        state.mode="live";
+        state.calendarOn=false;
+        saveState();
+        syncAutoRefresh();
+        render();
+      };
 
       $("chipCalendar").onclick = () => {
         state.calendarOn = !state.calendarOn;
-        // calendário faz sentido principalmente em "Próximos"
         if(state.calendarOn) state.mode="upcoming";
         saveState();
+        syncAutoRefresh();
         render();
       };
 
@@ -1181,16 +1319,29 @@
       $("dateSelect").addEventListener("change", () => {
         state.date = $("dateSelect").value;
         saveState();
-        // aplica automático (e mantém o botão como redundância)
         render();
       });
 
       // bottom nav
-      $("navGames").onclick = () => { if(state.mode==="favorites") state.mode="upcoming"; saveState(); render(); };
-      $("navFav").onclick = () => { state.mode="favorites"; saveState(); render(); };
+      $("navGames").onclick = () => {
+        if(state.mode==="favorites" || state.mode==="history") state.mode="upcoming";
+        saveState();
+        syncAutoRefresh();
+        render();
+      };
+
+      $("navFav").onclick = () => {
+        state.mode="favorites";
+        saveState();
+        syncAutoRefresh();
+        render();
+      };
+
       $("navHist").onclick = () => {
-        // deixamos clean por enquanto
-        alert("Histórico: vamos ativar isso depois (layout pronto).");
+        state.mode="history";
+        saveState();
+        syncAutoRefresh();
+        render();
       };
 
       // menu modal
@@ -1198,19 +1349,29 @@
       $("closeMenu").onclick = () => $("menuOverlay").classList.remove("show");
       $("menuOverlay").onclick = (e) => { if(e.target === $("menuOverlay")) $("menuOverlay").classList.remove("show"); };
 
-      $("menuGoFav").onclick = () => { state.mode="favorites"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
-      $("menuGoGames").onclick = () => { if(state.mode==="favorites") state.mode="upcoming"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
+      $("menuGoFav").onclick = () => { state.mode="favorites"; saveState(); syncAutoRefresh(); render(); $("menuOverlay").classList.remove("show"); };
+      $("menuGoGames").onclick = () => { if(state.mode==="favorites" || state.mode==="history") state.mode="upcoming"; saveState(); syncAutoRefresh(); render(); $("menuOverlay").classList.remove("show"); };
+      $("menuGoHist").onclick = () => { state.mode="history"; saveState(); syncAutoRefresh(); render(); $("menuOverlay").classList.remove("show"); };
+
+      $("menuClearHist").onclick = () => {
+        if(confirm("Quer limpar o histórico agora?")){
+          saveHistory([]);
+          if(state.mode==="history") render();
+        }
+        $("menuOverlay").classList.remove("show");
+      };
+
       $("menuAbout").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar Jogos PRO\nFonte: ${src}\nÚltima atualização: ${upd}\n\nBRT: ${TZ}`);
+        alert(`Radar Jogos PRO v${APP_VERSION}\nFonte: ${src}\nÚltima atualização: ${upd}\n\nBRT: ${TZ}\nAo vivo: auto-refresh ${LIVE_AUTO_REFRESH_MS/1000}s (quando ativo)`);
       };
     }
 
     // ---------- init
     (async function init(){
       loadState();
-      // defaults
+
       state.windowH = clamp(state.windowH || 24, 1, 24);
       if(!state.mode) state.mode = "upcoming";
       if(!state.region) state.region = "all";
@@ -1222,13 +1383,14 @@
       wire();
       setActiveChip();
 
-      // tenta carregar dados
       try{
         await loadJogosJson(false);
       }catch(e){
-        // sem travar a UI
+        // sem travar
       }
+
       updateMeta();
+      syncAutoRefresh();
       render();
     })();
   </script>
