@@ -1,7 +1,7 @@
 /**
- * update-jogos.js v2.2
+ * update-jogos.js v2.3
  * - Gera jogos.json (BRT) com HOJE+AMANHÃ + AO VIVO
- * - Normaliza status e aplica "auto-finish" para evitar live travado em 90'
+ * - Normaliza status e aplica "auto-finish" mais agressivo (pra não travar em 90')
  *
  * Requer Secret: API_FOOTBALL_KEY
  */
@@ -35,8 +35,7 @@ function brtNowParts() {
   }, {});
 
   const date = `${parts.year}-${parts.month}-${parts.day}`;
-  const time = `${parts.hour}:${parts.minute}:${parts.second}`;
-  return { date, time };
+  return { date };
 }
 
 function addDaysYYYYMMDD(dateStr, days) {
@@ -80,7 +79,7 @@ async function apiGet(path, qs = {}) {
     if (res.ok) return res.json();
 
     const txt = await res.text().catch(() => "");
-    console.warn(`⚠️ API ${res.status} attempt ${attempt}: ${txt.slice(0, 140)}`);
+    console.warn(`⚠️ API ${res.status} attempt ${attempt}: ${txt.slice(0, 160)}`);
     if (attempt < 3) await new Promise((r) => setTimeout(r, 900 * attempt));
   }
 
@@ -100,26 +99,21 @@ function shouldAutoFinish({ status, elapsed, kickoffMs }) {
   if (!kickoffMs) return false;
   if (FINISHED.has(status)) return false;
   if (CANCELLED.has(status)) return false;
-
-  // Só aplica se a API estiver dizendo que está "ao vivo"
   if (!LIVE_SET.has(status)) return false;
 
   const now = Date.now();
   const ageMin = (now - kickoffMs) / 60000;
-
-  // Regras conservadoras:
-  // - Se bateu 90' e já passou tempo suficiente do kickoff -> encerra
-  // - Se elapsed sumiu mas o kickoff já é bem antigo -> encerra
   const el = typeof elapsed === "number" ? elapsed : null;
 
-  // Sem prorrogação: após ~2h20 do kickoff e 90' já é praticamente garantido que acabou
-  if (el !== null && el >= 90 && ageMin >= 140) return true;
+  // ✅ v2.3: mais agressivo (resolve o seu caso ~136min)
+  // - 90' + passou 120 min do kickoff => encerra
+  if (el !== null && el >= 90 && ageMin >= 120) return true;
 
-  // Se for ET, pode ir mais longe:
-  if (status === "ET" && ageMin >= 220) return true;
+  // Prorrogação: deixa mais folga
+  if (status === "ET" && ageMin >= 210) return true;
 
-  // Se ficou "2H/HT" por tempo demais mesmo sem elapsed:
-  if (el === null && ageMin >= 180) return true;
+  // Se não tem elapsed mas já é muito antigo
+  if (el === null && ageMin >= 165) return true;
 
   return false;
 }
@@ -131,27 +125,21 @@ function mapFixtureToGame(fx) {
   const goals = fx.goals || {};
 
   const id = fixture.id;
-  const tsSec = fixture.timestamp; // segundos
+  const tsSec = fixture.timestamp;
   const kickoffMs = tsSec ? tsSec * 1000 : null;
 
-  const statusShort = normalizeStatusShort(fixture.status?.short);
-  let status = statusShort;
-
+  let status = normalizeStatusShort(fixture.status?.short);
   const elapsed = fixture.status?.elapsed ?? null;
 
-  // Placar
   const homeGoals = typeof goals.home === "number" ? goals.home : null;
   const awayGoals = typeof goals.away === "number" ? goals.away : null;
 
-  // Live real (antes do auto-finish)
   let isLive =
     LIVE_SET.has(status) ||
     String(fixture.status?.long || "").toLowerCase().includes("live");
 
-  // Se status já é finished, garante:
   if (FINISHED.has(status)) isLive = false;
 
-  // Auto-finish (principal correção do “travado em 90”)
   if (shouldAutoFinish({ status, elapsed, kickoffMs })) {
     status = "FT";
     isLive = false;
@@ -187,7 +175,6 @@ function uniqById(games) {
       continue;
     }
 
-    // Preferir a versão que tem status mais “final” e/ou placar
     const prevFinished = FINISHED.has(prev.status);
     const newFinished = FINISHED.has(g.status);
 
