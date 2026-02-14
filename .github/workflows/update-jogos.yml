@@ -3,7 +3,7 @@ name: Update jogos.json hourly
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 * * * *" # de hora em hora (UTC)
 
 permissions:
   contents: write
@@ -24,24 +24,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install deps (if package.json exists)
-        run: |
-          if [ -f package.json ]; then
-            npm ci || npm install
-          else
-            echo "No package.json, skipping install."
-          fi
-
       - name: Run update script
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         run: |
-          if [ -f update-jogos.js ]; then
-            node update-jogos.js
-          elif [ -f scripts/update-jogos.js ]; then
-            node scripts/update-jogos.js
-          else
-            echo "No update script found (update-jogos.js or scripts/update-jogos.js)."
-            exit 1
-          fi
+          node scripts/update-jogos.js
 
       - name: Commit and push
         run: |
