@@ -19,11 +19,13 @@
       --muted:rgba(234,244,246,.70);
       --muted2:rgba(234,244,246,.52);
 
-      --danger:#b85a5a;
+      --danger:#ff4d4d;
       --warn:#fbbf24;
 
       --shadow: 0 22px 80px rgba(0,0,0,.55);
       --radius: 22px;
+
+      --ease: cubic-bezier(.2,.8,.2,1);
     }
 
     *{box-sizing:border-box}
@@ -41,17 +43,18 @@
         linear-gradient(180deg, var(--bg1), var(--bg0));
     }
 
-    .wrap{max-width: 900px; margin:0 auto; padding: 14px 14px 126px;}
+    .wrap{max-width: 920px; margin:0 auto; padding: 14px 14px 132px;}
 
-    /* Top */
+    /* ===== TOP ===== */
     .topbar{
       position: sticky;
       top:0;
       z-index: 60;
       padding: 12px 0 10px;
-      background: linear-gradient(180deg, rgba(8,26,36,.82), rgba(6,20,27,.18));
+      background: linear-gradient(180deg, rgba(8,26,36,.84), rgba(6,20,27,.12));
       backdrop-filter: blur(14px);
     }
+
     .brand{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding: 12px 12px;
@@ -59,9 +62,22 @@
       border:1px solid var(--stroke);
       background: rgba(0,0,0,.14);
       box-shadow: 0 14px 34px rgba(0,0,0,.34);
+      position:relative;
+      overflow:hidden;
     }
-    .title{display:flex; flex-direction:column; gap:4px; line-height:1.05;}
-    .title h1{margin:0; font-size: 18px; letter-spacing:.3px; font-weight: 950;}
+    .brand::before{
+      content:"";
+      position:absolute; inset:-60px;
+      background:
+        radial-gradient(600px 240px at 20% 30%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(520px 260px at 80% 10%, rgba(120,140,255,.14), transparent 60%),
+        radial-gradient(520px 260px at 55% 0%, var(--glow), transparent 65%);
+      opacity:.9;
+      pointer-events:none;
+    }
+
+    .title{display:flex; flex-direction:column; gap:4px; line-height:1.05; position:relative; z-index:2}
+    .title h1{margin:0; font-size: 18px; letter-spacing:.3px; font-weight: 980;}
     .status{
       display:flex; align-items:center; gap:10px;
       font-weight: 900; font-size: 13px; color: var(--muted);
@@ -76,9 +92,13 @@
       background: rgba(255,255,255,.06); color: var(--text);
       font-weight: 950; border:1px solid var(--stroke);
       user-select:none;
+      position:relative; z-index:2;
+      transition: transform .18s var(--ease), background .18s var(--ease);
     }
+    .iconBtn:active{transform: scale(.98)}
+    .iconBtn:hover{background: rgba(255,255,255,.08)}
 
-    /* Panel */
+    /* ===== PANEL ===== */
     .panel{
       margin-top: 12px;
       padding: 14px;
@@ -88,7 +108,7 @@
       background:
         radial-gradient(900px 250px at 15% 0%, rgba(255,255,255,.06), transparent 60%),
         radial-gradient(700px 260px at 90% 0%, rgba(120,140,255,.10), transparent 60%),
-        linear-gradient(180deg, rgba(11,35,45,.82), rgba(9,28,37,.62));
+        linear-gradient(180deg, rgba(11,35,45,.84), rgba(9,28,37,.62));
       backdrop-filter: blur(12px);
       position: relative;
       overflow:hidden;
@@ -123,13 +143,17 @@
       font-weight: 950;
       cursor:pointer;
       user-select:none;
+      transition: transform .18s var(--ease), background .18s var(--ease);
     }
+    .btn:active{transform: scale(.98)}
+    .btn:hover{background: rgba(255,255,255,.08)}
     .btn.primary{
       background: linear-gradient(180deg, var(--accent), var(--accent2));
       border:none;
       color:#071d18;
       box-shadow: 0 14px 34px rgba(0,0,0,.22);
     }
+
     .meta{
       margin-top: 10px;
       color: var(--muted);
@@ -140,7 +164,7 @@
       z-index:2;
     }
 
-    /* Chips */
+    /* ===== CHIPS ===== */
     .chips{margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:2}
     .chip{
       padding: 10px 13px;
@@ -152,9 +176,11 @@
       user-select:none;
       font-size: 13px;
       display:flex; align-items:center; gap:8px;
+      transition: transform .18s var(--ease), background .18s var(--ease);
     }
+    .chip:active{transform: scale(.98)}
     .chip.active{
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
       box-shadow: 0 10px 26px rgba(0,0,0,.18);
       border-color: rgba(255,255,255,.14);
     }
@@ -169,7 +195,7 @@
       z-index:2;
     }
 
-    /* Calendar bar */
+    /* ===== DATE BAR ===== */
     .datebar{
       margin-top: 12px;
       display:flex;
@@ -203,7 +229,9 @@
       cursor:pointer;
       user-select:none;
       font-size: 12px;
+      transition: transform .18s var(--ease);
     }
+    .datepill:active{transform: scale(.98)}
     .datepill.active{border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.09);}
     .datebar .right{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
     .dateinput{
@@ -216,10 +244,25 @@
       outline:none;
     }
 
-    /* List */
+    /* ===== LIST ===== */
     .list{margin-top: 14px; display:flex; flex-direction:column; gap:12px;}
 
-    /* Card */
+    /* ===== SKELETON ===== */
+    .skeleton{
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.10), rgba(255,255,255,.05));
+      background-size: 220% 100%;
+      animation: shimmer 1.2s var(--ease) infinite;
+      height: 220px;
+    }
+    @keyframes shimmer{
+      0%{background-position: 0% 0%}
+      100%{background-position: 220% 0%}
+    }
+
+    /* ===== CARD ===== */
     .card{
       border-radius: 26px;
       border:1px solid rgba(255,255,255,.10);
@@ -229,17 +272,20 @@
         radial-gradient(900px 280px at 42% 0%, var(--glow), transparent 60%),
         linear-gradient(180deg, rgba(11,35,45,.92), rgba(9,28,37,.74));
       box-shadow: 0 18px 60px rgba(0,0,0,.34);
-      padding: 16px;
+      padding: 0;
       position:relative;
       overflow:hidden;
+      transform: translateY(0);
+      transition: transform .22s var(--ease);
     }
+    .card:hover{transform: translateY(-2px)}
 
-    /* “Banner” artístico sem imagem externa */
+    /* banner art */
     .card::before{
       content:"";
       position:absolute;
       left:-40px; top:-30px;
-      width: 220px; height: 140px;
+      width: 240px; height: 150px;
       border-radius: 28px;
       opacity:.22;
       background:
@@ -252,9 +298,16 @@
       pointer-events:none;
     }
 
+    .cardInner{padding: 16px;}
+    .head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
     .match{
       font-size: 26px;
-      font-weight: 950;
+      font-weight: 980;
       line-height: 1.05;
       margin: 0 0 8px;
       letter-spacing:.2px;
@@ -266,12 +319,28 @@
       font-size: 14px;
       line-height:1.2;
     }
-
-    .topline{
+    .rightHead{
       display:flex;
-      justify-content:space-between;
+      flex-direction:column;
+      align-items:flex-end;
       gap:10px;
-      align-items:flex-start;
+      min-width: 92px;
+    }
+    .badgeLive{
+      display:flex; align-items:center; gap:8px;
+      font-weight: 980;
+      font-size: 11px;
+      letter-spacing:.4px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      text-transform: uppercase;
+    }
+    .liveDot{
+      width:10px; height:10px; border-radius:50%;
+      background:var(--danger);
+      box-shadow: 0 0 0 6px rgba(255,77,77,.14);
     }
 
     .pillrow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; align-items:center}
@@ -282,34 +351,33 @@
       background: rgba(255,255,255,.06);
       font-weight: 950;
       font-size: 12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
     }
-    .pill.live{
-      border-color: rgba(255,255,255,.14);
-      background: rgba(255,255,255,.10);
-    }
+    .pill.live{border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.10);}
     .pill.final{border-color: rgba(184,90,90,.32); background: rgba(184,90,90,.14)}
     .pill.warn{border-color: rgba(251,191,36,.26); background: rgba(251,191,36,.12)}
+    .pill .miniDot{width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:.85}
 
-    .badgeLive{
-      display:flex; align-items:center; gap:8px;
-      font-weight: 950;
-      font-size: 12px;
-      padding: 8px 11px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
+    .actions{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top: 12px;
     }
-    .liveDot{
-      width:10px; height:10px; border-radius:50%;
-      background:#ff4d4d;
-      box-shadow: 0 0 0 6px rgba(255,77,77,.14);
+    .btn.small{
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight: 980;
+      font-size: 13px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
     }
 
-    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;}
-    .btn.small{padding: 11px 14px; border-radius: 14px; font-weight: 950; font-size: 13px}
-    .btn.star{display:flex; align-items:center; gap:8px}
-
-    /* Insights */
+    /* ===== INSIGHTS ===== */
     .section{
       margin-top: 12px;
       border-radius: 18px;
@@ -327,10 +395,10 @@
     .sectionHead h3{
       margin:0;
       font-size: 12px;
-      letter-spacing:.4px;
+      letter-spacing:.6px;
       color: rgba(234,244,246,.86);
       text-transform: uppercase;
-      font-weight: 950;
+      font-weight: 980;
     }
     .tabs{display:flex; gap:8px; flex-wrap:wrap;}
     .tab{
@@ -339,15 +407,14 @@
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
       color: rgba(234,244,246,.86);
-      font-weight: 950;
+      font-weight: 980;
       font-size: 12px;
       cursor:pointer;
       user-select:none;
+      transition: transform .18s var(--ease);
     }
-    .tab.active{
-      border-color: rgba(255,255,255,.14);
-      background: rgba(255,255,255,.09);
-    }
+    .tab:active{transform: scale(.98)}
+    .tab.active{border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.09);}
 
     .grid{
       display:grid;
@@ -367,6 +434,24 @@
       line-height: 1.35;
     }
 
+    .collapseBtn{
+      width:100%;
+      margin-top: 10px;
+      padding: 11px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: rgba(234,244,246,.86);
+      font-weight: 980;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      user-select:none;
+    }
+
+    /* ===== EMPTY ===== */
     .empty{
       text-align:center;
       padding: 18px 12px 14px;
@@ -388,7 +473,7 @@
       margin-top: 12px;
     }
 
-    /* Bottom nav */
+    /* ===== BOTTOM NAV ===== */
     .bottom{
       position: fixed;
       left:0; right:0; bottom: 12px;
@@ -398,7 +483,7 @@
       z-index: 80;
     }
     .bottom .bar{
-      width: min(900px, calc(100% - 24px));
+      width: min(920px, calc(100% - 24px));
       display:flex; gap: 10px;
       background: rgba(8,22,28,.64);
       border: 1px solid rgba(255,255,255,.10);
@@ -412,7 +497,7 @@
       flex:1;
       border-radius: 20px;
       padding: 14px 14px;
-      font-weight: 950;
+      font-weight: 980;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
       color: var(--text);
@@ -421,7 +506,9 @@
       user-select:none;
       font-size: 14px;
       opacity:.94;
+      transition: transform .18s var(--ease), background .18s var(--ease);
     }
+    .bigbtn:active{transform: scale(.98)}
     .bigbtn.active{
       background: linear-gradient(180deg, var(--accent), var(--accent2));
       color:#061d18;
@@ -430,7 +517,7 @@
       box-shadow: 0 14px 34px rgba(0,0,0,.22);
     }
 
-    /* Modal */
+    /* ===== MODAL ===== */
     .modal{
       position: fixed; inset:0;
       background: rgba(0,0,0,.50);
@@ -442,7 +529,7 @@
     }
     .modal.open{display:flex;}
     .sheet{
-      width: min(900px, 100%);
+      width: min(920px, 100%);
       background: rgba(10,27,35,.94);
       border:1px solid rgba(255,255,255,.10);
       border-radius: 26px;
@@ -462,7 +549,7 @@
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
       color: var(--text);
-      font-weight: 950;
+      font-weight: 980;
       cursor:pointer;
       margin: 10px 0;
       font-size: 14px;
@@ -476,7 +563,7 @@
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       color: var(--text);
-      font-weight: 950;
+      font-weight: 980;
       cursor:pointer;
     }
   </style>
@@ -505,7 +592,7 @@
 
       <div class="chips">
         <div class="chip active" data-tab="smart"><span class="dotmini"></span> ⚡ Ao vivo + Próximos</div>
-        <div class="chip" data-tab="live"><span class="dotmini" style="background:#ff4d4d; box-shadow:none;"></span> 🔴 Ao vivo</div>
+        <div class="chip" data-tab="live"><span class="dotmini" style="background:var(--danger); box-shadow:none;"></span> 🔴 Ao vivo</div>
         <div class="chip" data-tab="date">📅 Calendário</div>
         <div class="chip" data-tab="br">🇧🇷 Brasil</div>
         <div class="chip" data-tab="eu">🇪🇺 Europa</div>
@@ -552,8 +639,12 @@
         <span class="right" id="insightsState">ligado</span>
       </button>
 
-      <button class="item" id="cycleTheme"><span>Tema / Cores</span><span class="right" id="themeName">verde</span></button>
+      <button class="item" id="toggleCompact">
+        <span>Modo compacto</span>
+        <span class="right" id="compactState">desligado</span>
+      </button>
 
+      <button class="item" id="cycleTheme"><span>Tema / Cores</span><span class="right" id="themeName">verde</span></button>
       <button class="item" data-view="cfg"><span>Configurações</span><span class="right">em breve</span></button>
       <button class="close" id="closeMenu">Fechar</button>
     </div>
@@ -562,7 +653,6 @@
   <script>
     const $ = (s)=>document.querySelector(s);
     const $$ = (s)=>Array.from(document.querySelectorAll(s));
-    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
 
     /* ========= THEMES ========= */
     const THEMES = [
@@ -598,14 +688,18 @@
       fav: new Set(JSON.parse(localStorage.getItem('fav_ids')||'[]')),
       seen: new Set(JSON.parse(localStorage.getItem('seen_ids')||'[]')),
       showInsights: (localStorage.getItem('show_insights') ?? '1') === '1',
-      cardTab: JSON.parse(localStorage.getItem('card_tabs')||'{}') // {id:"odds|mm|form"}
+      compact: (localStorage.getItem('compact') ?? '0') === '1',
+      cardTab: JSON.parse(localStorage.getItem('card_tabs')||'{}'),
+      insightsOpen: JSON.parse(localStorage.getItem('insights_open')||'{}') // {id:true/false}
     };
 
     function saveLocal(){
       localStorage.setItem('fav_ids', JSON.stringify(Array.from(state.fav)));
       localStorage.setItem('seen_ids', JSON.stringify(Array.from(state.seen)));
       localStorage.setItem('show_insights', state.showInsights ? '1' : '0');
+      localStorage.setItem('compact', state.compact ? '1' : '0');
       localStorage.setItem('card_tabs', JSON.stringify(state.cardTab));
+      localStorage.setItem('insights_open', JSON.stringify(state.insightsOpen));
     }
 
     function setBottomActive(which){
@@ -656,8 +750,6 @@
       }).format(new Date(ts*1000));
     }
 
-    // Converter date+time (do seu JSON atual) => timestamp
-    // Obs: fixo -03:00 (Brasil sem horário de verão atualmente)
     function tsFromDateTime_SP(dateStr, timeStr){
       if(!dateStr) return null;
       const t = (timeStr && /^\d\d:\d\d$/.test(timeStr)) ? timeStr : '00:00';
@@ -672,20 +764,17 @@
       if(!state.selectedDate) state.selectedDate = todayYMD_SP();
     }
 
-    /* ========= PARSE GAMES (compatível com seu JSON atual e futuros) ========= */
+    /* ========= PARSE ========= */
     function makeId(g, idx){
       const base = `${g.home||''}|${g.away||''}|${g.league||''}|${g.country||''}|${g.date||''}|${g.time||''}|${g.ts||''}|${idx}`;
-      // hash simples
       let h=0;
       for(let i=0;i<base.length;i++){ h = ((h<<5)-h) + base.charCodeAt(i); h |= 0; }
       return Math.abs(h);
     }
-
     function isLiveStatus(status){
       const s = (status||'').toUpperCase();
       return ['1H','2H','HT','ET','P','LIVE','IN PLAY'].includes(s);
     }
-
     function normalizeGame(raw, idx){
       const home = raw.home ?? raw.teams?.home?.name ?? 'Casa';
       const away = raw.away ?? raw.teams?.away?.name ?? 'Fora';
@@ -693,7 +782,6 @@
       const country = raw.country ?? raw.league?.country ?? raw.area ?? 'World';
       const status = raw.status ?? raw.fixture?.status?.short ?? raw.fixture?.status?.long ?? 'NS';
 
-      // ts preferido (se existir), senão cria via date/time
       const ts =
         (typeof raw.ts === 'number' ? raw.ts :
         typeof raw.timestamp === 'number' ? raw.timestamp :
@@ -704,7 +792,7 @@
 
       const live = !!raw.live || isLiveStatus(status);
       const score = raw.score ?? (raw.goals ? {home: raw.goals.home, away: raw.goals.away} : null);
-      const probs = raw.probs ?? raw.odds ?? null; // para futuro
+      const probs = raw.probs ?? raw.odds ?? null;
 
       return { id:Number(id), home, away, league, country, status, ts: ts ?? 0, live, score, probs, raw };
     }
@@ -733,7 +821,6 @@
         return ymdSP_from_ts(g.ts) === state.selectedDate;
       }
 
-      // smart: ao vivo + próximos 36h + últimas 8h (deixa mais “cheio”)
       if(state.tab === 'smart'){
         const now = Date.now()/1000;
         const withinPast = (g.ts >= (now - (8*3600)));
@@ -760,17 +847,16 @@
       return 'pill';
     }
 
-    /* ========= INSIGHTS UI ========= */
+    /* ========= INSIGHTS ========= */
     function fmtOddsRow(label, obj){
       if(!obj) return `<div class="mut">${label}</div><div>—% • odd —</div>`;
-      // aceita {p, odd} ou {prob, odd}
       const p = obj.p ?? obj.prob ?? null;
       const o = obj.odd ?? null;
       if(p == null || o == null) return `<div class="mut">${label}</div><div>—% • odd —</div>`;
       return `<div class="mut">${label}</div><div>${p}% • odd ${o}</div>`;
     }
 
-    function cardInsights(g){
+    function insightsContent(g){
       const tab = state.cardTab[g.id] || 'odds';
       const hasOdds = !!g.probs;
 
@@ -786,7 +872,6 @@
         </div>
       `;
 
-      // UI de Mais/Menos (pronta para futuro)
       const mmHtml = `
         <div class="grid">
           <div class="mut">Mais provável</div><div>+ Over 1,5</div>
@@ -794,10 +879,9 @@
           <div class="mut">Defensivo</div><div>− Under 2,5</div>
           <div class="mut">Trava</div><div>− Under 1,5</div>
         </div>
-        <div class="miniNote">Sinal “+ / ± / −” (placeholder). Quando você assinar a API, a gente liga isso nos dados reais.</div>
+        <div class="miniNote">Placeholder visual “+ / ± / −”. Quando você assinar a API, a gente liga nos dados reais.</div>
       `;
 
-      // UI de Forma (últimos 3) - pronta
       const formHtml = `
         <div class="grid">
           <div class="mut">${g.home} (3 jogos)</div><div>W • D • L</div>
@@ -805,11 +889,14 @@
           <div class="mut">Gols médios</div><div>—</div>
           <div class="mut">Tendência</div><div>—</div>
         </div>
-        <div class="miniNote">Aba “Forma” fica perfeita quando tiver endpoint de últimos jogos/estatísticas.</div>
+        <div class="miniNote">Aba “Forma” fica perfeita com endpoint de últimos jogos/estatísticas.</div>
       `;
 
-      const content = tab === 'odds' ? oddsHtml : tab === 'mm' ? mmHtml : formHtml;
+      return tab === 'odds' ? oddsHtml : tab === 'mm' ? mmHtml : formHtml;
+    }
 
+    function insightsBlock(g){
+      const tab = state.cardTab[g.id] || 'odds';
       return `
         <div class="section">
           <div class="sectionHead">
@@ -820,7 +907,7 @@
               <div class="tab ${tab==='form'?'active':''}" data-ctab="form" data-id="${g.id}">Forma</div>
             </div>
           </div>
-          ${content}
+          ${insightsContent(g)}
         </div>
       `;
     }
@@ -829,33 +916,56 @@
     function card(g){
       const time = g.ts ? formatTimeSP(g.ts) : (g.raw?.time || '—:—');
       const date = g.ts ? formatDateSP(g.ts) : (g.raw?.date || '—/—/—');
-
-      // placar só se ao vivo E tiver dado
       const showScore = !!g.live && g.score && (g.score.home !== null && g.score.away !== null);
+
+      const open = state.insightsOpen[g.id] ?? false;
+
+      // modo compacto reduz insights por padrão
+      const allowOpen = state.showInsights && !state.compact;
+
+      const scorePill = showScore ? `<span class="pill"><span class="miniDot" style="background:var(--danger)"></span>Placar: ${g.score.home} x ${g.score.away}</span>` : ``;
 
       return `
         <article class="card">
-          <div class="topline">
-            <div>
-              <div class="match">${g.home} x ${g.away}</div>
-              <p class="sub">${g.league} • ${g.country} • ${time} <span class="tag" style="margin-left:8px">${date}</span></p>
+          <div class="cardInner">
+            <div class="head">
+              <div>
+                <div class="match">${g.home} x ${g.away}</div>
+                <p class="sub">${g.league} • ${g.country} • ${time} <span class="tag" style="margin-left:8px">${date}</span></p>
+              </div>
+              <div class="rightHead">
+                ${g.live ? `<div class="badgeLive"><span class="liveDot"></span> AO VIVO</div>` : ``}
+              </div>
             </div>
-            ${g.live ? `<div class="badgeLive"><span class="liveDot"></span> AO VIVO</div>` : ``}
-          </div>
 
-          <div class="pillrow">
-            <span class="${statusClass(g)}">${statusLabel(g)}</span>
-            ${showScore ? `<span class="pill">Placar: ${g.score.home} x ${g.score.away}</span>` : ``}
-          </div>
+            <div class="pillrow">
+              <span class="${statusClass(g)}">${statusLabel(g)}</span>
+              ${scorePill}
+            </div>
 
-          <div class="actions">
-            <button class="btn small primary" data-act="seen" data-id="${g.id}">Marcar como visto</button>
-            <button class="btn small star" data-act="fav" data-id="${g.id}">
-              ${state.fav.has(g.id) ? '★ Favorito' : '☆ Favoritar'}
-            </button>
-          </div>
+            <div class="actions">
+              <button class="btn small primary" data-act="seen" data-id="${g.id}">Marcar como visto</button>
+              <button class="btn small" data-act="fav" data-id="${g.id}">
+                ${state.fav.has(g.id) ? '★ Favorito' : '☆ Favoritar'}
+              </button>
+            </div>
 
-          ${state.showInsights ? cardInsights(g) : ``}
+            ${state.showInsights ? `
+              ${state.compact ? `` : `
+                <button class="collapseBtn" data-act="toggleInsightsCard" data-id="${g.id}">
+                  <span>${open ? 'Ocultar insights' : 'Ver insights'}</span>
+                  <span style="opacity:.7">${open ? '▲' : '▼'}</span>
+                </button>
+              `}
+              ${allowOpen && open ? insightsBlock(g) : ``}
+              ${state.compact ? `
+                <div class="section" style="opacity:.92">
+                  <div class="sectionHead"><h3>Insights</h3><span class="tag">compacto</span></div>
+                  <div class="miniNote">Modo compacto ligado. Desligue no Menu para ver abas de Odds/Mais-Menos/Forma.</div>
+                </div>
+              ` : ``}
+            ` : ``}
+          </div>
         </article>
       `;
     }
@@ -870,8 +980,8 @@
       const list = $('#list');
       const tips = [
         `Você está no filtro <b>${state.tab === 'date' ? 'Calendário' : state.tab === 'smart' ? 'Ao vivo + Próximos' : state.tab}</b>.`,
-        `Se “Hoje” estiver vazio, o <b>arquivo pode ter jogos de ontem</b> (igual seu print).`,
-        `A estética/UX já está pronta; quando os dados vierem certinho, vai ficar “app de loja”.`
+        `Se “Hoje” estiver vazio, o <b>arquivo pode estar com jogos de ontem</b> (igual seu print do JSON).`,
+        `Estética/UX ok — quando os dados vierem 100%, vira “app de loja”.`
       ].join('<br>');
 
       list.innerHTML = `
@@ -909,7 +1019,7 @@
 
       if(state.view === 'cfg'){
         list.innerHTML = `
-          <div class="card">
+          <div class="card"><div class="cardInner">
             <div class="match" style="font-size:22px">Configurações</div>
             <p class="sub">Em breve: alertas, ligas favoritas, notificações, modo PRO.</p>
             <div class="section">
@@ -921,7 +1031,7 @@
                 Rodando via GitHub Pages + GitHub Actions. Próximo passo: API paga + endpoints de odds/últimos jogos.
               </div>
             </div>
-          </div>
+          </div></div>
         `;
         return;
       }
@@ -967,6 +1077,16 @@
           render();
         };
       });
+
+      // toggle insights per card
+      $$('[data-act="toggleInsightsCard"]').forEach(b=>{
+        b.onclick = ()=>{
+          const id = Number(b.getAttribute('data-id'));
+          state.insightsOpen[id] = !(state.insightsOpen[id] ?? false);
+          saveLocal();
+          render();
+        };
+      });
     }
 
     /* ========= LOAD ========= */
@@ -982,9 +1102,19 @@
       return {live, todayCount, next24};
     }
 
+    function skeletonOn(){
+      const list = $('#list');
+      list.innerHTML = `
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      `;
+    }
+
     async function load(){
       const meta = $('#meta');
       meta.textContent = 'Carregando…';
+      skeletonOn();
 
       const url = `jogos.json?v=${Date.now()}`;
       const res = await fetch(url, {cache:'no-store'});
@@ -1005,8 +1135,7 @@
       render();
     }
 
-    /* ========= UI EVENTS ========= */
-    // chips
+    /* ========= UI ========= */
     $$('.chip').forEach(c=>{
       c.onclick = ()=>{
         state.tab = c.getAttribute('data-tab');
@@ -1020,7 +1149,6 @@
       };
     });
 
-    // search
     $('#q').addEventListener('input', (e)=>{
       state.q = e.target.value || '';
       render();
@@ -1032,7 +1160,6 @@
     };
     $('#refresh').onclick = load;
 
-    // bottom
     $('#goGames').onclick = ()=>{
       state.view = 'games';
       setBottomActive('games');
@@ -1049,7 +1176,6 @@
       render();
     };
 
-    // menu
     const modal = $('#modal');
     $('#openMenu').onclick = ()=> modal.classList.add('open');
     $('#closeMenu').onclick = ()=> modal.classList.remove('open');
@@ -1066,10 +1192,13 @@
 
     $('#cycleTheme').onclick = ()=> nextTheme();
 
-    // insights toggle
     function syncInsightsState(){
       $('#insightsState').textContent = state.showInsights ? 'ligado' : 'desligado';
     }
+    function syncCompactState(){
+      $('#compactState').textContent = state.compact ? 'ligado' : 'desligado';
+    }
+
     $('#toggleInsights').onclick = ()=>{
       state.showInsights = !state.showInsights;
       saveLocal();
@@ -1078,7 +1207,14 @@
       render();
     };
 
-    // calendário
+    $('#toggleCompact').onclick = ()=>{
+      state.compact = !state.compact;
+      saveLocal();
+      syncCompactState();
+      modal.classList.remove('open');
+      render();
+    };
+
     function highlightDatePills(){
       const t = todayYMD_SP();
       const tm = tomorrowYMD_SP();
@@ -1110,7 +1246,8 @@
     $('#datePick').value = state.selectedDate;
     highlightDatePills();
     syncInsightsState();
+    syncCompactState();
     load();
   </script>
 </body>
-</html>
+  </html>
