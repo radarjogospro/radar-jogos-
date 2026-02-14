@@ -1,242 +1,53 @@
-/**
- * jogos.js — gera jogos.json com ts (timestamp) confiável em BRT.
- * Foco: Ao vivo + Próximos (janela 1h..24h) funcionar correto no index.html.
- *
- * Requisitos:
- * - Secret: API_FOOTBALL_KEY (Settings > Secrets and variables > Actions)
- * - Node 18+ (GitHub Actions já tem)
- */
+name: Update jogos.json hourly
 
-const fs = require("fs");
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
 
-const API_BASE = "https://v3.football.api-sports.io";
-const TZ = "America/Sao_Paulo";
-const OUT_FILE = "jogos.json";
+permissions:
+  contents: write
 
-// Ajuste se quiser mais/menos jogos no FREE:
-const NEXT_COUNT = 120; // próximos X jogos (quanto maior, mais chance de estourar limite)
-const LIVE_ALL = true;  // true = pega jogos ao vivo também
+concurrency:
+  group: update-jogos
+  cancel-in-progress: true
 
-function nowBRTString() {
-  const d = new Date();
-  const dt = new Intl.DateTimeFormat("pt-BR", {
-    timeZone: TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(d);
-  return `${dt} BRT`;
-}
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-function ymdBRT(ts) {
-  // YYYY-MM-DD em BRT
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(ts * 1000));
-}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-function hmBRT(ts) {
-  // HH:MM em BRT
-  return new Intl.DateTimeFormat("pt-BR", {
-    timeZone: TZ,
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date(ts * 1000));
-}
+      - name: Install deps (if package.json exists)
+        run: |
+          if [ -f package.json ]; then
+            npm ci || npm install
+          else
+            echo "No package.json, skipping install."
+          fi
 
-function isLiveShort(short) {
-  const s = (short || "").toUpperCase();
-  return ["1H", "2H", "HT", "ET", "P", "LIVE"].includes(s);
-}
+      - name: Run update script
+        run: |
+          if [ -f update-jogos.js ]; then
+            node update-jogos.js
+          elif [ -f scripts/update-jogos.js ]; then
+            node scripts/update-jogos.js
+          else
+            echo "No update script found (update-jogos.js or scripts/update-jogos.js)."
+            exit 1
+          fi
 
-function safeJsonWrite(payload) {
-  fs.writeFileSync(OUT_FILE, JSON.stringify(payload, null, 2), "utf8");
-}
-
-async function apiGet(path, params, apiKey) {
-  const url = new URL(API_BASE + path);
-  Object.entries(params || {}).forEach(([k, v]) => {
-    if (v === undefined || v === null || v === "") return;
-    url.searchParams.set(k, String(v));
-  });
-
-  const res = await fetch(url.toString(), {
-    headers: {
-      "x-apisports-key": apiKey,
-      "accept": "application/json",
-    },
-  });
-
-  const text = await res.text();
-  let json = null;
-  try { json = JSON.parse(text); } catch { /* ignore */ }
-
-  if (!res.ok) {
-    const msg = json?.errors ? JSON.stringify(json.errors) : text?.slice(0, 200);
-    throw new Error(`HTTP ${res.status} em ${url.pathname}: ${msg}`);
-  }
-
-  if (json && json.errors && Object.keys(json.errors).length) {
-    throw new Error(`API errors: ${JSON.stringify(json.errors)}`);
-  }
-
-  return json;
-}
-
-function normalizeFixture(f) {
-  const ts = f?.fixture?.timestamp;
-  if (!ts || typeof ts !== "number") return null;
-
-  const home = f?.teams?.home?.name || "Casa";
-  const away = f?.teams?.away?.name || "Fora";
-  const league = f?.league?.name || "Liga";
-  const country = f?.league?.country || "World";
-  const statusShort = f?.fixture?.status?.short || "NS";
-  const statusLong = f?.fixture?.status?.long || statusShort;
-  const goalsHome = (typeof f?.goals?.home === "number") ? f.goals.home : null;
-  const goalsAway = (typeof f?.goals?.away === "number") ? f.goals.away : null;
-
-  return {
-    // Campos que o index.html já entende:
-    id: f?.fixture?.id || undefined,
-    home,
-    away,
-    league,
-    country,
-
-    // IMPORTANTÍSSIMO: ts confiável
-    ts,
-
-    // Também deixamos date/time em BRT para debug/compat:
-    date: ymdBRT(ts),
-    time: hmBRT(ts),
-
-    // Status (o index já usa isso)
-    status: statusShort,
-    statusLong,
-
-    // "ao vivo" e placar (o index mostra placar só se live)
-    live: isLiveShort(statusShort),
-    score: (goalsHome !== null && goalsAway !== null) ? { home: goalsHome, away: goalsAway } : null,
-
-    // Placeholder para odds/probs (API paga depois)
-    probs: null,
-  };
-}
-
-function dedupeById(games) {
-  const seen = new Set();
-  const out = [];
-  for (const g of games) {
-    const k = g.id ? String(g.id) : `${g.home}|${g.away}|${g.league}|${g.ts}`;
-    if (seen.has(k)) continue;
-    seen.add(k);
-    out.push(g);
-  }
-  return out;
-}
-
-function filterWindow(games) {
-  // Aqui já deixamos o JSON "limpo":
-  // mantém ao vivo + próximos 24h + um pequeno "buffer" de 2h pra trás (caso algum live venha sem flag)
-  const now = Math.floor(Date.now() / 1000);
-  const past = now - (2 * 3600);
-  const future = now + (24 * 3600);
-
-  return games.filter(g => {
-    if (g.live) return true;
-    return g.ts >= past && g.ts <= future;
-  });
-}
-
-async function main() {
-  const apiKey = process.env.API_FOOTBALL_KEY;
-
-  // Se não tiver key, não derruba o site:
-  if (!apiKey) {
-    safeJsonWrite({
-      updatedAt: nowBRTString(),
-      source: "API-Football",
-      warning: "Faltando secret API_FOOTBALL_KEY. Configure em Settings > Secrets and variables > Actions.",
-      games: [],
-    });
-    console.log("Sem API_FOOTBALL_KEY. jogos.json gerado vazio (sem falhar).");
-    return;
-  }
-
-  const all = [];
-
-  // 1) Próximos jogos (pega em ordem cronológica)
-  // endpoint: /fixtures?next=...
-  try {
-    const nextData = await apiGet("/fixtures", { next: NEXT_COUNT, timezone: TZ }, apiKey);
-    const fixtures = nextData?.response || [];
-    for (const f of fixtures) {
-      const g = normalizeFixture(f);
-      if (g) all.push(g);
-    }
-  } catch (e) {
-    console.log("Falha ao buscar next fixtures:", e.message);
-  }
-
-  // 2) Ao vivo (se existir)
-  // endpoint: /fixtures?live=all
-  if (LIVE_ALL) {
-    try {
-      const liveData = await apiGet("/fixtures", { live: "all", timezone: TZ }, apiKey);
-      const fixtures = liveData?.response || [];
-      for (const f of fixtures) {
-        const g = normalizeFixture(f);
-        if (g) all.push(g);
-      }
-    } catch (e) {
-      console.log("Falha ao buscar live fixtures:", e.message);
-    }
-  }
-
-  let games = dedupeById(all);
-
-  // Ordena por ts e filtra só janela útil (evita jogos antigos poluindo)
-  games.sort((a, b) => (a.ts - b.ts));
-  games = filterWindow(games);
-
-  // Meta útil pra UI
-  const now = Math.floor(Date.now() / 1000);
-  const today = ymdBRT(now);
-  const todayCount = games.filter(g => ymdBRT(g.ts) === today).length;
-  const next24 = games.filter(g => g.ts >= now && g.ts <= now + 24 * 3600 && !g.live).length;
-  const liveCount = games.filter(g => g.live).length;
-
-  safeJsonWrite({
-    updatedAt: nowBRTString(),
-    source: "API-Football",
-    meta: {
-      timezone: "BRT",
-      today,
-      todayCount,
-      next24,
-      liveCount,
-      rawCount: games.length,
-    },
-    games,
-  });
-
-  console.log(`OK: jogos.json gerado. games=${games.length} live=${liveCount} next24=${next24} today=${todayCount}`);
-}
-
-main().catch((err) => {
-  // Não derruba o Actions: gera JSON com erro e sai sem quebrar o Pages
-  safeJsonWrite({
-    updatedAt: nowBRTString(),
-    source: "API-Football",
-    error: String(err?.message || err),
-    games: [],
-  });
-  console.log("Erro fatal:", err);
-});
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add jogos.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update jogos.json"
+          git push
