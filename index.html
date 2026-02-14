@@ -59,7 +59,7 @@
       backdrop-filter: blur(10px);
     }
 
-    /* ===== TOP HEADER (estilo print) ===== */
+    /* ===== TOP HEADER ===== */
     .topHeader{
       position: sticky;
       top: 0;
@@ -93,9 +93,11 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      max-width: 150px;
+      max-width: 160px;
       line-height: 1.1;
     }
+
+    /* ✅ TOPO LIMPO: apenas "Online" (sem v/checagem) */
     .brandSub{
       display:flex; align-items:center; gap:8px;
       color: var(--muted);
@@ -128,21 +130,8 @@
     }
     .iconBtn:active{ transform: scale(.98); }
 
-    .btnWhite{
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.92);
-      color: rgba(0,0,0,.88);
-      font-weight: 1000;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-      user-select:none;
-      white-space:nowrap;
-      font-size: var(--fsBody);
-    }
     .btnPink{
-      padding: 10px 12px;
+      padding: 10px 14px;
       border-radius: 14px;
       border: 1px solid rgba(255,45,122,.45);
       background: linear-gradient(180deg, rgba(255,45,122,.90), rgba(199,31,95,.78));
@@ -154,9 +143,9 @@
       white-space:nowrap;
       font-size: var(--fsBody);
     }
-    .btnWhite:active,.btnPink:active{ transform: scale(.98); }
+    .btnPink:active{ transform: scale(.98); }
 
-    /* ===== SPORTS TABS (linha com ícones) ===== */
+    /* ===== SPORTS TABS ===== */
     .sportsRow{
       margin-top: 12px;
       display:flex; gap:12px;
@@ -277,6 +266,7 @@
     }
 
     .filterRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
     .chip{
       padding: 10px 12px;
       border-radius: 999px;
@@ -554,7 +544,7 @@
       font-size: var(--fsBody);
     }
 
-    /* ===== BOTTOM NAV (sequência igual) ===== */
+    /* ===== BOTTOM NAV ===== */
     .bottomNav{
       position: fixed;
       left: 50%;
@@ -629,7 +619,6 @@
 
     @media (max-width: 420px){
       .brandTitle{ max-width: 120px; }
-      .btnWhite{ display:none; } /* se apertar muito, some "CADASTRE-SE" */
       .banner{ min-width: 92%; }
     }
   </style>
@@ -643,13 +632,9 @@
         <div class="logoMark">RD</div>
         <div class="brandInfo">
           <div class="brandTitle">Radar PRO</div>
-          <!-- ✅ sem sobrepor: versão/checagem compactas aqui embaixo -->
           <div class="brandSub">
             <span class="dot"></span>
             <span>Online</span>
-            <span style="opacity:.55;">v2.4.2</span>
-            <span style="opacity:.55;">•</span>
-            <span id="checkTxt" style="opacity:.85;">Checagem: —</span>
           </div>
         </div>
       </div>
@@ -657,7 +642,6 @@
       <div class="topRight">
         <button class="iconBtn" id="openMenu" aria-label="Menu">⋮</button>
         <button class="iconBtn" id="icoGift" aria-label="Bônus">🎁</button>
-        <button class="btnWhite" id="signupBtn">CADASTRE-SE</button>
         <button class="btnPink" id="loginBtn">ENTRAR</button>
       </div>
     </div>
@@ -672,10 +656,10 @@
       <div class="sportTab" data-sport="virtual"><div class="sportIcon">🕹️</div><div>Virtuais</div></div>
     </div>
 
-    <!-- BANNERS (por aba) -->
+    <!-- BANNERS -->
     <div class="bannerRow" id="bannerRow"></div>
 
-    <!-- CONTEÚDO DINÂMICO (por página) -->
+    <!-- PÁGINAS -->
     <div id="pageHome">
       <div class="sectionTitle">Quente agora</div>
       <div class="list" id="hotList"></div>
@@ -703,7 +687,7 @@
           <button class="btn" id="infoBtn">Info</button>
         </div>
 
-        <div class="meta" id="meta">Carregando…</div>
+        <div class="meta" id="metaLive">Carregando…</div>
 
         <div class="sortRow">
           <div class="sortBtn" id="sortBtn">
@@ -743,7 +727,7 @@
           <button class="btn" id="infoBtn2">Info</button>
         </div>
 
-        <div class="meta" id="meta2">Carregando…</div>
+        <div class="meta" id="metaGames">Carregando…</div>
 
         <div class="sortRow">
           <div class="sortBtn" id="sortBtn2">
@@ -803,13 +787,15 @@
         <div class="menuItem" id="menuGoLive"><span>🔴 Ao vivo</span><small>live limpo</small></div>
         <div class="menuItem" id="menuGoGames"><span>🏟️ Jogos</span><small>próximas 24h</small></div>
         <div class="menuItem" id="menuGoPro"><span>💎 Plano PRO</span><small>vantagens</small></div>
+        <div class="menuItem" id="menuAbout"><span>ℹ️ Sobre</span><small>versão e fonte</small></div>
       </div>
     </div>
   </div>
 
   <script>
     const TZ = "America/Sao_Paulo";
-    const LS_KEY = "rjpro_state_v242";
+    const APP_VERSION = "v2.4.3";
+    const LS_KEY = "rjpro_state_v243";
 
     const state = {
       page: "home",          // home | live | games | pro
@@ -874,7 +860,7 @@
       return st === "FT" || st === "AET" || st === "PEN";
     }
 
-    // ✅ Anti-“154’” no FREE: se passar de limite absurdo, cai fora do live
+    // ✅ Anti-“jogo infinito” (FREE)
     function isLikelyStaleLive(g){
       const st = (g.status||"").toUpperCase();
       const k = getKickoffMs(g);
@@ -883,13 +869,11 @@
       const now = Date.now();
       const ageMin = (now - k) / 60000;
 
-      // status comuns de live
       const liveSet = ["1H","2H","HT","ET","BT","P","LIVE","IN_PLAY"];
       if(!liveSet.includes(st) && !(typeof g.elapsed === "number")) return false;
 
-      // hard caps (pra não vender live “bugado”)
-      if(st !== "ET" && ageMin >= 140) return true;   // jogo normal
-      if(st === "ET" && ageMin >= 220) return true;   // prorrogação
+      if(st !== "ET" && ageMin >= 140) return true;
+      if(st === "ET" && ageMin >= 220) return true;
       return false;
     }
 
@@ -911,7 +895,6 @@
 
       const now = Date.now();
       let mins = Math.max(0, Math.floor((now - k) / 60000));
-      // cap visual (pra não aparecer 154’)
       mins = Math.min(mins, 130);
 
       if(typeof g.elapsed === "number") return Math.min(Math.max(g.elapsed, mins), 130);
@@ -954,19 +937,51 @@
       return hay.includes(qq);
     }
 
+    // ✅ Fetch robusto + fallback de chave
     async function loadJogosJson(force=false){
       const bust = force ? `?t=${Date.now()}` : "";
-      const res = await fetch("jogos.json"+bust, { cache: "no-store" });
-      if(!res.ok) throw new Error("Falha ao carregar jogos.json");
-      data = await res.json();
-      allGames = Array.isArray(data.games) ? data.games : [];
+      const tries = [
+        `./jogos.json${bust}`,
+        `jogos.json${bust}`
+      ];
+
+      let lastErr = null;
+      for(const url of tries){
+        try{
+          const res = await fetch(url, { cache: "no-store" });
+          if(!res.ok) throw new Error(`HTTP ${res.status}`);
+          const j = await res.json();
+          data = j;
+
+          // ✅ aceita vários formatos
+          const arr =
+            (Array.isArray(j.games) && j.games) ||
+            (Array.isArray(j.fixtures) && j.fixtures) ||
+            (Array.isArray(j.matches) && j.matches) ||
+            [];
+
+          allGames = arr;
+          return;
+        }catch(e){
+          lastErr = e;
+        }
+      }
+      data = null;
+      allGames = [];
+      throw lastErr || new Error("Falha ao carregar jogos.json");
     }
 
-    function updateMeta(){
-      $("checkTxt").textContent = `Checagem: ${new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(new Date())}`;
+    function nowClock(){
+      return new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(new Date());
+    }
 
-      const upd = data?.updatedAt || "—";
-      const src = data?.source || "—";
+    function metaHTML(){
+      if(!data){
+        return `Sem dados. <b>Clique em Atualizar</b>.`;
+      }
+
+      const upd = data.updatedAt || "—";
+      const src = data.source || "—";
       const now = Date.now();
 
       let liveClean=0, todayCount=0, next24=0;
@@ -979,12 +994,15 @@
         if(k && k >= now && k <= (now + 24*3600*1000)) next24++;
       }
 
-      const metaHTML =
+      return (
         `Atualizado: <b>${upd}</b> • Fonte: <b>${src}</b><br>` +
-        `Jogos: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo (limpo): <b>${liveClean}</b>`;
+        `Jogos: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo (limpo): <b>${liveClean}</b>`
+      );
+    }
 
-      if($("meta")) $("meta").innerHTML = metaHTML;
-      if($("meta2")) $("meta2").innerHTML = metaHTML;
+    function updateMeta(){
+      if($("metaLive")) $("metaLive").innerHTML = metaHTML();
+      if($("metaGames")) $("metaGames").innerHTML = metaHTML();
     }
 
     function popularityScore(g){
@@ -1185,28 +1203,26 @@
     }
 
     function pickHotNow(){
-      // “Quente agora”: pega os ao vivo mais relevantes e devolve poucos
       const live = allGames.filter(isLiveGame);
       const ordered = sortList(live, "popular");
       return ordered.slice(0, 6);
     }
 
     function renderHome(){
-      const hot = pickHotNow();
       const root = $("hotList");
       root.innerHTML = "";
 
       if(!data){
-        root.innerHTML = `<div class="empty">Sem dados ainda. Clique em Atualizar no Ao vivo/Jogos.</div>`;
+        root.innerHTML = `<div class="empty">Sem dados ainda. Vá em “Ao vivo” ou “Jogos” e clique em <b>Atualizar</b>.</div>`;
         return;
       }
 
+      const hot = pickHotNow();
       if(hot.length === 0){
         root.innerHTML = `<div class="empty">Nada ao vivo agora. Vá em “Jogos” para ver as próximas partidas.</div>`;
         return;
       }
 
-      // sem agrupamento no “Quente agora” (igual vibe do print)
       hot.forEach(g => root.appendChild(renderMatch(g)));
     }
 
@@ -1263,11 +1279,22 @@
       }
     }
 
+    function setRegionChipsUI(){
+      // LIVE
+      if($("chipBrazil")) $("chipBrazil").classList.toggle("active", state.region==="brazil");
+      if($("chipEurope")) $("chipEurope").classList.toggle("active", state.region==="europe");
+      if($("chipAll")) $("chipAll").classList.toggle("active", state.region==="all");
+      // GAMES
+      if($("chipBrazil2")) $("chipBrazil2").classList.toggle("active", state.region==="brazil");
+      if($("chipEurope2")) $("chipEurope2").classList.toggle("active", state.region==="europe");
+      if($("chipAll2")) $("chipAll2").classList.toggle("active", state.region==="all");
+    }
+
     function renderBanners(){
       const row = $("bannerRow");
       row.innerHTML = "";
 
-      const makeBanner = (tag, title, sub, ctaText) => {
+      const makeBanner = (tag, title, sub, ctaText, onClick) => {
         const el = document.createElement("div");
         el.className = "banner";
         el.innerHTML = `
@@ -1280,27 +1307,30 @@
             <button class="bannerCta">${ctaText}</button>
           </div>
         `;
-        el.querySelector(".bannerCta").onclick = () => {
-          alert(`${title}\n\n(Aqui depois a gente liga a ação real.)`);
-        };
+        el.querySelector(".bannerCta").onclick = onClick;
         return el;
       };
 
       if(state.page === "home"){
-        row.appendChild(makeBanner("🔥 Destaque", "Quente agora", "Os jogos mais relevantes ao vivo (limpos).", "Ver ao vivo"));
-        row.appendChild(makeBanner("✨ PRO", "Alertas inteligentes", "Receba aviso quando bater tendência.", "Saiba mais"));
+        row.appendChild(makeBanner("🔥 Destaque", "Quente agora", "Os jogos mais relevantes ao vivo (limpos).", "Ver ao vivo", () => showPage("live")));
+        row.appendChild(makeBanner("🗓️ Próximos", "Agenda rápida", "Veja as próximas 24h com filtros.", "Ir pra Jogos", () => showPage("games")));
       } else if(state.page === "live"){
-        row.appendChild(makeBanner("🔴 Ao vivo", "Live minuto-a-minuto", "Atualiza e evita “jogo infinito”.", "Atualizar"));
-        row.appendChild(makeBanner("✅ Limpo", "Failsafe FREE", "Se travar, tiramos do live.", "Entendi"));
+        row.appendChild(makeBanner("🔴 Ao vivo", "Live minuto-a-minuto", "Atualiza e evita “jogo infinito”.", "Atualizar", async () => {
+          await doRefresh("live");
+        }));
+        row.appendChild(makeBanner("💎 PRO", "Mercados extras", "Over/Under/BTTS reais no PRO.", "Ver PRO", () => showPage("pro")));
       } else if(state.page === "games"){
-        row.appendChild(makeBanner("🗓️ Próximos", "Próximas 24h", "Filtre por país/ligas e encontre rápido.", "Buscar"));
-        row.appendChild(makeBanner("💎 PRO", "Mercados extras", "Over/Under/BTTS reais no PRO.", "Ver PRO"));
+        row.appendChild(makeBanner("🗓️ Próximos", "Próximas 24h", "Filtre por país/ligas e encontre rápido.", "Buscar", () => {
+          const inp = $("qGames"); if(inp){ inp.focus(); inp.scrollIntoView({behavior:"smooth", block:"center"}); }
+        }));
+        row.appendChild(makeBanner("✅ Dica", "Não aparece nada?", "Clique em Atualizar e teste “Todos”.", "Atualizar", async () => {
+          await doRefresh("games");
+        }));
       } else {
-        row.appendChild(makeBanner("💎 Plano PRO", "Venda pronta", "Conta + assinatura entram na fase 2.", "Quero PRO"));
-        row.appendChild(makeBanner("📌 Roadmap", "Login e pagamento", "Supabase/Firebase + Pix/Cartão.", "Como funciona"));
+        row.appendChild(makeBanner("💎 Plano PRO", "Venda pronta", "Conta + assinatura entram na fase 2.", "Quero PRO", () => alert("Checkout PRO: fase 2 (Pix/Cartão).")));
+        row.appendChild(makeBanner("📌 Roadmap", "Login e pagamento", "Supabase/Firebase + Pix/Cartão.", "Como funciona", () => alert("Fase 2: conta + assinatura + recursos PRO.")));
       }
 
-      // scroll suave inicial
       row.scrollLeft = 0;
     }
 
@@ -1321,17 +1351,14 @@
       renderBanners();
       renderAll();
 
-      // auto timers só nas páginas necessárias
-      if(page === "live" && state.autoLive) startAutoLive();
-      else stopAutoLive();
-
-      if(page === "games" && state.autoGames) startAutoGames();
-      else stopAutoGames();
+      if(page === "live" && state.autoLive) startAutoLive(); else stopAutoLive();
+      if(page === "games" && state.autoGames) startAutoGames(); else stopAutoGames();
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function renderAll(){
+      setRegionChipsUI();
       updateMeta();
       renderHome();
       if(state.page==="live") renderLive();
@@ -1377,6 +1404,21 @@
     }
     function stopAutoGames(){ if(autoTimerGames) clearInterval(autoTimerGames); autoTimerGames = null; }
 
+    async function doRefresh(where){
+      const btn = (where==="live") ? $("refreshBtn") : $("refreshBtn2");
+      const listId = (where==="live") ? "listLive" : "listGames";
+
+      if(btn) btn.textContent = "Atualizando…";
+      try{
+        await loadJogosJson(true);
+        renderAll();
+      }catch(e){
+        renderEmpty(listId, `Erro ao atualizar dados.<br><small style="opacity:.8">(${escapeHtml(e?.message || "falha")})</small>`);
+      }finally{
+        if(btn) btn.textContent = "Atualizar";
+      }
+    }
+
     function wire(){
       // nav
       $("navHome").onclick = () => showPage("home");
@@ -1394,23 +1436,27 @@
       $("menuGoGames").onclick = () => { $("menuOverlay").classList.remove("show"); showPage("games"); };
       $("menuGoPro").onclick  = () => { $("menuOverlay").classList.remove("show"); showPage("pro"); };
 
-      // topo (cadastro/entrar placeholders)
-      $("signupBtn").onclick = () => alert("Cadastro: fase 2 (conta).");
+      $("menuAbout").onclick = () => {
+        const upd = data?.updatedAt || "—";
+        const src = data?.source || "—";
+        alert(`Radar PRO ${APP_VERSION}\nChecagem: ${nowClock()}\nFonte: ${src}\nAtualizado: ${upd}\nJogos carregados: ${allGames.length}`);
+      };
+
+      // topo
       $("loginBtn").onclick = () => alert("Entrar: fase 2 (conta).");
       $("icoGift").onclick = () => alert("Bônus/novidades: placeholder.");
 
-      // sports tabs (visual)
+      // sports tabs (apenas visual por enquanto)
       document.querySelectorAll(".sportTab").forEach(tab=>{
         tab.onclick = () => {
           document.querySelectorAll(".sportTab").forEach(x=>x.classList.remove("active"));
           tab.classList.add("active");
           state.sport = tab.getAttribute("data-sport") || "all";
           saveState();
-          // por enquanto só UI, sem filtrar esportes
         };
       });
 
-      // LIVE page
+      // LIVE: filtros
       $("qLive").addEventListener("input", () => { state.qLive = $("qLive").value; saveState(); renderAll(); });
       $("clearLive").onclick = () => { state.qLive=""; $("qLive").value=""; saveState(); renderAll(); };
 
@@ -1418,12 +1464,7 @@
       $("chipEurope").onclick = () => { state.region="europe"; saveState(); renderAll(); };
       $("chipAll").onclick = () => { state.region="all"; saveState(); renderAll(); };
 
-      $("refreshBtn").onclick = async () => {
-        $("refreshBtn").textContent = "Atualizando…";
-        try{ await loadJogosJson(true); renderAll(); }
-        catch(e){ renderEmpty("listLive","Erro ao atualizar dados."); }
-        finally{ $("refreshBtn").textContent = "Atualizar"; }
-      };
+      $("refreshBtn").onclick = async () => doRefresh("live");
 
       $("autoBtn").onclick = () => {
         state.autoLive = !state.autoLive;
@@ -1443,13 +1484,13 @@
       $("infoBtn").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar PRO v2.4.2\nFonte: ${src}\nAtualizado: ${upd}\n\n• Live “limpo”: remove jogos com tempo absurdo no FREE\n• PRO: conta + assinatura (fase 2).`);
+        alert(`Radar PRO ${APP_VERSION}\nChecagem: ${nowClock()}\nFonte: ${src}\nAtualizado: ${upd}\n\n• Live “limpo”: remove jogos com tempo absurdo no FREE\n• PRO: conta + assinatura (fase 2).`);
       };
 
       $("icoSettings").onclick = () => alert("Configurações: mais pra frente.");
       $("icoTune").onclick = () => alert("Filtros avançados: mais pra frente.");
 
-      // GAMES page
+      // GAMES
       $("qGames").addEventListener("input", () => { state.qGames = $("qGames").value; saveState(); renderAll(); });
       $("clearGames").onclick = () => { state.qGames=""; $("qGames").value=""; saveState(); renderAll(); };
 
@@ -1457,12 +1498,7 @@
       $("chipEurope2").onclick = () => { state.region="europe"; saveState(); renderAll(); };
       $("chipAll2").onclick = () => { state.region="all"; saveState(); renderAll(); };
 
-      $("refreshBtn2").onclick = async () => {
-        $("refreshBtn2").textContent = "Atualizando…";
-        try{ await loadJogosJson(true); renderAll(); }
-        catch(e){ renderEmpty("listGames","Erro ao atualizar dados."); }
-        finally{ $("refreshBtn2").textContent = "Atualizar"; }
-      };
+      $("refreshBtn2").onclick = async () => doRefresh("games");
 
       $("autoBtn2").onclick = () => {
         state.autoGames = !state.autoGames;
@@ -1482,7 +1518,7 @@
       $("infoBtn2").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar PRO v2.4.2\nFonte: ${src}\nAtualizado: ${upd}\n\n• Jogos: próximas 24h\n• Ordenação: horário ou popular.`);
+        alert(`Radar PRO ${APP_VERSION}\nChecagem: ${nowClock()}\nFonte: ${src}\nAtualizado: ${upd}\n\n• Jogos: próximas 24h\n• Ordenação: horário ou popular.`);
       };
 
       $("icoSettings2").onclick = () => alert("Configurações: mais pra frente.");
@@ -1490,7 +1526,7 @@
 
       // PRO
       $("proBuy").onclick = () => alert("Checkout PRO: fase 2 (Pix/Cartão).");
-      $("proHow").onclick = () => alert("PRO: conta + assinatura + recursos. Vamos ligar depois que o layout estiver 100%.");
+      $("proHow").onclick = () => alert("Fase 2: conta + assinatura + recursos PRO.");
     }
 
     (async function init(){
@@ -1507,7 +1543,6 @@
       $("qLive").value = state.qLive || "";
       $("qGames").value = state.qGames || "";
 
-      // botões auto status
       $("autoBtn").textContent = `Auto: ${state.autoLive ? "ON" : "OFF"}`;
       $("autoBtn").classList.toggle("primary", state.autoLive);
 
@@ -1519,18 +1554,15 @@
 
       wire();
 
-      try{ await loadJogosJson(false); }catch(e){}
-      renderBanners();
-      renderAll();
+      try{
+        await loadJogosJson(false);
+      }catch(e){
+        // deixa UI pronta mesmo se falhar
+      }
+
       startTicker();
-
-      // abre na última página usada
       showPage(state.page);
-
-      // auto conforme página
-      if(state.page==="live" && state.autoLive) startAutoLive();
-      if(state.page==="games" && state.autoGames) startAutoGames();
     })();
   </script>
 </body>
-</html>
+      </html>
