@@ -1,126 +1,196 @@
 /**
- * update-jogos.js (API-Football)
- * Gera jogos.json no fuso America/Sao_Paulo (BRT) e com timestamp para filtros por janela (1h/2h/...).
+ * Gera jogos.json (BRT) com:
+ * - fixtures de HOJE e AMANHÃ (BRT)
+ * - jogos AO VIVO (live=all)
+ * - kickoffTs (timestamp), placar quando ao vivo e status
  *
- * Requisitos:
- * - Secret/ENV: API_FOOTBALL_KEY
- *
- * Observação:
- * - No plano FREE, é normal a API limitar endpoints/retornos dependendo do seu plano.
+ * Requer Secret: API_FOOTBALL_KEY
  */
 
 const fs = require("fs");
 
-const API_KEY = process.env.API_FOOTBALL_KEY || process.env.API_FOOTBALL_TOKEN || "";
 const TZ = "America/Sao_Paulo";
-const BASE = "https://v3.football.api-sports.io";
+const API_BASE = "https://v3.football.api-sports.io";
+const API_KEY = process.env.API_FOOTBALL_KEY || "";
 
-function pad(n) {
-  return String(n).padStart(2, "0");
+if (!API_KEY) {
+  console.error("❌ Missing API_FOOTBALL_KEY. Configure em Settings > Secrets > Actions.");
+  process.exit(1);
 }
 
-// Data no fuso BRT usando Intl (sem libs)
-function getDatePartsInTZ(date, timeZone) {
+function brtNowParts() {
   const fmt = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
+    timeZone: TZ,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
   });
+
   // en-CA -> YYYY-MM-DD
-  const ymd = fmt.format(date);
-  const [year, month, day] = ymd.split("-").map(Number);
-  return { year, month, day, ymd };
+  const parts = fmt.formatToParts(new Date()).reduce((acc, p) => {
+    acc[p.type] = p.value;
+    return acc;
+  }, {});
+
+  const date = `${parts.year}-${parts.month}-${parts.day}`;
+  const time = `${parts.hour}:${parts.minute}:${parts.second}`;
+  return { date, time };
 }
 
-function addDays(ymd, days) {
-  const [y, m, d] = ymd.split("-").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  dt.setUTCDate(dt.getUTCDate() + days);
-  const yy = dt.getUTCFullYear();
-  const mm = pad(dt.getUTCMonth() + 1);
-  const dd = pad(dt.getUTCDate());
+function addDaysYYYYMMDD(dateStr, days) {
+  // cria data base em UTC "meio-dia" pra evitar bugs de DST
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const base = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  base.setUTCDate(base.getUTCDate() + days);
+  const yy = base.getUTCFullYear();
+  const mm = String(base.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(base.getUTCDate()).padStart(2, "0");
   return `${yy}-${mm}-${dd}`;
 }
 
-async function apiFetch(path) {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: {
-      "x-apisports-key": API_KEY,
-      accept: "application/json",
-    },
-  });
+function formatBRTFromTimestampSec(tsSec) {
+  const dt = new Date(tsSec * 1000);
+  const fmtDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(dt);
 
-  const text = await res.text();
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch (e) {
-    throw new Error(`Resposta não-JSON da API: ${text.slice(0, 200)}`);
-  }
+  const fmtTime = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: TZ,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(dt);
 
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status}: ${JSON.stringify(data).slice(0, 300)}`);
-  }
-
-  // Alguns erros vêm com { errors: {...} }
-  if (data?.errors && Object.keys(data.errors).length) {
-    throw new Error(`API errors: ${JSON.stringify(data.errors)}`);
-  }
-
-  return data;
+  return { date: fmtDate, time: fmtTime };
 }
 
-function normalizeFixture(fx) {
+async function apiGet(path, qs = {}) {
+  const url = new URL(API_BASE + path);
+  for (const [k, v] of Object.entries(qs)) url.searchParams.set(k, String(v));
+
+  // retry simples (rate/instabilidade)
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const res = await fetch(url.toString(), {
+      headers: {
+        "x-apisports-key": API_KEY,
+      },
+    });
+
+    if (res.ok) return res.json();
+
+    const txt = await res.text().catch(() => "");
+    console.warn(`⚠️ API ${res.status} attempt ${attempt}: ${txt.slice(0, 120)}`);
+
+    if (attempt < 3) await new Promise((r) => setTimeout(r, 800 * attempt));
+  }
+
+  throw new Error("API request failed after retries.");
+}
+
+function normalizeStatusShort(short) {
+  // API-Football costuma trazer: NS, 1H, HT, 2H, FT, AET, PEN, PST, CANC...
+  if (!short) return "UNK";
+  return String(short).toUpperCase();
+}
+
+function mapFixtureToGame(fx) {
   const fixture = fx.fixture || {};
-  const league = fx.league || {};
   const teams = fx.teams || {};
+  const league = fx.league || {};
   const goals = fx.goals || {};
   const score = fx.score || {};
 
-  // API-Football costuma trazer timestamp em seconds
-  const kickoffTs = fixture.timestamp ? fixture.timestamp * 1000 : null;
+  const id = fixture.id;
+  const ts = fixture.timestamp; // segundos UTC
+  const statusShort = fixture.status?.short;
+  const status = normalizeStatusShort(statusShort);
 
-  // “date” vem em ISO (UTC). Mantemos também.
-  const kickoffISO = fixture.date || null;
+  const isLive = ["1H", "2H", "HT", "ET", "BT", "P"].includes(status) || fx?.fixture?.status?.long?.toLowerCase?.().includes("live");
 
-  // Status (FT, HT, NS, 1H, 2H etc)
-  const statusShort = fixture.status?.short || "";
-  const statusLong = fixture.status?.long || "";
+  const brt = ts ? formatBRTFromTimestampSec(ts) : { date: null, time: null };
+
+  const homeName = teams.home?.name || "Home";
+  const awayName = teams.away?.name || "Away";
+
+  // Placar: em live geralmente goals.home/goals.away; em FT também
+  const homeGoals = typeof goals.home === "number" ? goals.home : null;
+  const awayGoals = typeof goals.away === "number" ? goals.away : null;
+
+  // elapsed/minutos
+  const elapsed = fixture.status?.elapsed ?? null;
 
   return {
-    id: fixture.id || null,
-    home: teams.home?.name || "Home",
-    away: teams.away?.name || "Away",
+    id,
+    home: homeName,
+    away: awayName,
     league: league.name || "",
     country: league.country || "",
-    // Para filtro e exibição correta:
-    kickoffTs,      // timestamp (ms)
-    kickoffISO,     // iso original
-    // Para exibir placar:
-    goalsHome: Number.isFinite(goals.home) ? goals.home : null,
-    goalsAway: Number.isFinite(goals.away) ? goals.away : null,
-    status: statusShort || "",
-    statusLong: statusLong || "",
-    // extras úteis
-    round: league.round || "",
-    season: league.season || null,
+    date: brt.date || "",
+    time: brt.time || "",
+    kickoffTs: ts ? ts * 1000 : null, // ms
+    status,
+    isLive: !!isLive,
+    elapsed,
+    scoreHome: homeGoals,
+    scoreAway: awayGoals,
   };
 }
 
-function isLiveStatus(short) {
-  // API-Football: 1H, 2H, HT, ET, BT, P, LIVE etc. (varia)
-  const liveSet = new Set(["1H", "2H", "HT", "ET", "BT", "P", "LIVE"]);
-  return liveSet.has(short);
+function uniqById(games) {
+  const map = new Map();
+  for (const g of games) {
+    if (!g?.id) continue;
+    // se já existe, preferir o que tem live/placar
+    const prev = map.get(g.id);
+    if (!prev) map.set(g.id, g);
+    else {
+      const prevScore = prev.scoreHome !== null || prev.scoreAway !== null;
+      const newScore = g.scoreHome !== null || g.scoreAway !== null;
+      if (newScore && !prevScore) map.set(g.id, g);
+      else if (g.isLive && !prev.isLive) map.set(g.id, g);
+      else map.set(g.id, { ...prev, ...g });
+    }
+  }
+  return [...map.values()];
 }
 
-function isFinalStatus(short) {
-  const finalSet = new Set(["FT", "AET", "PEN"]);
-  return finalSet.has(short);
-}
+async function main() {
+  const { date: todayBRT } = brtNowParts();
+  const tomorrowBRT = addDaysYYYYMMDD(todayBRT, 1);
 
-function toUpdatedAtBRT(now = new Date()) {
-  const fmt = new Intl.DateTimeFormat("pt-BR", {
+  // 1) HOJE e AMANHÃ (BRT) — garante “próximas 1h/2h/...”
+  const [todayData, tomorrowData] = await Promise.all([
+    apiGet("/fixtures", { date: todayBRT }),
+    apiGet("/fixtures", { date: tomorrowBRT }),
+  ]);
+
+  // 2) AO VIVO
+  let liveData = { response: [] };
+  try {
+    liveData = await apiGet("/fixtures", { live: "all" });
+  } catch (e) {
+    console.warn("⚠️ live=all falhou (ok no FREE às vezes). Seguindo sem live extra.");
+  }
+
+  const raw = [
+    ...(todayData?.response || []),
+    ...(tomorrowData?.response || []),
+    ...(liveData?.response || []),
+  ];
+
+  const mapped = raw.map(mapFixtureToGame);
+  const games = uniqById(mapped)
+    .filter((g) => g.kickoffTs) // remove sem timestamp
+    .sort((a, b) => a.kickoffTs - b.kickoffTs);
+
+  const updatedAt = new Intl.DateTimeFormat("pt-BR", {
     timeZone: TZ,
     year: "numeric",
     month: "2-digit",
@@ -128,76 +198,19 @@ function toUpdatedAtBRT(now = new Date()) {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-  });
-  // "dd/mm/aaaa hh:mm"
-  const str = fmt.format(now).replace(",", "");
-  return `${str} BRT`;
-}
-
-async function main() {
-  if (!API_KEY) {
-    console.error("ERRO: faltou API_FOOTBALL_KEY (Secrets/ENV).");
-    process.exit(1);
-  }
-
-  const now = new Date();
-  const { ymd: todayBRT } = getDatePartsInTZ(now, TZ);
-  const tomorrowBRT = addDays(todayBRT, 1);
-
-  // 2 chamadas (HOJE + AMANHÃ) no fuso BRT
-  // Importante: timezone=America/Sao_Paulo para a API já devolver horários ajustados
-  const pathToday = `/fixtures?date=${todayBRT}&timezone=${encodeURIComponent(TZ)}`;
-  const pathTomorrow = `/fixtures?date=${tomorrowBRT}&timezone=${encodeURIComponent(TZ)}`;
-
-  const [d1, d2] = await Promise.all([apiFetch(pathToday), apiFetch(pathTomorrow)]);
-
-  const list = []
-    .concat(d1?.response || [])
-    .concat(d2?.response || []);
-
-  // Normaliza e ordena por kickoffTs
-  let games = list.map(normalizeFixture).filter(g => g.kickoffTs);
-
-  games.sort((a, b) => a.kickoffTs - b.kickoffTs);
-
-  // Estatísticas rápidas pro seu header
-  const nowTs = now.getTime();
-  const next24hTs = nowTs + 24 * 60 * 60 * 1000;
-
-  let countLive = 0;
-  let countToday = 0;
-  let countNext24h = 0;
-
-  for (const g of games) {
-    if (isLiveStatus(g.status)) countLive++;
-    // “Hoje” baseado no kickoff estar entre 00:00-23:59 BRT (aprox)
-    // Como estamos buscando só hoje+amanhã, consideramos “today” pelo kickoff >= agora-24h e < amanhã 00:00 BRT (simplificado)
-    // Na UI você vai filtrar por timestamp mesmo, então aqui é só informativo.
-    if (g.kickoffTs >= nowTs - 24 * 60 * 60 * 1000 && g.kickoffTs <= nowTs + 24 * 60 * 60 * 1000) countToday++;
-    if (g.kickoffTs >= nowTs && g.kickoffTs <= next24hTs) countNext24h++;
-  }
+  }).format(new Date());
 
   const out = {
-    updatedAt: toUpdatedAtBRT(now),
+    updatedAt: `${updatedAt} BRT`,
     source: "API-Football",
-    timezone: TZ,
-    meta: {
-      todayBRT,
-      tomorrowBRT,
-      total: games.length,
-      live: countLive,
-      next24h: countNext24h,
-      // “todayApprox” apenas informativo
-      todayApprox: countToday,
-    },
     games,
   };
 
   fs.writeFileSync("jogos.json", JSON.stringify(out, null, 2), "utf-8");
-  console.log(`OK: jogos.json gerado. Total: ${games.length} | Live: ${countLive} | Próx 24h: ${countNext24h}`);
+  console.log(`✅ jogos.json atualizado: ${games.length} jogos (hoje+amanhã+live).`);
 }
 
-main().catch((err) => {
-  console.error("ERRO:", err?.message || err);
+main().catch((e) => {
+  console.error("❌ Falha ao gerar jogos.json:", e?.message || e);
   process.exit(1);
 });
