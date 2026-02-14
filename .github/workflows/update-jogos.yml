@@ -3,7 +3,7 @@ name: Update jogos.json hourly
 on:
   workflow_dispatch:
   schedule:
-    - cron: "10 * * * *"  # a cada hora no minuto 10 (UTC)
+    - cron: "10 * * * *"
 
 permissions:
   contents: write
