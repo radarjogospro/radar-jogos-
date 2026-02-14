@@ -3,28 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#071b1b" />
+  <meta name="theme-color" content="#0a1717" />
   <title>Radar Jogos PRO</title>
   <style>
     :root{
-      --bg0:#061818;
-      --bg1:#071f1f;
-      --card:#0b2424cc;
-      --card2:#0b2424b3;
-      --stroke:rgba(255,255,255,.08);
-      --stroke2:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.66);
-      --muted2:rgba(255,255,255,.52);
+      /* Paleta única + gradiente claro (sem “lista verde”) */
+      --bgA:#0a1717;
+      --bgB:#0c1e1e;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.10);
+      --stroke2: rgba(255,255,255,.14);
 
-      --accent:#22c55e;   /* emerald */
-      --accent2:#06b6d4;  /* cyan */
-      --accent3:#8b5cf6;  /* violet */
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.55);
+
+      --accent:#22c55e;
+      --accent2:#06b6d4;
       --danger:#ef4444;
+      --warn:#f59e0b;
 
-      --shadow: 0 18px 55px rgba(0,0,0,.55);
-      --radius: 22px;
-      --radius2: 16px;
+      --shadow: 0 16px 46px rgba(0,0,0,.52);
+      --r: 22px;
+      --r2: 16px;
     }
 
     *{ box-sizing:border-box; }
@@ -34,153 +36,117 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
-        radial-gradient(1100px 600px at 25% -10%, rgba(34,197,94,.18), transparent 60%),
-        radial-gradient(900px 500px at 90% 10%, rgba(6,182,212,.14), transparent 55%),
-        radial-gradient(900px 500px at 20% 95%, rgba(139,92,246,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg0));
+        radial-gradient(900px 520px at 20% -10%, rgba(6,182,212,.14), transparent 62%),
+        radial-gradient(900px 520px at 90% 15%, rgba(34,197,94,.10), transparent 60%),
+        linear-gradient(180deg, var(--bgB), var(--bgA));
       overflow-x:hidden;
     }
 
-    .wrap{
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 16px 14px 92px;
-    }
+    .wrap{ max-width:760px; margin:0 auto; padding:16px 14px 92px; }
 
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding: 16px 16px;
-      border-radius: var(--radius);
-      background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border: 1px solid var(--stroke);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:16px 16px;
+      border-radius: var(--r);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid var(--stroke);
       box-shadow: var(--shadow);
-      position: sticky;
-      top: 10px;
-      z-index: 20;
-      backdrop-filter: blur(10px);
+      position: sticky; top: 10px; z-index: 20;
+      backdrop-filter: blur(12px);
     }
-    .brand{
-      display:flex; flex-direction:column; gap:6px;
-      min-width: 0;
-    }
-    .brand .title{
-      font-weight:800;
-      letter-spacing:.2px;
-      font-size: 20px;
-      line-height: 1.1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    .brand{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+    .title{
+      font-weight:900; letter-spacing:.2px; font-size:20px; line-height:1.1;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .statusline{
-      display:flex; align-items:center; gap:10px;
-      color:var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      flex-wrap:wrap;
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      color:var(--muted); font-size:13px; font-weight:800;
     }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: var(--accent);
-      box-shadow: 0 0 0 6px rgba(34,197,94,.12);
-      flex: 0 0 auto;
+    .dot{ width:10px; height:10px; border-radius:999px; background: var(--accent); box-shadow:0 0 0 6px rgba(34,197,94,.12); }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+      font-weight:900; font-size:12px;
+      white-space:nowrap;
+    }
+    .pill.warn{
+      border-color: rgba(245,158,11,.35);
+      background: rgba(245,158,11,.10);
+      color: rgba(255,255,255,.90);
     }
 
     .btn{
-      border: 1px solid var(--stroke);
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.05);
       color: var(--text);
-      padding: 10px 14px;
+      padding:10px 14px;
       border-radius: 16px;
-      font-weight: 800;
-      cursor: pointer;
+      font-weight:900;
+      cursor:pointer;
       transition: transform .08s ease, background .2s ease, border-color .2s ease;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
       white-space:nowrap;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
     }
-    .btn:active{ transform: scale(.98); }
+    .btn:active{ transform: scale(.985); }
     .btn.primary{
-      border-color: rgba(34,197,94,.35);
-      background: linear-gradient(180deg, rgba(34,197,94,.30), rgba(34,197,94,.16));
+      border-color: rgba(34,197,94,.38);
+      background: linear-gradient(180deg, rgba(34,197,94,.24), rgba(34,197,94,.10));
     }
-    .btn.ghost{
-      background: rgba(255,255,255,.03);
-    }
-    .btn.menu{
-      display:flex; align-items:center; gap:10px;
-      padding: 10px 14px;
-    }
+    .btn.ghost{ background: rgba(255,255,255,.03); }
+    .btn.menu{ padding:10px 14px; }
 
     .panel{
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: var(--radius);
-      background: linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border: 1px solid var(--stroke);
+      margin-top:14px;
+      padding:14px;
+      border-radius: var(--r);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
       box-shadow: var(--shadow);
-      position: relative;
-      overflow:hidden;
-    }
-    .panel:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0/24px 24px;
-      opacity:.35;
-      pointer-events:none;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,.75), rgba(0,0,0,0));
+      backdrop-filter: blur(10px);
     }
 
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .row > *{ flex: 0 0 auto; }
-    .searchWrap{
-      display:flex; gap:10px; align-items:center;
-      width:100%;
-    }
+    .searchWrap{ display:flex; gap:10px; align-items:center; width:100%; }
     .search{
-      flex: 1 1 auto;
-      display:flex;
-      padding: 10px 12px;
+      flex:1 1 auto;
+      padding:10px 12px;
       border-radius: 18px;
       border:1px solid var(--stroke);
-      background: rgba(0,0,0,.18);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,.16);
+      backdrop-filter: blur(8px);
     }
     .search input{
       width:100%;
-      border:0;
-      outline:none;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
+      border:0; outline:none; background:transparent;
+      color:var(--text);
+      font-size:14px;
+      font-weight:800;
     }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+
     .meta{
       margin-top: 10px;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       line-height: 1.35;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
 
-    .chips{
-      margin-top: 12px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
+    .chips{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
     .chip{
       padding: 10px 12px;
       border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      font-weight: 900;
+      font-weight: 950;
       font-size: 13px;
       display:flex; align-items:center; gap:10px;
       cursor:pointer;
@@ -189,67 +155,56 @@
       transition: background .2s ease, border-color .2s ease, transform .08s ease;
     }
     .chip:active{ transform: scale(.985); }
+    .chip .miniDot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.22); }
     .chip.active{
       border-color: rgba(6,182,212,.35);
-      background: linear-gradient(180deg, rgba(6,182,212,.18), rgba(6,182,212,.08));
-    }
-    .chip.active.green{
-      border-color: rgba(34,197,94,.40);
-      background: linear-gradient(180deg, rgba(34,197,94,.20), rgba(34,197,94,.08));
-    }
-    .chip .miniDot{
-      width:10px; height:10px; border-radius:999px;
-      background: rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(6,182,212,.15), rgba(6,182,212,.06));
     }
     .chip.active .miniDot{ background: var(--accent2); }
-    .chip.active.green .miniDot{ background: var(--accent); }
+    .chip.green.active{
+      border-color: rgba(34,197,94,.38);
+      background: linear-gradient(180deg, rgba(34,197,94,.17), rgba(34,197,94,.06));
+    }
+    .chip.green.active .miniDot{ background: var(--accent); }
 
     .subpanel{
       margin-top: 12px;
       padding: 12px;
-      border-radius: var(--radius2);
+      border-radius: var(--r2);
       border: 1px solid var(--stroke);
-      background: rgba(0,0,0,.15);
+      background: rgba(0,0,0,.12);
     }
-
     .labelRow{
       display:flex; justify-content:space-between; align-items:center;
       color: var(--muted);
-      font-weight: 900;
+      font-weight: 950;
       font-size: 12px;
       margin-bottom: 10px;
     }
-
-    .windowChips{
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
+    .windowChips{ display:flex; gap:10px; flex-wrap:wrap; }
     .wchip{
       padding: 9px 12px;
       border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      font-weight: 900;
+      font-weight: 950;
       font-size: 13px;
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
     }
     .wchip.active{
-      border-color: rgba(34,197,94,.40);
-      background: linear-gradient(180deg, rgba(34,197,94,.20), rgba(34,197,94,.08));
+      border-color: rgba(34,197,94,.38);
+      background: linear-gradient(180deg, rgba(34,197,94,.17), rgba(34,197,94,.06));
     }
 
-    .dateRow{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-      margin-top: 12px;
-    }
     select{
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.04);
       color: var(--text);
       padding: 11px 12px;
       border-radius: 16px;
-      font-weight: 900;
+      font-weight: 950;
       font-size: 14px;
       outline:none;
     }
@@ -257,9 +212,9 @@
     .proPanel{
       margin-top: 12px;
       padding: 12px;
-      border-radius: var(--radius2);
+      border-radius: var(--r2);
       border: 1px solid var(--stroke);
-      background: rgba(0,0,0,.12);
+      background: rgba(0,0,0,.10);
     }
     .proTitle{
       display:flex; justify-content:space-between; align-items:center;
@@ -267,14 +222,8 @@
       margin-bottom: 10px;
       letter-spacing:.2px;
     }
-    .proTitle small{
-      color: var(--muted);
-      font-weight: 900;
-    }
-    .proCards{
-      display:grid;
-      gap:10px;
-    }
+    .proTitle small{ color: var(--muted); font-weight: 900; }
+    .proCards{ display:grid; gap:10px; }
     .proCard{
       padding: 11px 12px;
       border-radius: 16px;
@@ -282,65 +231,54 @@
       background: rgba(255,255,255,.03);
     }
     .proCard b{ display:block; margin-bottom: 2px; }
-    .proCard span{ color: var(--muted); font-weight: 700; font-size: 13px; line-height: 1.25; }
+    .proCard span{ color: var(--muted); font-weight: 750; font-size: 13px; line-height: 1.25; }
 
-    .list{
-      margin-top: 14px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
+    .list{ margin-top: 14px; display:flex; flex-direction:column; gap: 12px; }
 
     .game{
-      border-radius: var(--radius);
+      border-radius: var(--r);
       border: 1px solid var(--stroke);
-      background: linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       box-shadow: var(--shadow);
       overflow:hidden;
+      backdrop-filter: blur(10px);
     }
-    .gameHeader{
-      padding: 14px 14px 10px;
-      position: relative;
-    }
-
-    .gameTop{
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      align-items:flex-start;
-    }
-    .teams{
-      font-weight: 950;
-      font-size: 18px;
-      line-height: 1.15;
-      letter-spacing:.15px;
-    }
+    .gameHeader{ padding: 14px 14px 10px; }
+    .gameTop{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .teams{ font-weight: 950; font-size: 18px; line-height: 1.15; letter-spacing:.15px; }
     .sub{
       color: var(--muted);
       margin-top: 6px;
       font-size: 13px;
-      font-weight: 750;
+      font-weight: 800;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
     }
-
-    .badgeLive{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
-      min-width: 108px;
-    }
-    .liveTag{
+    .pillDate{
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      color: rgba(255,255,255,.80);
+      font-weight: 900;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+
+    .badgeLive{
+      display:flex; flex-direction:column; align-items:flex-end; gap:8px;
+      min-width:108px;
+    }
+    .liveTag{
+      display:inline-flex; align-items:center; gap:8px;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(239,68,68,.35);
-      background: rgba(239,68,68,.12);
+      background: rgba(239,68,68,.10);
       font-weight: 950;
       font-size: 12px;
       letter-spacing:.3px;
@@ -351,58 +289,29 @@
       background: var(--danger);
       box-shadow: 0 0 0 6px rgba(239,68,68,.12);
     }
-
     .scorePill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
+      display:inline-flex; align-items:center; gap:10px;
       padding: 7px 10px;
       border-radius: 14px;
       border: 1px solid var(--stroke2);
-      background: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.16);
       font-weight: 950;
       font-size: 13px;
       white-space:nowrap;
     }
-    .scorePill .min{
-      color: rgba(255,255,255,.80);
-      font-weight: 900;
-    }
-
-    .pillDate{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke);
-      background: rgba(0,0,0,.16);
-      color: rgba(255,255,255,.80);
-      font-weight: 850;
-      font-size: 12px;
-      white-space:nowrap;
-    }
+    .scorePill .min{ color: rgba(255,255,255,.80); font-weight: 900; }
 
     .gameActions{
       padding: 0 14px 12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; gap:10px; flex-wrap:wrap;
     }
-    .gameActions .btn{
-      flex: 1 1 140px;
-      text-align:center;
-      padding: 10px 12px;
-      border-radius: 16px;
-    }
+    .gameActions .btn{ flex: 1 1 140px; text-align:center; padding: 10px 12px; border-radius: 16px; }
 
-    /* ✅ v1.9: detalhes colapsável */
     .detailsWrap{ display:none; }
     .detailsWrap.open{ display:block; }
 
     .miniTabs{
-      display:flex;
-      gap:10px;
-      padding: 10px 14px 12px;
+      display:flex; gap:10px; padding: 10px 14px 12px;
       border-top: 1px solid var(--stroke);
       background: rgba(0,0,0,.10);
       flex-wrap:wrap;
@@ -412,21 +321,20 @@
       border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
-      font-weight: 900;
+      font-weight: 950;
       font-size: 12px;
       cursor:pointer;
       user-select:none;
     }
     .tab.active{
       border-color: rgba(6,182,212,.38);
-      background: linear-gradient(180deg, rgba(6,182,212,.18), rgba(6,182,212,.07));
+      background: linear-gradient(180deg, rgba(6,182,212,.16), rgba(6,182,212,.06));
     }
-
     .tabContent{
       padding: 10px 14px 14px;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 650;
+      font-weight: 750;
       display:none;
     }
     .tabContent.active{ display:block; }
@@ -437,26 +345,24 @@
       gap:10px 14px;
     }
     .kv{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; justify-content:space-between; gap:10px;
       padding: 9px 10px;
       border-radius: 14px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.78);
-      font-weight: 800;
+      font-weight: 900;
     }
     .kv b{ color: rgba(255,255,255,.92); }
 
     .empty{
       padding: 16px;
-      border-radius: var(--radius);
-      border: 1px dashed rgba(255,255,255,.14);
-      background: rgba(0,0,0,.12);
+      border-radius: var(--r);
+      border: 1px dashed rgba(255,255,255,.16);
+      background: rgba(0,0,0,.10);
       color: var(--muted);
       text-align:center;
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .bottomNav{
@@ -469,9 +375,8 @@
       border-radius: 22px;
       border: 1px solid var(--stroke);
       background: rgba(0,0,0,.40);
-      backdrop-filter: blur(12px);
-      display:flex;
-      gap:10px;
+      backdrop-filter: blur(14px);
+      display:flex; gap:10px;
       box-shadow: var(--shadow);
       z-index: 30;
     }
@@ -483,16 +388,12 @@
       background: rgba(255,255,255,.04);
       color: rgba(255,255,255,.86);
       font-weight: 950;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      cursor:pointer;
-      user-select:none;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      cursor:pointer; user-select:none;
     }
     .navBtn.active{
-      border-color: rgba(34,197,94,.40);
-      background: linear-gradient(180deg, rgba(34,197,94,.22), rgba(34,197,94,.10));
+      border-color: rgba(34,197,94,.38);
+      background: linear-gradient(180deg, rgba(34,197,94,.17), rgba(34,197,94,.06));
     }
 
     .modalOverlay{
@@ -509,7 +410,7 @@
       margin-bottom: 14px;
       border-radius: 22px;
       border: 1px solid var(--stroke);
-      background: rgba(8,24,24,.96);
+      background: rgba(10,23,23,.96);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
@@ -519,23 +420,17 @@
       border-bottom: 1px solid var(--stroke);
     }
     .modalHead b{ font-size: 15px; letter-spacing:.2px; }
-    .modalBody{
-      padding: 12px 14px 14px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
+    .modalBody{ padding: 12px 14px 14px; display:flex; flex-direction:column; gap:10px; }
     .menuItem{
       padding: 12px 12px;
       border-radius: 16px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
-      font-weight: 900;
+      font-weight: 950;
       display:flex; align-items:center; justify-content:space-between;
-      cursor:pointer;
-      user-select:none;
+      cursor:pointer; user-select:none;
     }
-    .menuItem small{ color: var(--muted); font-weight: 750; }
+    .menuItem small{ color: var(--muted); font-weight: 800; }
 
     @media (max-width: 420px){
       .teams{ font-size: 17px; }
@@ -546,15 +441,15 @@
 
 <body>
   <div class="wrap">
-
     <div class="topbar">
       <div class="brand">
         <div class="title">Radar Jogos PRO</div>
         <div class="statusline">
-          <span class="dot" id="onlineDot"></span>
-          <span id="onlineTxt">Online</span>
-          <span id="verTxt" style="opacity:.9;">v1.9</span>
+          <span class="dot"></span>
+          <span>Online</span>
+          <span id="verTxt" style="opacity:.9;">v2.0</span>
           <span id="checkTxt" style="opacity:.75;">• Checagem: —</span>
+          <span id="stalePill" class="pill warn" style="display:none;">⚠️ Dados atrasados</span>
         </div>
       </div>
       <button class="btn menu" id="openMenu">… Menu</button>
@@ -568,14 +463,12 @@
         <button class="btn ghost" id="clearBtn">Limpar</button>
       </div>
 
-      <div class="row" style="margin-top:10px">
+      <div class="row">
         <button class="btn primary" id="refreshBtn">Atualizar</button>
         <button class="btn ghost" id="autoBtn">Auto: OFF</button>
       </div>
 
-      <div class="meta" id="meta">
-        Carregando…
-      </div>
+      <div class="meta" id="meta">Carregando…</div>
 
       <div class="chips">
         <div class="chip green" id="chipUpcoming"><span class="miniDot"></span>⚡ Próximos</div>
@@ -599,7 +492,7 @@
           <span>Data (BRT)</span>
           <span id="dateBadge">—</span>
         </div>
-        <div class="dateRow">
+        <div class="row">
           <select id="dateSelect"></select>
           <button class="btn ghost" id="applyDateBtn">Aplicar</button>
         </div>
@@ -631,7 +524,7 @@
         </div>
       </div>
 
-      <div class="row" style="margin-top:12px">
+      <div class="row">
         <button class="btn ghost" id="scrollTopBtn" style="width:100%;">Voltar pro topo</button>
       </div>
     </div>
@@ -652,53 +545,41 @@
         <button class="btn ghost" id="closeMenu">Fechar</button>
       </div>
       <div class="modalBody">
-        <div class="menuItem" id="menuGoFav">
-          <span>⭐ Favoritos</span><small>ver salvos</small>
-        </div>
-        <div class="menuItem" id="menuGoHist">
-          <span>🕘 Histórico</span><small>ver tocados</small>
-        </div>
-        <div class="menuItem" id="menuGoGames">
-          <span>🗓️ Jogos</span><small>lista principal</small>
-        </div>
-        <div class="menuItem" id="menuAbout">
-          <span>ℹ️ Sobre</span><small>versão e fonte</small>
-        </div>
+        <div class="menuItem" id="menuGoFav"><span>⭐ Favoritos</span><small>ver salvos</small></div>
+        <div class="menuItem" id="menuGoHist"><span>🕘 Histórico</span><small>ver tocados</small></div>
+        <div class="menuItem" id="menuGoGames"><span>🗓️ Jogos</span><small>lista principal</small></div>
+        <div class="menuItem" id="menuAbout"><span>ℹ️ Sobre</span><small>versão e fonte</small></div>
       </div>
     </div>
   </div>
 
   <script>
     /*********************
-     * Radar Jogos PRO - v1.9
-     * FIX 1: Ao vivo “travado” (heurística por tempo desde kickoff)
-     * FIX 2: Detalhes colapsável (odds/abas só aparecem ao abrir)
+     * Radar Jogos PRO - v2.0
+     * Fixes:
+     * - Ao vivo travado: heurística + parse kickoffTs string/number
+     * - Aviso de dados atrasados (updatedAt parado)
+     * - Paleta única + gradiente claro
      *********************/
 
-    const VERSION = "v1.9";
-    const TZ = "America/Sao_Paulo"; // BRT
-    const LS_KEY = "rjpro_state_v9";
+    const VERSION = "v2.0";
+    const TZ = "America/Sao_Paulo";
+    const LS_KEY = "rjpro_state_v20";
 
-    // ✅ Heurística: se passou tempo demais do kickoff e está “90'” sem FT, tiramos do Ao Vivo.
-    // (FREE costuma atrasar status. Isso corrige visualmente.)
-    const STALE_LIVE_AFTER_MIN = 125; // 2h05m (ajusta se quiser)
-    const LIVE_ELAPSED_CUTOFF = 90;   // 90' travado
+    // ✅ Mais agressivo (pra tirar “90'” travado no FREE)
+    const STALE_LIVE_AFTER_MIN = 110;  // 1h50 após kickoff já pode considerar encerrado visualmente
+    const LIVE_ELAPSED_CUTOFF  = 90;   // 90' travado
+    const DATA_STALE_AFTER_MIN = 12;   // se updatedAt tiver > 12min, mostra aviso
 
     const LIVE_STATUSES = new Set(["1H","2H","HT","ET","BT","P","LIVE","IN_PLAY"]);
     const FINISHED_STATUSES = new Set(["FT","AET","PEN"]);
     const NOT_PLAYING_STATUSES = new Set(["PST","CANC","ABD","SUSP","INT","TBD"]);
 
     const state = {
-      mode: "upcoming",    // upcoming | live | favorites | history
-      region: "all",       // brazil | europe | all
-      windowH: 24,
-      calendarOn: false,
-      date: null,          // YYYY-MM-DD (BRT)
-      q: "",
-      favorites: {},
-      history: {},
-      auto: false,
-      autoEverySec: 60,
+      mode: "upcoming", region: "all", windowH: 24,
+      calendarOn: false, date: null, q: "",
+      favorites: {}, history: {},
+      auto: false, autoEverySec: 60,
     };
 
     let data = null;
@@ -706,60 +587,47 @@
     let autoTimer = null;
 
     const $ = (id) => document.getElementById(id);
-    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
 
-    function saveState(){
-      try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
-    }
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(LS_KEY);
-        if(!raw) return;
-        Object.assign(state, JSON.parse(raw));
-      }catch(e){}
-    }
+    function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+    function loadState(){ try{ const raw=localStorage.getItem(LS_KEY); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){} }
 
-    function fmtBrtDate(d){
-      return new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, day:"2-digit", month:"2-digit", year:"numeric" }).format(d);
-    }
-    function fmtBrtTime(d){
-      return new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, hour:"2-digit", minute:"2-digit" }).format(d);
-    }
     function brtDayKey(d){
-      const parts = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year:"numeric", month:"2-digit", day:"2-digit" }).formatToParts(d);
+      const parts = new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
       const y = parts.find(p=>p.type==="year").value;
       const m = parts.find(p=>p.type==="month").value;
       const da = parts.find(p=>p.type==="day").value;
       return `${y}-${m}-${da}`;
     }
+    function fmtBrtDate(d){
+      return new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,day:"2-digit",month:"2-digit",year:"numeric"}).format(d);
+    }
+    function fmtBrtTime(d){
+      return new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,hour:"2-digit",minute:"2-digit"}).format(d);
+    }
     function nowHM(){
-      const p = new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, hour:"2-digit", minute:"2-digit" }).formatToParts(new Date());
+      const p = new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,hour:"2-digit",minute:"2-digit"}).formatToParts(new Date());
       const hh = p.find(x=>x.type==="hour")?.value || "00";
       const mm = p.find(x=>x.type==="minute")?.value || "00";
       return `${hh}:${mm}`;
     }
     function setCheck(){ $("checkTxt").textContent = `• Checagem: ${nowHM()}`; }
 
-    function regionMatch(g){
-      const c = (g.country||"").toLowerCase();
-      if(state.region==="all") return true;
-      if(state.region==="brazil") return c.includes("brazil") || c.includes("brasil");
-      if(state.region==="europe"){
-        const europeCountries = ["england","scotland","wales","ireland","northern ireland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","iceland","poland","czech","slovakia","hungary","romania","bulgaria","greece","turkey","croatia","serbia","slovenia","ukraine","russia","estonia","latvia","lithuania"];
-        if(c.includes("europe")) return true;
-        return europeCountries.some(x => c.includes(x));
+    function parseKickoffTs(v){
+      // ✅ aceita number ou string numérica
+      if(typeof v === "number" && Number.isFinite(v)) return v;
+      if(typeof v === "string"){
+        const n = Number(v);
+        if(Number.isFinite(n)) return n;
       }
-      return true;
-    }
-    function qMatch(g){
-      const q = (state.q||"").trim().toLowerCase();
-      if(!q) return true;
-      const hay = `${g.home||""} ${g.away||""} ${g.league||""} ${g.country||""}`.toLowerCase();
-      return hay.includes(q);
+      return null;
     }
 
     function getKickoffMs(g){
-      if(typeof g.kickoffTs === "number") return g.kickoffTs;
+      const k = parseKickoffTs(g.kickoffTs);
+      if(k) return k;
+
+      // fallback por date/time (se existir)
       if(g.date && g.time){
         const iso = `${g.date}T${g.time}:00-03:00`;
         const d = new Date(iso);
@@ -773,7 +641,6 @@
     function isFinished(g){ return FINISHED_STATUSES.has(normStatus(g)); }
     function isNotPlaying(g){ return NOT_PLAYING_STATUSES.has(normStatus(g)); }
 
-    // ✅ v1.9: remove “ao vivo” travado por tempo desde kickoff
     function isStaleLiveByTime(g){
       const k = getKickoffMs(g);
       if(!k) return false;
@@ -784,8 +651,13 @@
       const el = (typeof g.elapsed === "number") ? g.elapsed : null;
       const st = normStatus(g);
 
-      // Se não é status live “forte” e está 90’ (ou mais) e já passou muito do kickoff: considerar finalizado visualmente
-      if(!LIVE_STATUSES.has(st) && el !== null && el >= LIVE_ELAPSED_CUTOFF && minutesFromKickoff >= STALE_LIVE_AFTER_MIN){
+      // ✅ regra principal: 90’ + passou tempo demais do kickoff => tira do “Ao vivo”
+      if(el !== null && el >= LIVE_ELAPSED_CUTOFF && minutesFromKickoff >= STALE_LIVE_AFTER_MIN){
+        return true;
+      }
+
+      // ✅ regra extra: status não-final, mas já passou MUITO tempo do kickoff
+      if(!FINISHED_STATUSES.has(st) && minutesFromKickoff >= (STALE_LIVE_AFTER_MIN + 30)){
         return true;
       }
 
@@ -793,17 +665,12 @@
     }
 
     function isLiveGame(g){
-      const st = normStatus(g);
-
-      if(isFinished(g)) return false;
-      if(isNotPlaying(g)) return false;
-
-      // trava por tempo → nunca live
+      if(isFinished(g) || isNotPlaying(g)) return false;
       if(isStaleLiveByTime(g)) return false;
 
+      const st = normStatus(g);
       if(LIVE_STATUSES.has(st)) return true;
 
-      // se veio marcado como live, ainda checa “stale”
       if(g.isLive === true) return true;
 
       const el = (typeof g.elapsed === "number") ? g.elapsed : null;
@@ -812,22 +679,9 @@
       return false;
     }
 
-    function liveSortScore(g){
-      const st = normStatus(g);
-      const el = (typeof g.elapsed === "number") ? g.elapsed : 0;
-      if(st==="2H") return 3000 + el;
-      if(st==="1H") return 2000 + el;
-      if(st==="HT") return 2500;
-      if(st==="ET") return 3500 + el;
-      if(st==="P")  return 3600;
-      if(isLiveGame(g)) return 1500 + el;
-      return 0;
-    }
-
     function minutesText(g){
+      if(isFinished(g) || isStaleLiveByTime(g)) return "FT";
       const st = normStatus(g);
-      if(isFinished(g)) return "FT";
-      if(isStaleLiveByTime(g)) return "FT"; // ✅ v1.9: se travou, mostra como FT no card
       if(typeof g.elapsed === "number" && g.elapsed > 0) return `${g.elapsed}'`;
       if(st==="HT") return "HT";
       return st || "—";
@@ -845,7 +699,30 @@
       return `${g.home||""}__${g.away||""}__${g.league||""}__${g.date||""}__${g.time||""}`;
     }
 
-    function setActiveChip(){
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function regionMatch(g){
+      const c = (g.country||"").toLowerCase();
+      if(state.region==="all") return true;
+      if(state.region==="brazil") return c.includes("brazil") || c.includes("brasil");
+      if(state.region==="europe"){
+        const europe = ["england","scotland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","poland","czech","romania","greece","turkey","croatia","serbia","slovenia","ukraine"];
+        return c.includes("europe") || europe.some(x=>c.includes(x));
+      }
+      return true;
+    }
+    function qMatch(g){
+      const q = (state.q||"").trim().toLowerCase();
+      if(!q) return true;
+      const hay = `${g.home||""} ${g.away||""} ${g.league||""} ${g.country||""}`.toLowerCase();
+      return hay.includes(q);
+    }
+
+    function setActive(){
       $("chipUpcoming").classList.toggle("active", state.mode==="upcoming");
       $("chipUpcoming").classList.toggle("green", true);
       $("chipLive").classList.toggle("active", state.mode==="live");
@@ -860,74 +737,94 @@
       $("navHist").classList.toggle("active", state.mode==="history");
 
       $("autoBtn").textContent = `Auto: ${state.auto ? "ON" : "OFF"}`;
-      $("autoBtn").classList.toggle("primary", !!state.auto);
     }
 
     function renderWindowChips(){
-      const opts = [1,2,3,6,12,24];
-      const root = $("windowChips");
-      root.innerHTML = "";
+      const opts=[1,2,3,6,12,24];
+      const root=$("windowChips");
+      root.innerHTML="";
       for(const h of opts){
-        const el = document.createElement("div");
-        el.className = "wchip" + (state.windowH===h ? " active":"");
-        el.textContent = h + "h";
-        el.onclick = () => {
-          state.windowH = h;
-          $("windowLabel").textContent = `Próximas ${h}h • BRT`;
-          $("proRight").textContent = `Janela ativa: ${h}h • Fuso: BRT`;
-          saveState();
-          renderWindowChips();
-          render();
+        const el=document.createElement("div");
+        el.className="wchip"+(state.windowH===h?" active":"");
+        el.textContent=h+"h";
+        el.onclick=()=>{
+          state.windowH=h;
+          $("windowLabel").textContent=`Próximas ${h}h • BRT`;
+          $("proRight").textContent=`Janela ativa: ${h}h • Fuso: BRT`;
+          saveState(); renderWindowChips(); render();
         };
         root.appendChild(el);
       }
-      $("windowLabel").textContent = `Próximas ${state.windowH}h • BRT`;
-      $("proRight").textContent = `Janela ativa: ${state.windowH}h • Fuso: BRT`;
+      $("windowLabel").textContent=`Próximas ${state.windowH}h • BRT`;
+      $("proRight").textContent=`Janela ativa: ${state.windowH}h • Fuso: BRT`;
     }
 
     function fillDateSelect(){
-      const sel = $("dateSelect");
-      sel.innerHTML = "";
-      const now = new Date();
-      const days = [];
+      const sel=$("dateSelect");
+      sel.innerHTML="";
+      const now=new Date();
+      const days=[];
       for(let i=0;i<10;i++){
-        const d = new Date(now.getTime() + i*24*3600*1000);
+        const d=new Date(now.getTime()+i*24*3600*1000);
         days.push(brtDayKey(d));
       }
       for(const day of days){
-        const opt = document.createElement("option");
-        opt.value = day;
-        const d = new Date(`${day}T12:00:00-03:00`);
-        opt.textContent = fmtBrtDate(d);
+        const opt=document.createElement("option");
+        opt.value=day;
+        const dd=new Date(`${day}T12:00:00-03:00`);
+        opt.textContent=fmtBrtDate(dd);
         sel.appendChild(opt);
       }
-      if(!state.date) state.date = days[0];
-      sel.value = state.date;
-      $("dateBadge").textContent = sel.options[sel.selectedIndex]?.textContent || "—";
+      if(!state.date) state.date=days[0];
+      sel.value=state.date;
+      $("dateBadge").textContent=sel.options[sel.selectedIndex]?.textContent||"—";
     }
 
     async function loadJogosJson(force=false){
       const bust = force ? `?t=${Date.now()}` : "";
-      const url = "jogos.json" + bust;
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch("jogos.json"+bust, { cache:"no-store" });
       if(!res.ok) throw new Error("Falha ao carregar jogos.json");
-      const j = await res.json();
-      data = j;
-      allGames = Array.isArray(j.games) ? j.games : [];
+      data = await res.json();
+      allGames = Array.isArray(data.games) ? data.games : [];
+    }
+
+    function parseUpdatedAtToMs(updatedAt){
+      // espera algo como: "14/02/2026, 14:10 BRT" (pt-BR)
+      if(!updatedAt) return null;
+      const s = String(updatedAt).replace(" BRT","").trim();
+      // tenta achar dd/mm/yyyy e hh:mm
+      const m = s.match(/(\d{2})\/(\d{2})\/(\d{4}).*?(\d{2}):(\d{2})/);
+      if(!m) return null;
+      const dd=m[1], mm=m[2], yyyy=m[3], hh=m[4], mi=m[5];
+      // cria data no -03:00
+      const iso = `${yyyy}-${mm}-${dd}T${hh}:${mi}:00-03:00`;
+      const d = new Date(iso);
+      const ms = d.getTime();
+      return Number.isFinite(ms) ? ms : null;
     }
 
     function updateMeta(){
       if(!data){
-        $("meta").textContent = "Sem dados ainda.";
+        $("meta").textContent="Sem dados ainda.";
+        $("stalePill").style.display="none";
         return;
       }
       const upd = data.updatedAt || "—";
       const src = data.source || "—";
 
+      const updMs = parseUpdatedAtToMs(upd);
+      const ageMin = updMs ? Math.round((Date.now()-updMs)/60000) : null;
+      const stale = (ageMin !== null && ageMin >= DATA_STALE_AFTER_MIN);
+
+      $("stalePill").style.display = stale ? "inline-flex" : "none";
+      if(stale){
+        $("stalePill").textContent = `⚠️ Dados atrasados (${ageMin} min)`;
+      }
+
       const now = Date.now();
+      const todayKey = brtDayKey(new Date());
       let liveCount=0, todayCount=0, next24=0;
 
-      const todayKey = brtDayKey(new Date());
       for(const g of allGames){
         const k = getKickoffMs(g);
         if(isLiveGame(g)) liveCount++;
@@ -936,49 +833,45 @@
       }
 
       $("meta").innerHTML =
-        `Última atualização: <b>${upd}</b> • Fonte: <b>${src}</b> • Auto: <b>${state.auto ? "ON" : "OFF"}</b><br>` +
-        `Jogos no arquivo: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo: <b>${liveCount}</b>`;
+        `Última atualização: <b>${upd}</b> • Fonte: <b>${src}</b> • Auto: <b>${state.auto?"ON":"OFF"}</b>` +
+        (ageMin!==null ? ` • Idade: <b>${ageMin} min</b>` : ``) +
+        `<br>Jogos no arquivo: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo (limpo): <b>${liveCount}</b>`;
     }
 
     function filterUpcoming(){
-      const now = Date.now();
-      const max = now + state.windowH * 3600 * 1000;
+      const now=Date.now();
+      const max=now + state.windowH*3600*1000;
+      const todayKey = brtDayKey(new Date());
 
-      return allGames.filter(g => {
+      return allGames.filter(g=>{
         if(!regionMatch(g) || !qMatch(g)) return false;
         if(isLiveGame(g)) return false;
         if(isFinished(g) || isNotPlaying(g)) return false;
 
-        const k = getKickoffMs(g);
+        const k=getKickoffMs(g);
         if(!k) return false;
 
         if(state.calendarOn && state.date){
-          if(g.date !== state.date) return false;
-          return true;
+          return g.date === state.date;
         }
-        return (k >= now && k <= max);
-      })
-      .sort((a,b) => (getKickoffMs(a)||0) - (getKickoffMs(b)||0));
+        // Próximos por janela
+        return (k>=now && k<=max);
+      }).sort((a,b)=>(getKickoffMs(a)||0)-(getKickoffMs(b)||0));
     }
 
     function filterLive(){
-      return allGames.filter(g => {
+      return allGames.filter(g=>{
         if(!regionMatch(g) || !qMatch(g)) return false;
-        if(!isLiveGame(g)) return false;
-        return true;
-      })
-      .sort((a,b) => liveSortScore(b) - liveSortScore(a));
+        return isLiveGame(g);
+      }).sort((a,b)=>{
+        // live mais recente no topo
+        const ea = (typeof a.elapsed==="number")?a.elapsed:0;
+        const eb = (typeof b.elapsed==="number")?b.elapsed:0;
+        return eb - ea;
+      });
     }
 
-    function renderEmpty(msg){
-      $("list").innerHTML = `<div class="empty">${msg}</div>`;
-    }
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
+    function renderEmpty(msg){ $("list").innerHTML = `<div class="empty">${msg}</div>`; }
 
     function renderGameCard(g){
       const id = gameId(g);
@@ -993,10 +886,9 @@
 
       const fav = !!state.favorites[id];
 
-      const el = document.createElement("div");
-      el.className = "game";
-
-      el.innerHTML = `
+      const el=document.createElement("div");
+      el.className="game";
+      el.innerHTML=`
         <div class="gameHeader">
           <div class="gameTop">
             <div style="min-width:0">
@@ -1013,7 +905,7 @@
 
             <div class="badgeLive">
               ${live ? `<div class="liveTag"><span class="ldot"></span>AO VIVO</div>` : ``}
-              ${(live || isFinished(g) || isStaleLiveByTime(g)) && (score || mins) ? `
+              ${(live || mins==="FT") && (score || mins) ? `
                 <div class="scorePill">
                   <span>${score ? score : "—"}</span>
                   <span class="min">• ${mins}</span>
@@ -1029,7 +921,7 @@
         </div>
 
         <div class="detailsWrap" data-details>
-          <div class="miniTabs" data-tabs>
+          <div class="miniTabs">
             <div class="tab active" data-tab="insights">Insights / Odds</div>
             <div class="tab" data-tab="maismenos">Mais/Menos</div>
             <div class="tab" data-tab="forma">Forma</div>
@@ -1042,7 +934,7 @@
               <div class="kv"><span>Over 2,5</span><b>—%</b></div>
               <div class="kv"><span>BTTS</span><b>—%</b></div>
             </div>
-            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:700;">
+            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:800;">
               No modo FREE, alguns cálculos podem não aparecer. Layout pronto para a API paga.
             </div>
           </div>
@@ -1054,7 +946,7 @@
               <div class="kv"><span>Under 1,5</span><b>—%</b></div>
               <div class="kv"><span>Under 3,5</span><b>—%</b></div>
             </div>
-            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:700;">
+            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:800;">
               Em PRO: odds reais e mercados extras.
             </div>
           </div>
@@ -1065,7 +957,7 @@
               <div class="kv"><span>Forma (fora)</span><b>—</b></div>
               <div class="kv"><span>H2H (últimos)</span><b>—</b></div>
             </div>
-            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:700;">
+            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:800;">
               Em PRO: últimos jogos reais e tendências por liga.
             </div>
           </div>
@@ -1073,183 +965,127 @@
       `;
 
       // Favoritar
-      el.querySelector('[data-act="fav"]').onclick = () => {
+      el.querySelector('[data-act="fav"]').onclick=()=>{
         state.favorites[id] = !state.favorites[id];
-        saveState();
-        render();
+        saveState(); render();
       };
 
-      // ✅ v1.9: Detalhes abre/fecha + salva no histórico quando ABRE
+      // Detalhes abre/fecha + histórico só quando abre
       const detailsBtn = el.querySelector('[data-act="details"]');
       const detailsWrap = el.querySelector('[data-details]');
-      let opened = false;
+      let opened=false;
 
       function setOpened(v){
-        opened = v;
+        opened=v;
         detailsWrap.classList.toggle("open", opened);
         detailsBtn.textContent = opened ? "Fechar" : "Detalhes";
       }
-
-      detailsBtn.onclick = () => {
+      detailsBtn.onclick=()=>{
         setOpened(!opened);
         if(opened){
-          state.history[id] = Date.now();
+          state.history[id]=Date.now();
           saveState();
-          // opcional: rolar até as abas quando abrir
-          setTimeout(() => {
-            detailsWrap.scrollIntoView({behavior:"smooth", block:"center"});
-          }, 60);
+          setTimeout(()=>detailsWrap.scrollIntoView({behavior:"smooth",block:"center"}),60);
         }
       };
 
-      // Tabs (só quando aberto, mas pode configurar já)
+      // Tabs
       const tabs = el.querySelectorAll(".tab");
       const contents = el.querySelectorAll(".tabContent");
-      tabs.forEach(t => {
-        t.onclick = () => {
+      tabs.forEach(t=>{
+        t.onclick=()=>{
           tabs.forEach(x=>x.classList.remove("active"));
           t.classList.add("active");
-          const key = t.getAttribute("data-tab");
-          contents.forEach(c=>{
-            c.classList.toggle("active", c.getAttribute("data-content")===key);
-          });
+          const key=t.getAttribute("data-tab");
+          contents.forEach(c=>c.classList.toggle("active", c.getAttribute("data-content")===key));
         };
       });
 
-      // começa fechado sempre (fica mais limpo)
       setOpened(false);
-
       return el;
     }
 
     function renderFavorites(){
-      const favIds = Object.keys(state.favorites).filter(k => state.favorites[k]);
-      if(favIds.length===0){
-        renderEmpty("Você ainda não favoritou nada. Clique em ☆ Favoritar em um jogo.");
-        return;
-      }
-      const map = new Map(allGames.map(g => [gameId(g), g]));
-      const favGames = favIds.map(id => map.get(id)).filter(Boolean);
-
-      favGames.sort((a,b) => {
-        const la = isLiveGame(a), lb = isLiveGame(b);
-        if(la && !lb) return -1;
-        if(lb && !la) return 1;
-        if(la && lb) return liveSortScore(b)-liveSortScore(a);
-        return (getKickoffMs(a)||0) - (getKickoffMs(b)||0);
-      });
-
-      const root = $("list");
-      root.innerHTML = "";
-      favGames.forEach(g => root.appendChild(renderGameCard(g)));
+      const favIds = Object.keys(state.favorites).filter(k=>state.favorites[k]);
+      if(!favIds.length){ renderEmpty("Você ainda não favoritou nada. Clique em ☆ Favoritar em um jogo."); return; }
+      const map=new Map(allGames.map(g=>[gameId(g), g]));
+      const favGames=favIds.map(id=>map.get(id)).filter(Boolean);
+      favGames.sort((a,b)=>(getKickoffMs(a)||0)-(getKickoffMs(b)||0));
+      $("list").innerHTML="";
+      favGames.forEach(g=>$("list").appendChild(renderGameCard(g)));
     }
 
     function renderHistory(){
-      const ids = Object.keys(state.history || {});
-      if(ids.length===0){
-        renderEmpty("Seu histórico está vazio. Abra “Detalhes” em um jogo para salvar aqui.");
-        return;
-      }
-      const map = new Map(allGames.map(g => [gameId(g), g]));
-      const items = ids
-        .map(id => ({ id, ts: state.history[id], g: map.get(id) }))
-        .filter(x => x.g)
-        .sort((a,b) => (b.ts||0) - (a.ts||0));
-
-      const root = $("list");
-      root.innerHTML = "";
-      items.forEach(x => root.appendChild(renderGameCard(x.g)));
+      const ids=Object.keys(state.history||{});
+      if(!ids.length){ renderEmpty("Seu histórico está vazio. Abra “Detalhes” em um jogo para salvar aqui."); return; }
+      const map=new Map(allGames.map(g=>[gameId(g), g]));
+      const items=ids.map(id=>({id,ts:state.history[id],g:map.get(id)})).filter(x=>x.g).sort((a,b)=>(b.ts||0)-(a.ts||0));
+      $("list").innerHTML="";
+      items.forEach(x=>$("list").appendChild(renderGameCard(x.g)));
     }
 
     function render(){
       $("verTxt").textContent = VERSION;
-      setActiveChip();
+      setActive();
       updateMeta();
 
       $("calendarBox").style.display = state.calendarOn ? "block" : "none";
-      if(state.calendarOn){
-        fillDateSelect();
-        $("dateSelect").value = state.date || $("dateSelect").value;
-        $("dateBadge").textContent = $("dateSelect").options[$("dateSelect").selectedIndex]?.textContent || "—";
-      }
+      if(state.calendarOn) fillDateSelect();
 
       if(state.mode==="favorites"){ renderFavorites(); return; }
       if(state.mode==="history"){ renderHistory(); return; }
 
-      if(!data){
-        renderEmpty("Sem dados ainda. Clique em Atualizar.");
-        return;
-      }
+      if(!data){ renderEmpty("Sem dados ainda. Clique em Atualizar."); return; }
 
       let list = [];
       if(state.mode==="live"){
         list = filterLive();
-        if(list.length===0){
-          renderEmpty("Nada ao vivo agora com esses filtros. Troque região ou use Próximos.");
-          return;
-        }
+        if(!list.length){ renderEmpty("Nada ao vivo agora com esses filtros. Troque região ou use Próximos."); return; }
       } else {
         list = filterUpcoming();
-        if(list.length===0){
-          const hint = state.calendarOn ? "Não há jogos nessa data com esses filtros." : "Sem jogos nessa janela. Tente 12h/24h ou ative Calendário.";
-          renderEmpty(hint);
+        if(!list.length){
+          const msg = state.calendarOn ? "Não há jogos nessa data com esses filtros." : "Sem jogos nessa janela. Tente 12h/24h ou ative Calendário.";
+          renderEmpty(msg);
           return;
         }
       }
 
-      const root = $("list");
-      root.innerHTML = "";
-      list.forEach(g => root.appendChild(renderGameCard(g)));
+      $("list").innerHTML="";
+      list.forEach(g=>$("list").appendChild(renderGameCard(g)));
     }
 
+    function stopAuto(){ if(autoTimer){ clearInterval(autoTimer); autoTimer=null; } }
     function startAuto(){
       stopAuto();
-      autoTimer = setInterval(async () => {
+      autoTimer=setInterval(async()=>{
         try{
           await loadJogosJson(true);
           setCheck();
           updateMeta();
           render();
         }catch(e){}
-      }, clamp(state.autoEverySec||60, 15, 300) * 1000);
-    }
-    function stopAuto(){
-      if(autoTimer){
-        clearInterval(autoTimer);
-        autoTimer = null;
-      }
+      }, clamp(state.autoEverySec||60, 15, 300)*1000);
     }
 
     function wire(){
-      $("chipUpcoming").onclick = () => { state.mode="upcoming"; saveState(); render(); };
-      $("chipLive").onclick = () => { state.mode="live"; state.calendarOn=false; saveState(); render(); };
+      $("chipUpcoming").onclick=()=>{ state.mode="upcoming"; saveState(); render(); };
+      $("chipLive").onclick=()=>{ state.mode="live"; state.calendarOn=false; saveState(); render(); };
 
-      $("chipCalendar").onclick = () => {
-        state.calendarOn = !state.calendarOn;
+      $("chipCalendar").onclick=()=>{
+        state.calendarOn=!state.calendarOn;
         if(state.calendarOn) state.mode="upcoming";
-        saveState();
-        render();
+        saveState(); render();
       };
 
-      $("chipBrazil").onclick = () => { state.region="brazil"; saveState(); render(); };
-      $("chipEurope").onclick = () => { state.region="europe"; saveState(); render(); };
-      $("chipAll").onclick = () => { state.region="all"; saveState(); render(); };
+      $("chipBrazil").onclick=()=>{ state.region="brazil"; saveState(); render(); };
+      $("chipEurope").onclick=()=>{ state.region="europe"; saveState(); render(); };
+      $("chipAll").onclick=()=>{ state.region="all"; saveState(); render(); };
 
-      $("q").addEventListener("input", () => {
-        state.q = $("q").value;
-        saveState();
-        render();
-      });
+      $("q").addEventListener("input", ()=>{ state.q=$("q").value; saveState(); render(); });
+      $("clearBtn").onclick=()=>{ state.q=""; $("q").value=""; saveState(); render(); };
 
-      $("clearBtn").onclick = () => {
-        state.q = "";
-        $("q").value = "";
-        saveState();
-        render();
-      };
-
-      $("refreshBtn").onclick = async () => {
-        $("refreshBtn").textContent = "Atualizando…";
+      $("refreshBtn").onclick=async()=>{
+        $("refreshBtn").textContent="Atualizando…";
         try{
           await loadJogosJson(true);
           setCheck();
@@ -1258,56 +1094,44 @@
         }catch(e){
           renderEmpty("Erro ao atualizar dados. Veja se o workflow gerou jogos.json e se o link está público.");
         }finally{
-          $("refreshBtn").textContent = "Atualizar";
+          $("refreshBtn").textContent="Atualizar";
         }
       };
 
-      $("autoBtn").onclick = async () => {
-        state.auto = !state.auto;
+      $("autoBtn").onclick=async()=>{
+        state.auto=!state.auto;
         saveState();
-        setActiveChip();
+        setActive();
         updateMeta();
-
         if(state.auto){
-          try{ await loadJogosJson(true); setCheck(); }catch(e){}
+          try{ await loadJogosJson(true); }catch(e){}
+          setCheck();
           startAuto();
           render();
-        } else {
+        }else{
           stopAuto();
         }
       };
 
-      $("scrollTopBtn").onclick = () => window.scrollTo({top:0, behavior:"smooth"});
+      $("scrollTopBtn").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
 
-      $("applyDateBtn").onclick = () => {
-        state.date = $("dateSelect").value;
-        saveState();
-        render();
-      };
+      $("applyDateBtn").onclick=()=>{ state.date=$("dateSelect").value; saveState(); render(); };
+      $("dateSelect").addEventListener("change", ()=>{ state.date=$("dateSelect").value; saveState(); render(); });
 
-      $("dateSelect").addEventListener("change", () => {
-        state.date = $("dateSelect").value;
-        saveState();
-        render();
-      });
+      $("navGames").onclick=()=>{ if(state.mode==="favorites"||state.mode==="history") state.mode="upcoming"; saveState(); render(); };
+      $("navFav").onclick=()=>{ state.mode="favorites"; saveState(); render(); };
+      $("navHist").onclick=()=>{ state.mode="history"; saveState(); render(); };
 
-      $("navGames").onclick = () => {
-        if(state.mode==="favorites" || state.mode==="history") state.mode="upcoming";
-        saveState(); render();
-      };
-      $("navFav").onclick = () => { state.mode="favorites"; saveState(); render(); };
-      $("navHist").onclick = () => { state.mode="history"; saveState(); render(); };
+      $("openMenu").onclick=()=>$("menuOverlay").classList.add("show");
+      $("closeMenu").onclick=()=>$("menuOverlay").classList.remove("show");
+      $("menuOverlay").onclick=(e)=>{ if(e.target===$("menuOverlay")) $("menuOverlay").classList.remove("show"); };
 
-      $("openMenu").onclick = () => $("menuOverlay").classList.add("show");
-      $("closeMenu").onclick = () => $("menuOverlay").classList.remove("show");
-      $("menuOverlay").onclick = (e) => { if(e.target === $("menuOverlay")) $("menuOverlay").classList.remove("show"); };
-
-      $("menuGoFav").onclick = () => { state.mode="favorites"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
-      $("menuGoHist").onclick = () => { state.mode="history"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
-      $("menuGoGames").onclick = () => { state.mode="upcoming"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
-      $("menuAbout").onclick = () => {
-        const upd = data?.updatedAt || "—";
-        const src = data?.source || "—";
+      $("menuGoFav").onclick=()=>{ state.mode="favorites"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
+      $("menuGoHist").onclick=()=>{ state.mode="history"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
+      $("menuGoGames").onclick=()=>{ state.mode="upcoming"; saveState(); render(); $("menuOverlay").classList.remove("show"); };
+      $("menuAbout").onclick=()=>{
+        const upd=data?.updatedAt||"—";
+        const src=data?.source||"—";
         alert(`Radar Jogos PRO ${VERSION}\nFonte: ${src}\nÚltima atualização: ${upd}\n\nBRT: ${TZ}`);
       };
     }
@@ -1315,20 +1139,17 @@
     (async function init(){
       loadState();
 
-      state.windowH = clamp(state.windowH || 24, 1, 24);
-      if(!state.mode) state.mode = "upcoming";
-      if(!state.region) state.region = "all";
-      if(!state.favorites) state.favorites = {};
-      if(!state.history) state.history = {};
-      state.auto = !!state.auto;
+      state.windowH=clamp(state.windowH||24,1,24);
+      if(!state.mode) state.mode="upcoming";
+      if(!state.region) state.region="all";
+      if(!state.favorites) state.favorites={};
+      if(!state.history) state.history={};
+      state.auto=!!state.auto;
 
-      $("q").value = state.q || "";
-      $("verTxt").textContent = VERSION;
-
+      $("q").value=state.q||"";
       renderWindowChips();
       fillDateSelect();
       wire();
-      setActiveChip();
       setCheck();
 
       try{ await loadJogosJson(false); }catch(e){}
