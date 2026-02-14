@@ -16,11 +16,10 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout (full)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -32,41 +31,34 @@ jobs:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         run: node scripts/update-jogos.js
 
-      - name: Commit and push (safe)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and push (safe + retry)
         run: |
           set -e
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # garante que só o jogos.json entra no stash (evita erro de unstaged no rebase)
-          git add jogos.json || true
-          git stash push -m "tmp-jogos" -- jogos.json || true
+          git add jogos.json
 
-          # atualiza branch local
-          git pull --rebase origin main
-
-          # volta o jogos.json gerado pelo script
-          git stash pop || true
-
-          # se não mudou nada no jogos.json, encerra limpo
-          git add jogos.json || true
-          git diff --staged --quiet && echo "No changes in jogos.json" && exit 0
+          if git diff --staged --quiet; then
+            echo "No changes in jogos.json"
+            exit 0
+          fi
 
           git commit -m "chore: update jogos.json"
 
-          # push com retry (corridas entre execuções)
+          # pull --rebase to avoid non-fast-forward
+          git pull --rebase origin main
+
+          # retry push in case of race
           for i in 1 2 3; do
-            echo "Push attempt $i..."
-            if git push origin HEAD:main; then
-              echo "Push ok"
+            if git push; then
+              echo "Push OK"
               exit 0
             fi
-            echo "Push failed, rebasing and retrying..."
+            echo "Push failed, retry $i..."
+            sleep $((i*2))
             git pull --rebase origin main
-            sleep 2
           done
 
           echo "Push failed after retries"
