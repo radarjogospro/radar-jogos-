@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#0a1717" />
   <title>Radar Jogos PRO</title>
+
   <style>
     :root{
-      /* Paleta única + gradiente claro (sem “lista verde”) */
       --bgA:#0a1717;
       --bgB:#0c1e1e;
+
       --card: rgba(255,255,255,.06);
       --card2: rgba(255,255,255,.04);
       --stroke: rgba(255,255,255,.10);
@@ -54,22 +55,25 @@
       position: sticky; top: 10px; z-index: 20;
       backdrop-filter: blur(12px);
     }
+
     .brand{ display:flex; flex-direction:column; gap:6px; min-width:0; }
     .title{
       font-weight:900; letter-spacing:.2px; font-size:20px; line-height:1.1;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
+
     .statusline{
       display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-      color:var(--muted); font-size:13px; font-weight:800;
+      color:var(--muted); font-size:13px; font-weight:850;
     }
     .dot{ width:10px; height:10px; border-radius:999px; background: var(--accent); box-shadow:0 0 0 6px rgba(34,197,94,.12); }
+
     .pill{
       display:inline-flex; align-items:center; gap:8px;
       padding:6px 10px; border-radius:999px;
       border:1px solid var(--stroke);
       background: rgba(0,0,0,.18);
-      font-weight:900; font-size:12px;
+      font-weight:950; font-size:12px;
       white-space:nowrap;
     }
     .pill.warn{
@@ -84,7 +88,7 @@
       color: var(--text);
       padding:10px 14px;
       border-radius: 16px;
-      font-weight:900;
+      font-weight:950;
       cursor:pointer;
       transition: transform .08s ease, background .2s ease, border-color .2s ease;
       user-select:none;
@@ -124,21 +128,37 @@
       border:0; outline:none; background:transparent;
       color:var(--text);
       font-size:14px;
-      font-weight:800;
+      font-weight:850;
     }
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
 
-    .meta{
-      margin-top: 10px;
+    /* ✅ meta compacto + “Info” recolhível */
+    .metaLine{
+      margin-top:10px;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 800;
-      line-height: 1.35;
+      font-weight: 850;
       display:flex;
-      flex-direction:column;
-      gap:6px;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
+    .metaLine .left{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .metaDetails{
+      margin-top:10px;
+      padding:12px;
+      border-radius: var(--r2);
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.12);
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.45;
+      display:none;
+    }
+    .metaDetails.open{ display:block; }
 
     .chips{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
     .chip{
@@ -447,7 +467,7 @@
         <div class="statusline">
           <span class="dot"></span>
           <span>Online</span>
-          <span id="verTxt" style="opacity:.9;">v2.0</span>
+          <span id="verTxt" style="opacity:.9;">v2.1</span>
           <span id="checkTxt" style="opacity:.75;">• Checagem: —</span>
           <span id="stalePill" class="pill warn" style="display:none;">⚠️ Dados atrasados</span>
         </div>
@@ -468,7 +488,12 @@
         <button class="btn ghost" id="autoBtn">Auto: OFF</button>
       </div>
 
-      <div class="meta" id="meta">Carregando…</div>
+      <!-- ✅ Linha limpa (sem aquela lista grande) -->
+      <div class="metaLine" id="metaLine">
+        <div class="left" id="metaLeft">Atualizado: — • Idade: — • Ao vivo: —</div>
+        <button class="btn ghost" id="infoBtn">Info</button>
+      </div>
+      <div class="metaDetails" id="metaDetails"></div>
 
       <div class="chips">
         <div class="chip green" id="chipUpcoming"><span class="miniDot"></span>⚡ Próximos</div>
@@ -555,21 +580,21 @@
 
   <script>
     /*********************
-     * Radar Jogos PRO - v2.0
-     * Fixes:
-     * - Ao vivo travado: heurística + parse kickoffTs string/number
-     * - Aviso de dados atrasados (updatedAt parado)
-     * - Paleta única + gradiente claro
+     * Radar Jogos PRO - v2.1
+     * - Tela inicial limpa (meta compacto)
+     * - “Info” recolhível
+     * - Live filter mais agressivo quando API trava em 90'
      *********************/
-
-    const VERSION = "v2.0";
+    const VERSION = "v2.1";
     const TZ = "America/Sao_Paulo";
-    const LS_KEY = "rjpro_state_v20";
+    const LS_KEY = "rjpro_state_v21";
 
-    // ✅ Mais agressivo (pra tirar “90'” travado no FREE)
-    const STALE_LIVE_AFTER_MIN = 110;  // 1h50 após kickoff já pode considerar encerrado visualmente
-    const LIVE_ELAPSED_CUTOFF  = 90;   // 90' travado
-    const DATA_STALE_AFTER_MIN = 12;   // se updatedAt tiver > 12min, mostra aviso
+    // ✅ Se a API travar em 90', usamos heurística pra não ficar “ao vivo” pra sempre.
+    // Regra: 90' e passou ~105 min do kickoff => sai do AO VIVO.
+    const STALE_LIVE_AFTER_MIN = 105;
+    const LIVE_ELAPSED_CUTOFF  = 90;
+
+    const DATA_STALE_AFTER_MIN = 12;
 
     const LIVE_STATUSES = new Set(["1H","2H","HT","ET","BT","P","LIVE","IN_PLAY"]);
     const FINISHED_STATUSES = new Set(["FT","AET","PEN"]);
@@ -580,6 +605,7 @@
       calendarOn: false, date: null, q: "",
       favorites: {}, history: {},
       auto: false, autoEverySec: 60,
+      infoOpen: false,
     };
 
     let data = null;
@@ -614,7 +640,6 @@
     function setCheck(){ $("checkTxt").textContent = `• Checagem: ${nowHM()}`; }
 
     function parseKickoffTs(v){
-      // ✅ aceita number ou string numérica
       if(typeof v === "number" && Number.isFinite(v)) return v;
       if(typeof v === "string"){
         const n = Number(v);
@@ -622,12 +647,9 @@
       }
       return null;
     }
-
     function getKickoffMs(g){
       const k = parseKickoffTs(g.kickoffTs);
       if(k) return k;
-
-      // fallback por date/time (se existir)
       if(g.date && g.time){
         const iso = `${g.date}T${g.time}:00-03:00`;
         const d = new Date(iso);
@@ -636,7 +658,6 @@
       }
       return null;
     }
-
     function normStatus(g){ return String(g.status||"").toUpperCase().trim(); }
     function isFinished(g){ return FINISHED_STATUSES.has(normStatus(g)); }
     function isNotPlaying(g){ return NOT_PLAYING_STATUSES.has(normStatus(g)); }
@@ -644,23 +665,17 @@
     function isStaleLiveByTime(g){
       const k = getKickoffMs(g);
       if(!k) return false;
-
       const now = Date.now();
       const minutesFromKickoff = (now - k) / 60000;
-
       const el = (typeof g.elapsed === "number") ? g.elapsed : null;
       const st = normStatus(g);
 
-      // ✅ regra principal: 90’ + passou tempo demais do kickoff => tira do “Ao vivo”
+      // ✅ 90’ travado por muito tempo => sai do “Ao vivo”
       if(el !== null && el >= LIVE_ELAPSED_CUTOFF && minutesFromKickoff >= STALE_LIVE_AFTER_MIN){
+        // se estiver em prorrogação, não tira
+        if(st === "ET") return false;
         return true;
       }
-
-      // ✅ regra extra: status não-final, mas já passou MUITO tempo do kickoff
-      if(!FINISHED_STATUSES.has(st) && minutesFromKickoff >= (STALE_LIVE_AFTER_MIN + 30)){
-        return true;
-      }
-
       return false;
     }
 
@@ -670,7 +685,6 @@
 
       const st = normStatus(g);
       if(LIVE_STATUSES.has(st)) return true;
-
       if(g.isLive === true) return true;
 
       const el = (typeof g.elapsed === "number") ? g.elapsed : null;
@@ -680,7 +694,8 @@
     }
 
     function minutesText(g){
-      if(isFinished(g) || isStaleLiveByTime(g)) return "FT";
+      if(isFinished(g)) return "FT";
+      if(isStaleLiveByTime(g)) return "FT";
       const st = normStatus(g);
       if(typeof g.elapsed === "number" && g.elapsed > 0) return `${g.elapsed}'`;
       if(st==="HT") return "HT";
@@ -710,7 +725,7 @@
       if(state.region==="all") return true;
       if(state.region==="brazil") return c.includes("brazil") || c.includes("brasil");
       if(state.region==="europe"){
-        const europe = ["england","scotland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","poland","czech","romania","greece","turkey","croatia","serbia","slovenia","ukraine"];
+        const europe = ["england","scotland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","poland","czech","romania","greece","turkey","croatia","serbia","slovenia","ukraine","hungary"];
         return c.includes("europe") || europe.some(x=>c.includes(x));
       }
       return true;
@@ -789,14 +804,11 @@
     }
 
     function parseUpdatedAtToMs(updatedAt){
-      // espera algo como: "14/02/2026, 14:10 BRT" (pt-BR)
       if(!updatedAt) return null;
       const s = String(updatedAt).replace(" BRT","").trim();
-      // tenta achar dd/mm/yyyy e hh:mm
       const m = s.match(/(\d{2})\/(\d{2})\/(\d{4}).*?(\d{2}):(\d{2})/);
       if(!m) return null;
       const dd=m[1], mm=m[2], yyyy=m[3], hh=m[4], mi=m[5];
-      // cria data no -03:00
       const iso = `${yyyy}-${mm}-${dd}T${hh}:${mi}:00-03:00`;
       const d = new Date(iso);
       const ms = d.getTime();
@@ -805,10 +817,12 @@
 
     function updateMeta(){
       if(!data){
-        $("meta").textContent="Sem dados ainda.";
+        $("metaLeft").textContent="Atualizado: — • Idade: — • Ao vivo: —";
+        $("metaDetails").innerHTML="";
         $("stalePill").style.display="none";
         return;
       }
+
       const upd = data.updatedAt || "—";
       const src = data.source || "—";
 
@@ -832,16 +846,21 @@
         if(k && k >= now && k <= (now + 24*3600*1000)) next24++;
       }
 
-      $("meta").innerHTML =
-        `Última atualização: <b>${upd}</b> • Fonte: <b>${src}</b> • Auto: <b>${state.auto?"ON":"OFF"}</b>` +
-        (ageMin!==null ? ` • Idade: <b>${ageMin} min</b>` : ``) +
-        `<br>Jogos no arquivo: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo (limpo): <b>${liveCount}</b>`;
+      $("metaLeft").textContent =
+        `Atualizado: ${upd} • Idade: ${ageMin!==null?ageMin+" min":"—"} • Ao vivo: ${liveCount}`;
+
+      $("metaDetails").innerHTML =
+        `Fonte: <b>${escapeHtml(src)}</b><br>`+
+        `Auto: <b>${state.auto?"ON":"OFF"}</b><br>`+
+        `Jogos no arquivo: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b><br>`+
+        `Obs: se a Idade subir, o workflow não está atualizando o jogos.json.`;
+      $("metaDetails").classList.toggle("open", !!state.infoOpen);
+      $("infoBtn").textContent = state.infoOpen ? "Fechar Info" : "Info";
     }
 
     function filterUpcoming(){
       const now=Date.now();
       const max=now + state.windowH*3600*1000;
-      const todayKey = brtDayKey(new Date());
 
       return allGames.filter(g=>{
         if(!regionMatch(g) || !qMatch(g)) return false;
@@ -854,7 +873,6 @@
         if(state.calendarOn && state.date){
           return g.date === state.date;
         }
-        // Próximos por janela
         return (k>=now && k<=max);
       }).sort((a,b)=>(getKickoffMs(a)||0)-(getKickoffMs(b)||0));
     }
@@ -864,7 +882,6 @@
         if(!regionMatch(g) || !qMatch(g)) return false;
         return isLiveGame(g);
       }).sort((a,b)=>{
-        // live mais recente no topo
         const ea = (typeof a.elapsed==="number")?a.elapsed:0;
         const eb = (typeof b.elapsed==="number")?b.elapsed:0;
         return eb - ea;
@@ -964,13 +981,11 @@
         </div>
       `;
 
-      // Favoritar
       el.querySelector('[data-act="fav"]').onclick=()=>{
         state.favorites[id] = !state.favorites[id];
         saveState(); render();
       };
 
-      // Detalhes abre/fecha + histórico só quando abre
       const detailsBtn = el.querySelector('[data-act="details"]');
       const detailsWrap = el.querySelector('[data-details]');
       let opened=false;
@@ -989,7 +1004,6 @@
         }
       };
 
-      // Tabs
       const tabs = el.querySelectorAll(".tab");
       const contents = el.querySelectorAll(".tabContent");
       tabs.forEach(t=>{
@@ -1113,6 +1127,12 @@
         }
       };
 
+      $("infoBtn").onclick=()=>{
+        state.infoOpen = !state.infoOpen;
+        saveState();
+        updateMeta();
+      };
+
       $("scrollTopBtn").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
 
       $("applyDateBtn").onclick=()=>{ state.date=$("dateSelect").value; saveState(); render(); };
@@ -1145,6 +1165,7 @@
       if(!state.favorites) state.favorites={};
       if(!state.history) state.history={};
       state.auto=!!state.auto;
+      state.infoOpen=!!state.infoOpen;
 
       $("q").value=state.q||"";
       renderWindowChips();
@@ -1160,4 +1181,4 @@
     })();
   </script>
 </body>
-  </html>
+</html>
