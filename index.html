@@ -24,6 +24,7 @@
       --accent2:#06b6d4;
       --danger:#ef4444;
       --hot:#ec4899;
+      --warn:#f59e0b;
 
       --shadow: 0 18px 55px rgba(0,0,0,.55);
       --radius: 22px;
@@ -52,7 +53,7 @@
       backdrop-filter: blur(10px);
     }
 
-    /* ===== Topo estilo "app" ===== */
+    /* ===== Topo (layout v2.4.2) ===== */
     .topShell{
       position: sticky;
       top: 10px;
@@ -148,7 +149,7 @@
       box-shadow: 0 0 0 6px rgba(239,68,68,.12);
     }
 
-    /* Abas de esportes (linha de ícones) */
+    /* Abas de esportes */
     .sportsTabs{
       display:flex;
       gap:12px;
@@ -264,7 +265,21 @@
 
     .meta{ margin-top:10px; color: var(--muted); font-size: 13px; font-weight: 800; line-height: 1.35; }
 
-    /* Sort row (Horário primeiro / Popular primeiro) */
+    /* Aviso discreto do fallback */
+    .fallbackNote{
+      display:inline-flex; align-items:center; gap:8px;
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(245,158,11,.30);
+      background: rgba(245,158,11,.10);
+      color: rgba(255,255,255,.86);
+      font-weight: 900;
+      font-size: 12px;
+      width: fit-content;
+    }
+
+    /* Sort row */
     .sortRow{
       margin-top:12px;
       display:flex; gap:10px; align-items:center;
@@ -432,7 +447,7 @@
       font-weight: 950;
     }
 
-    /* Bottom nav estilo app */
+    /* Bottom nav */
     .bottomNav{
       position: fixed;
       left: 50%;
@@ -464,7 +479,7 @@
       background: linear-gradient(180deg, rgba(6,182,212,.16), rgba(6,182,212,.07));
     }
 
-    /* Menu modal (… ) */
+    /* Menu modal */
     .modalOverlay{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -513,7 +528,6 @@
 <body>
   <div class="wrap">
 
-    <!-- Topo -->
     <div class="topShell surface">
       <div class="topbar">
         <div class="brandRow">
@@ -543,7 +557,6 @@
       </div>
     </div>
 
-    <!-- Hero/banner -->
     <div class="hero surface" id="hero">
       <div class="heroInner">
         <div class="heroLeft">
@@ -555,7 +568,6 @@
       </div>
     </div>
 
-    <!-- Painel filtros -->
     <div class="panel surface">
       <div class="chips">
         <div class="chip green active" id="chipUpcoming"><span class="miniDot"></span>🗓️ Próximos (24h)</div>
@@ -579,6 +591,7 @@
       </div>
 
       <div class="meta" id="meta">Carregando…</div>
+      <div id="fallbackNoteWrap"></div>
 
       <div class="sortRow">
         <select class="sortSelect" id="sortSel">
@@ -597,7 +610,6 @@
     <div class="list" id="list"></div>
   </div>
 
-  <!-- Bottom nav -->
   <div class="bottomNav">
     <div class="navBtn active" id="navHome">🏠 Início</div>
     <div class="navBtn" id="navLive">🔴 Ao vivo</div>
@@ -605,7 +617,6 @@
     <div class="navBtn" id="navPro">💎 PRO</div>
   </div>
 
-  <!-- Modal menu -->
   <div class="modalOverlay" id="menuOverlay">
     <div class="modal">
       <div class="modalHead">
@@ -615,22 +626,25 @@
       <div class="modalBody">
         <div class="menuItem" id="menuFav"><span>⭐ Favoritos</span><small>ver salvos</small></div>
         <div class="menuItem" id="menuGames"><span>🗓️ Jogos</span><small>lista principal</small></div>
-        <div class="menuItem" id="menuAbout"><span>ℹ️ Sobre</span><small>fonte e versão</small></div>
+        <div class="menuItem" id="menuAbout"><span>ℹ️ Sobre</span><small>fonte</small></div>
       </div>
     </div>
   </div>
 
   <script>
     /* =======================
-       Radar PRO v2.4.4
-       (puxar jogos robusto + UI ok)
+       Radar PRO v2.4.5
+       - Layout idêntico v2.4.2
+       - Fallback: se games=[] usa último cache (24h)
     ======================= */
 
     const TZ = "America/Sao_Paulo";
-    const LS_KEY = "rjpro_state_v244";
+    const LS_KEY = "rjpro_state_v245";
+    const CACHE_KEY = "rjpro_games_cache_v245";
+    const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
     const state = {
-      mode: "upcoming",   // upcoming | live | games | favorites | pro
+      mode: "upcoming",   // upcoming | live | home | pro
       region: "all",      // all | brazil | europe
       sport: "all",       // all | football | basket | volley | tennis
       q: "",
@@ -642,6 +656,7 @@
     let data = null;
     let allGames = [];
     let autoTimer = null;
+    let usingFallback = false;
 
     const $ = (id) => document.getElementById(id);
 
@@ -661,7 +676,6 @@
       const da = parts.find(p=>p.type==="day").value;
       return `${y}-${m}-${da}`;
     }
-
     function escapeHtml(s){
       return String(s).replace(/[&<>"']/g, m => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
@@ -672,18 +686,15 @@
       if(typeof g.kickoffTs === "number") return g.kickoffTs;
       return null;
     }
-
     function gameId(g){
       if(g.id) return String(g.id);
       return `${g.home||""}__${g.away||""}__${g.league||""}__${g.date||""}__${g.time||""}`;
     }
-
     function isFinished(g){
       const st = (g.status||"").toUpperCase();
       return st === "FT" || st === "AET" || st === "PEN";
     }
 
-    // failsafe (front) para live “travado”
     function isLikelyStaleLive(g){
       const st = (g.status||"").toUpperCase();
       const k = getKickoffMs(g);
@@ -730,7 +741,6 @@
       return `${sh}–${sa}`;
     }
 
-    /* ======= Matchers ======= */
     function regionMatch(g){
       const c = (g.country||"").toLowerCase();
       if(state.region==="all") return true;
@@ -743,10 +753,9 @@
     }
 
     function sportMatch(g){
-      // por enquanto só futebol, mas deixa a estrutura pronta
       if(state.sport==="all") return true;
-      if(state.sport==="football") return true; // o feed atual é futebol
-      return false; // outras modalidades ainda não alimentadas
+      if(state.sport==="football") return true; // feed atual é futebol
+      return false;
     }
 
     function qMatch(g){
@@ -757,7 +766,6 @@
     }
 
     function popularityScore(g){
-      // heurística simples: liga conhecida + país conhecido + ao vivo ganha peso
       const league = (g.league||"").toLowerCase();
       const country = (g.country||"").toLowerCase();
       let s = 0;
@@ -765,7 +773,6 @@
       if(top.some(k=> league.includes(k))) s += 50;
       if(country.includes("brazil")||country.includes("brasil")) s += 20;
       if(isLiveGame(g)) s += 30;
-      // kickoff mais próximo ganha peso
       const k = getKickoffMs(g);
       if(k){
         const diffH = Math.abs((k - Date.now())/3600000);
@@ -774,7 +781,27 @@
       return s;
     }
 
-    /* ======= Extrator robusto (puxa qualquer formato comum) ======= */
+    /* ===== Cache fallback ===== */
+    function writeCache(payload){
+      try{
+        localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+      }catch(e){}
+    }
+    function readCache(){
+      try{
+        const raw = localStorage.getItem(CACHE_KEY);
+        if(!raw) return null;
+        const obj = JSON.parse(raw);
+        if(!obj || typeof obj !== "object") return null;
+        if(typeof obj.ts !== "number" || !Array.isArray(obj.games)) return null;
+        if(Date.now() - obj.ts > CACHE_TTL_MS) return null;
+        return obj;
+      }catch(e){
+        return null;
+      }
+    }
+
+    /* ===== Extrator robusto ===== */
     function isMatchLike(obj){
       if(!obj || typeof obj !== "object") return false;
       if((obj.home && obj.away) || (obj.homeTeam && obj.awayTeam)) return true;
@@ -880,6 +907,8 @@
     }
 
     async function loadJogosJson(force=false){
+      usingFallback = false;
+
       const bust = force ? `?t=${Date.now()}` : "";
       const urls = [`./jogos.json${bust}`, `jogos.json${bust}`];
 
@@ -902,11 +931,46 @@
 
           if(!rawArr) rawArr = deepFindArray(j);
 
-          allGames = rawArr ? normalizeGamesArray(rawArr) : [];
+          const normalized = rawArr ? normalizeGamesArray(rawArr) : [];
+          if(normalized.length > 0){
+            allGames = normalized;
+
+            // salva cache bom (não salva vazio)
+            writeCache({
+              ts: Date.now(),
+              meta: {
+                updatedAt: j.updatedAt || j.updated_at || null,
+                source: j.source || j.fonte || "API-Football"
+              },
+              games: allGames
+            });
+
+            return;
+          }
+
+          // Se JSON veio mas games vazio -> tenta cache
+          const cache = readCache();
+          if(cache && Array.isArray(cache.games) && cache.games.length > 0){
+            usingFallback = true;
+            allGames = cache.games;
+            // Mantém o meta do JSON atual (atualizado) mas sinaliza fallback
+            return;
+          }
+
+          allGames = [];
           return;
         }catch(e){
           lastErr = e;
         }
+      }
+
+      // falhou fetch -> tenta cache
+      const cache = readCache();
+      if(cache && Array.isArray(cache.games) && cache.games.length > 0){
+        usingFallback = true;
+        data = data || { updatedAt: cache.meta?.updatedAt || "—", source: cache.meta?.source || "API-Football" };
+        allGames = cache.games;
+        return;
       }
 
       data = null;
@@ -914,9 +978,8 @@
       throw lastErr || new Error("Falha ao carregar jogos.json");
     }
 
-    /* ======= UI helpers ======= */
     function setActiveChips(){
-      $("chipUpcoming").classList.toggle("active", state.mode==="upcoming" || state.mode==="games" || state.mode==="home");
+      $("chipUpcoming").classList.toggle("active", state.mode==="upcoming" || state.mode==="home");
       $("chipUpcoming").classList.toggle("green", true);
       $("chipLive").classList.toggle("active", state.mode==="live");
 
@@ -929,7 +992,7 @@
 
       $("navHome").classList.toggle("active", state.mode==="home");
       $("navLive").classList.toggle("active", state.mode==="live");
-      $("navGames").classList.toggle("active", state.mode==="games" || state.mode==="upcoming");
+      $("navGames").classList.toggle("active", state.mode==="upcoming");
       $("navPro").classList.toggle("active", state.mode==="pro");
     }
 
@@ -943,9 +1006,22 @@
       }
     }
 
+    function renderFallbackNote(){
+      const wrap = $("fallbackNoteWrap");
+      wrap.innerHTML = "";
+      if(usingFallback){
+        const div = document.createElement("div");
+        div.className = "fallbackNote";
+        div.textContent = "⚠ Usando últimos dados (backup) porque a fonte retornou 0 jogos.";
+        wrap.appendChild(div);
+      }
+    }
+
     function updateMeta(){
+      const metaEl = $("meta");
       if(!data){
-        $("meta").textContent = "Sem dados ainda. Clique em Atualizar.";
+        metaEl.textContent = "Sem dados ainda. Clique em Atualizar.";
+        renderFallbackNote();
         return;
       }
 
@@ -963,9 +1039,11 @@
         if(k && k >= now && k <= (now + 24*3600*1000)) next24++;
       }
 
-      $("meta").innerHTML =
+      metaEl.innerHTML =
         `Atualizado: <b>${escapeHtml(upd)}</b> • Fonte: <b>${escapeHtml(src)}</b><br>` +
         `Jogos: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo (limpo): <b>${liveClean}</b>`;
+
+      renderFallbackNote();
     }
 
     function filterUpcoming24(){
@@ -998,7 +1076,6 @@
       if(state.sort==="popular"){
         list.sort((a,b)=> popularityScore(b)-popularityScore(a));
       }else{
-        // ao vivo: por elapsed/status
         list.sort((a,b)=> ((b.elapsed||0) - (a.elapsed||0)));
       }
       return list;
@@ -1020,7 +1097,6 @@
       const mins = minutesText(g);
       const fav = !!state.favorites[id];
 
-      // odds fake (layout). depois você pluga odds reais.
       const o1 = g.odds1 ?? "—";
       const ox = g.oddsX ?? "—";
       const o2 = g.odds2 ?? "—";
@@ -1042,7 +1118,7 @@
                   <span style="opacity:.5">•</span>
                   <span>${escapeHtml(g.country||"—")}</span>
                   <span style="opacity:.5">•</span>
-                  <span><b>${tStr}</b></span>
+                  <span><b>${escapeHtml(tStr)}</b></span>
                   <span class="pillDate">${escapeHtml(dStr)}</span>
                 </div>
               </div>
@@ -1197,7 +1273,6 @@
     }
 
     function wire(){
-      // sports
       document.querySelectorAll(".sTab").forEach(t=>{
         t.onclick = () => {
           state.sport = t.getAttribute("data-sport");
@@ -1207,7 +1282,6 @@
         };
       });
 
-      // chips
       $("chipUpcoming").onclick = () => { state.mode="upcoming"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("chipLive").onclick = () => { state.mode="live"; saveState(); render(); if(state.autoOn) startAuto(); };
 
@@ -1215,12 +1289,12 @@
       $("chipEurope").onclick = () => { state.region="europe"; saveState(); render(); };
       $("chipAll").onclick = () => { state.region="all"; saveState(); render(); };
 
-      // search
       $("q").addEventListener("input", () => {
         state.q = $("q").value;
         saveState();
         render();
       });
+
       $("clearBtn").onclick = () => {
         state.q = "";
         $("q").value = "";
@@ -1228,7 +1302,6 @@
         render();
       };
 
-      // sort
       $("sortSel").value = state.sort || "time";
       $("sortSel").onchange = () => {
         state.sort = $("sortSel").value;
@@ -1236,7 +1309,6 @@
         render();
       };
 
-      // refresh
       $("refreshBtn").onclick = async () => {
         $("refreshBtn").textContent = "Atualizando…";
         try{
@@ -1249,7 +1321,6 @@
         }
       };
 
-      // auto
       $("autoBtn").onclick = () => {
         state.autoOn = !state.autoOn;
         saveState();
@@ -1258,11 +1329,10 @@
         else stopAuto();
       };
 
-      // info
       $("infoBtn").onclick = () => {
         const upd = data?.updatedAt || data?.updated_at || "—";
         const src = data?.source || data?.fonte || "API-Football";
-        alert(`Radar PRO v2.4.4\nFonte: ${src}\nAtualizado: ${upd}\n\nObs: O JSON (GitHub Actions) pode atualizar em ciclos.\nAuto recarrega 30–60s.`);
+        alert(`Radar PRO v2.4.5\nFonte: ${src}\nAtualizado: ${upd}\n\nObs: Se a fonte retornar 0 jogos, o app usa backup (24h) para não ficar vazio.`);
       };
 
       $("gearBtn").onclick = () => alert("Configurações: ativaremos depois (layout pronto).");
@@ -1272,16 +1342,13 @@
       $("scrollTopBtn").onclick = () => window.scrollTo({top:0, behavior:"smooth"});
       $("heroBtn").onclick = () => window.scrollTo({top:0, behavior:"smooth"});
 
-      // bottom nav
       $("navHome").onclick = () => { state.mode="home"; saveState(); render(); };
       $("navLive").onclick = () => { state.mode="live"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("navGames").onclick = () => { state.mode="upcoming"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("navPro").onclick = () => alert("PRO: área de assinatura (vamos ativar depois).");
 
-      // top buttons
       $("enterBtn").onclick = () => alert("Entrar/Cadastrar: vamos ativar depois (login/conta).");
 
-      // modal menu
       $("openMenu").onclick = () => $("menuOverlay").classList.add("show");
       $("closeMenu").onclick = () => $("menuOverlay").classList.remove("show");
       $("menuOverlay").onclick = (e) => { if(e.target === $("menuOverlay")) $("menuOverlay").classList.remove("show"); };
@@ -1294,7 +1361,7 @@
       $("menuAbout").onclick = () => {
         const upd = data?.updatedAt || data?.updated_at || "—";
         const src = data?.source || data?.fonte || "API-Football";
-        alert(`Radar PRO v2.4.4\nFonte: ${src}\nAtualizado: ${upd}`);
+        alert(`Radar PRO v2.4.5\nFonte: ${src}\nAtualizado: ${upd}`);
       };
     }
 
@@ -1321,4 +1388,4 @@
     })();
   </script>
 </body>
-</html>
+  </html>
