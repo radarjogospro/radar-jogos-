@@ -18,6 +18,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -30,9 +33,35 @@ jobs:
         run: node scripts/update-jogos.js
 
       - name: Commit and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # pega atualizações remotas antes de tentar commitar/push
+          git pull --rebase origin main
+
           git add jogos.json
-          git diff --staged --quiet || git commit -m "chore: update jogos.json"
-          git push
+
+          # se não mudou nada, sai limpo
+          git diff --staged --quiet && echo "No changes in jogos.json" && exit 0
+
+          git commit -m "chore: update jogos.json"
+
+          # push com retry (evita travar por corrida)
+          for i in 1 2 3; do
+            echo "Push attempt $i..."
+            if git push origin HEAD:main; then
+              echo "Push ok"
+              exit 0
+            fi
+            echo "Push failed, rebasing and retrying..."
+            git pull --rebase origin main
+            sleep 2
+          done
+
+          echo "Push failed after retries"
+          exit 1
