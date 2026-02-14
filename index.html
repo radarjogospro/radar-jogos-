@@ -2,1033 +2,1415 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#071f24" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Radar Jogos PRO</title>
+  <meta name="theme-color" content="#0b1b1d" />
   <style>
     :root{
-      --bg0:#061a1f;
-      --bg1:#071f24;
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.10);
+      --bg0:#071416;
+      --bg1:#0b1b1d;
+      --card:rgba(10,20,25,.55);
+      --card2:rgba(255,255,255,.05);
+      --bd:rgba(255,255,255,.08);
+      --bd2:rgba(255,255,255,.10);
       --txt:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.62);
-      --muted2:rgba(255,255,255,.48);
-
-      --a1:#31d7ff;   /* cyan */
-      --a2:#a855f7;   /* purple */
-      --a3:#22c55e;   /* green */
-      --warn:#ef4444; /* red */
-
-      --r:22px;
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
-      --shadow2: 0 10px 25px rgba(0,0,0,.25);
-      --blur: 18px;
+      --mut:rgba(255,255,255,.70);
+      --mut2:rgba(255,255,255,.55);
+      --green:#34c759;
+      --red:#ff3b30;
+      --blue:#0a84ff;
+      --amber:#ffcc00;
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --r: 22px;
+      --r2: 16px;
       --pad: 14px;
     }
 
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1200px 700px at 20% 0%, rgba(49,215,255,.18), transparent 60%),
-        radial-gradient(900px 600px at 90% 20%, rgba(168,85,247,.14), transparent 60%),
-        radial-gradient(900px 600px at 50% 100%, rgba(34,197,94,.10), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--txt);
-      min-height:100vh;
+      background:
+        radial-gradient(1200px 700px at 20% 0%, rgba(46, 255, 225, .14), transparent 55%),
+        radial-gradient(900px 500px at 90% 15%, rgba(10, 132, 255, .16), transparent 55%),
+        radial-gradient(900px 700px at 60% 110%, rgba(52, 199, 89, .12), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+      overflow-x:hidden;
     }
 
     .wrap{
-      max-width: 820px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 14px 12px 90px;
+      padding: 14px 14px 120px;
     }
 
     .topbar{
+      margin-top: 8px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: 26px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .toprow{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      padding: 14px;
-      border-radius: var(--r);
-      background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(var(--blur));
-      position: sticky;
-      top: 10px;
-      z-index: 20;
+      gap: 10px;
     }
 
     .brand{
-      display:flex; flex-direction:column; gap:4px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width:0;
     }
 
-    .brand .title{
-      font-weight: 800;
+    .statusdot{
+      width:12px;height:12px;border-radius:999px;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(52,199,89,.14);
+      flex:0 0 auto;
+    }
+
+    .brandtext{min-width:0}
+    .brandtext .t1{
+      font-weight: 850;
+      font-size: 20px;
       letter-spacing:.2px;
-      font-size: 18px;
+      line-height:1.05;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 62vw;
     }
-
-    .online{
-      display:flex; align-items:center; gap:8px;
-      color: var(--muted);
+    .brandtext .t2{
+      margin-top: 2px;
       font-size: 13px;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: var(--a3);
-      box-shadow: 0 0 0 4px rgba(34,197,94,.14);
+      color: var(--mut);
+      display:flex;
+      align-items:center;
+      gap: 6px;
     }
 
-    .btn{
-      border: 1px solid var(--stroke);
+    .menuBtn{
+      appearance:none;border:0;outline:0;
+      cursor:pointer;
+      padding: 11px 14px;
+      border-radius: 18px;
       background: rgba(255,255,255,.06);
       color: var(--txt);
-      border-radius: 16px;
-      padding: 10px 12px;
-      font-weight: 650;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
-      backdrop-filter: blur(var(--blur));
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 750;
+      display:flex;
+      align-items:center;
+      gap: 10px;
       user-select:none;
     }
-    .btn:active{ transform: translateY(1px); }
+    .menuBtn:active{transform:translateY(1px)}
 
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(49,215,255,.25), rgba(34,197,94,.18));
-      border-color: rgba(49,215,255,.25);
-    }
-    .btn.ghost{
-      background: rgba(255,255,255,.04);
-    }
-
-    .card{
-      margin-top: 12px;
+    .panel{
+      margin-top: 14px;
       padding: 14px;
-      border-radius: var(--r);
-      background: linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.035));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(var(--blur));
+      border-radius: 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      backdrop-filter: blur(12px);
       position: relative;
       overflow:hidden;
     }
-    .card::before{
+    .panel:before{
       content:"";
       position:absolute; inset:0;
-      background:
-        radial-gradient(circle at 10px 10px, rgba(255,255,255,.07) 0 1px, transparent 2px) 0 0/18px 18px;
-      opacity:.35;
+      background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity:.25;
       pointer-events:none;
-      mix-blend-mode: overlay;
     }
+    .panel > *{position:relative}
 
-    .row{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    .searchRow{
+      display:flex;
+      gap: 10px;
+      align-items:center;
     }
-
     .search{
-      flex: 1 1 auto;
-      display:flex; align-items:center; gap:10px;
-      padding: 10px 12px;
+      flex:1;
+      padding: 12px 14px;
       border-radius: 18px;
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.18);
-    }
-    .search input{
-      width:100%;
-      border:0; outline:0;
-      background: transparent;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,255,255,.09);
       color: var(--txt);
+      outline:none;
       font-size: 14px;
     }
+    .btn{
+      appearance:none;border:0;outline:0;
+      cursor:pointer;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--txt);
+      font-weight: 800;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:active{transform:translateY(1px)}
+
+    .btnPrimary{
+      background: linear-gradient(135deg, rgba(52,199,89,.95), rgba(34,166,73,.92));
+      border: 1px solid rgba(52,199,89,.35);
+      color: rgba(0,0,0,.88);
+      font-weight: 900;
+    }
+
     .meta{
       margin-top: 10px;
-      color: var(--muted);
-      font-size: 12.8px;
-      line-height: 1.35;
-    }
-
-    .chips{
-      margin-top: 10px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-
-    .chip{
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.055);
-      color: var(--txt);
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-weight: 700;
       font-size: 13px;
-      cursor:pointer;
-      display:flex; align-items:center; gap:8px;
-      user-select:none;
-    }
-    .chip.active{
-      background: linear-gradient(135deg, rgba(49,215,255,.20), rgba(168,85,247,.16));
-      border-color: rgba(49,215,255,.22);
-    }
-    .chip .pill{
-      width:8px; height:8px; border-radius:999px;
-      background: rgba(255,255,255,.35);
-    }
-    .chip.active .pill{ background: var(--a1); }
-
-    .subpanel{
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 18px;
-      border: 1px solid var(--stroke);
-      background: rgba(0,0,0,.18);
-    }
-    .subpanel .label{
-      color: var(--muted2);
-      font-size: 12px;
-      font-weight: 750;
-      margin-bottom: 8px;
-      display:flex; justify-content:space-between; align-items:center; gap:8px;
+      color: var(--mut);
+      line-height:1.35;
     }
 
-    .window{
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .wbtn{
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.05);
-      color: var(--txt);
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .wbtn.active{
-      background: linear-gradient(135deg, rgba(34,197,94,.20), rgba(49,215,255,.16));
-      border-color: rgba(34,197,94,.25);
-    }
-
-    .propanel{
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 18px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-    }
-    .progrid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-      margin-top: 10px;
-    }
-    .proitem{
-      border: 1px solid var(--stroke);
-      background: rgba(0,0,0,.14);
-      border-radius: 16px;
-      padding: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-    .proitem b{ color: var(--txt); }
-
-    .list{
+    .pills{
       margin-top: 12px;
       display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    .match{
-      padding: 14px;
-      border-radius: var(--r);
-      background: linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(var(--blur));
-      overflow:hidden;
-      position:relative;
-    }
-    .match::after{
-      content:"";
-      position:absolute; inset:-40px -40px auto auto;
-      width:160px; height:160px;
-      background: radial-gradient(circle at 40% 40%, rgba(49,215,255,.18), transparent 60%);
-      transform: rotate(18deg);
-      pointer-events:none;
-    }
-
-    .mhead{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .teams{
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: .2px;
-      line-height: 1.15;
-    }
-    .sub{
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 13px;
-      display:flex;
-      gap:8px;
       flex-wrap:wrap;
-      align-items:center;
+      gap: 10px;
     }
-    .tag{
-      display:inline-flex; align-items:center; gap:6px;
-      padding: 6px 10px;
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
       border-radius: 999px;
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.15);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.09);
       color: var(--txt);
       font-weight: 800;
-      font-size: 12px;
-    }
-    .tag.live{
-      border-color: rgba(239,68,68,.35);
-      background: rgba(239,68,68,.10);
-    }
-    .tag.live .ldot{
-      width:8px; height:8px; border-radius:999px;
-      background: var(--warn);
-      box-shadow: 0 0 0 4px rgba(239,68,68,.12);
-    }
-
-    .actions{
-      margin-top: 12px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .btn.small{
-      padding: 10px 12px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 800;
-      flex: 1 1 140px;
-      display:flex; justify-content:center; gap:8px; align-items:center;
-    }
-    .btn.small.secondary{
-      background: rgba(255,255,255,.05);
-    }
-
-    .accordion{
-      margin-top: 12px;
-      border-radius: 16px;
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.16);
-      overflow:hidden;
-    }
-    .acc-head{
-      display:flex; justify-content:space-between; align-items:center;
-      padding: 12px;
       cursor:pointer;
       user-select:none;
-      color: var(--txt);
-      font-weight: 900;
-      font-size: 13px;
     }
-    .acc-body{
-      padding: 12px;
-      border-top:1px solid rgba(255,255,255,.08);
-      display:none;
+    .pill .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: rgba(255,255,255,.18);
     }
-    .acc-body.open{ display:block; }
+    .pill.active{
+      background: rgba(10,132,255,.10);
+      border-color: rgba(10,132,255,.22);
+    }
+    .pill.active .dot{background: var(--blue); box-shadow: 0 0 0 6px rgba(10,132,255,.14)}
+    .pill.red.active{background: rgba(255,59,48,.10); border-color: rgba(255,59,48,.22)}
+    .pill.red.active .dot{background: var(--red); box-shadow: 0 0 0 6px rgba(255,59,48,.14)}
+    .pill.green.active{background: rgba(52,199,89,.10); border-color: rgba(52,199,89,.22)}
+    .pill.green.active .dot{background: var(--green); box-shadow: 0 0 0 6px rgba(52,199,89,.14)}
 
-    .tabs{
-      display:flex; gap:8px; flex-wrap:wrap;
+    .subpills{
+      margin-top: 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+    }
+
+    .windowBox{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .windowRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      color: var(--mut);
+      font-size: 13px;
       margin-bottom: 10px;
     }
-    .tab{
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.045);
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 12px;
+    .chips{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .chipBtn{
       cursor:pointer;
-      user-select:none;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.09);
       color: var(--txt);
-      opacity:.9;
-    }
-    .tab.active{
-      background: linear-gradient(135deg, rgba(168,85,247,.16), rgba(49,215,255,.12));
-      border-color: rgba(168,85,247,.25);
-    }
-
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 12px;
-      align-items:center;
+      font-weight: 900;
       font-size: 13px;
-      color: var(--muted);
+      user-select:none;
     }
-    .grid2 b{ color: var(--txt); }
+    .chipBtn.active{
+      background: rgba(52,199,89,.12);
+      border-color: rgba(52,199,89,.22);
+    }
 
-    .empty{
+    .proPanel{
       margin-top: 12px;
-      padding: 18px;
-      border-radius: var(--r);
-      border: 1px dashed rgba(255,255,255,.18);
-      color: var(--muted);
-      background: rgba(0,0,0,.16);
-      text-align:center;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .proHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .proHead .ttl{
+      font-weight: 950;
+      letter-spacing:.2px;
+    }
+    .proHead .sub{
+      color: var(--mut);
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .proCard{
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.06);
+      margin-top: 10px;
+    }
+    .proCard .h{
+      font-weight: 950;
+      margin-bottom: 6px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .proCard .p{
+      color: var(--mut);
+      font-size: 13px;
+      line-height: 1.35;
     }
 
-    .bottomnav{
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,.45));
-      backdrop-filter: blur(16px);
-      z-index: 30;
-    }
-    .bnwrap{
-      max-width: 820px;
-      margin: 0 auto;
+    .dateRow{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(255,255,255,.06);
       display:flex;
       gap: 10px;
       align-items:center;
       justify-content:space-between;
     }
-    .navbtn{
-      flex:1 1 auto;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.055);
+    .dateRow .lbl{color: var(--mut); font-size:13px; font-weight: 800;}
+    .dateRow .controls{display:flex; gap:10px; align-items:center; flex:1; justify-content:flex-end;}
+    .datePick{
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
       color: var(--txt);
-      border-radius: 18px;
-      padding: 12px 10px;
-      font-weight: 900;
-      font-size: 13px;
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      align-items:center;
-      cursor:pointer;
-      user-select:none;
-    }
-    .navbtn.active{
-      background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(49,215,255,.14));
-      border-color: rgba(34,197,94,.28);
+      outline:none;
+      font-weight: 850;
+      max-width: 190px;
     }
 
-    /* modal/menu */
-    .overlay{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-      display:none;
-      z-index: 60;
-      padding: 18px 12px;
+    /* LISTA / CARDS */
+    #games{
+      margin-top: 16px;
     }
-    .overlay.open{ display:block; }
-    .sheet{
-      max-width: 820px;
-      margin: 10px auto 0;
-      border-radius: 22px;
-      border: 1px solid var(--stroke);
-      background: linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    .game-card{
+      margin: 12px 0;
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(10,20,25,.50);
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,.28);
+      backdrop-filter: blur(12px);
     }
-    .sheet h3{
-      margin:0; padding: 14px 14px 10px;
-      font-size: 16px;
+    .gc-head{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+    .gc-left{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      min-width: 0;
+      flex:1;
+    }
+    .dotLive{
+      width:9px; height:9px; border-radius:999px;
+      background: rgba(255,255,255,.18);
+      margin-top: 7px;
+      flex:0 0 auto;
+    }
+    .dotLive.live{
+      background: var(--red);
+      box-shadow: 0 0 0 6px rgba(255,59,48,.14);
+    }
+    .teams{min-width:0; flex:1}
+    .teams .t1{
+      font-size: 18px;
+      font-weight: 950;
+      line-height: 1.12;
       letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 64vw;
     }
-    .sheet .sitem{
-      padding: 12px 14px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      cursor:pointer;
-      user-select:none;
-      color: var(--txt);
-      font-weight: 850;
+    .teams .t2{
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--mut);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 64vw;
     }
-    .sheet .sitem span{ color: var(--muted); font-weight: 800; }
-    .sheet .sclose{
-      padding: 12px 14px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      text-align:center;
+    .gc-right{
+      text-align:right;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap: 6px;
+      flex:0 0 auto;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+    }
+    .chip.live{background: rgba(255,59,48,.10); border-color: rgba(255,59,48,.22)}
+    .chip.ft{background: rgba(52,199,89,.10); border-color: rgba(52,199,89,.22)}
+    .chip.time{background: rgba(10,132,255,.10); border-color: rgba(10,132,255,.22)}
+    .dateMini{font-size: 12px; color: var(--mut)}
+
+    .gc-actions{
+      display:flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .btnGhost{
+      flex:1;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
       color: var(--txt);
       font-weight: 900;
       cursor:pointer;
+      user-select:none;
     }
-    @media (min-width: 720px){
-      .teams{ font-size: 20px; }
-      .progrid{ grid-template-columns: 1fr 1fr; }
+    .btnGhost:active{transform:translateY(1px)}
+
+    details.gc-more{ margin-top: 10px; }
+    details.gc-more summary{
+      list-style:none;
+      cursor:pointer;
+      font-weight: 950;
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--txt);
+      user-select:none;
+    }
+    details.gc-more summary::-webkit-details-marker{display:none}
+
+    .mk-box{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .mk-row{display:flex; justify-content:space-between; gap:10px; padding: 6px 0;}
+    .mk-l{font-size: 13px; color: var(--txt); font-weight: 850;}
+    .mk-r{font-size: 13px; color: var(--txt); display:flex; gap:10px; align-items:center;}
+    .mk-odd{
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+    }
+    .mk-foot{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--mut);
+      line-height:1.35;
+    }
+
+    .empty{
+      margin: 14px 0;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--mut);
+      line-height:1.4;
+    }
+
+    /* MENU (bottom sheet) */
+    .sheetBack{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.40);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events:none;
+      transition: .18s ease;
+      z-index: 50;
+    }
+    .sheetBack.open{opacity:1; pointer-events:auto;}
+
+    .sheet{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -520px;
+      width: min(860px, calc(100vw - 18px));
+      background: rgba(10,20,25,.86);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      border-radius: 26px;
+      padding: 12px;
+      transition: .22s ease;
+      z-index: 51;
+    }
+    .sheet.open{bottom: 12px;}
+
+    .sheetHandle{
+      width: 46px; height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      margin: 6px auto 12px;
+    }
+    .sheetTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 6px 8px 12px;
+    }
+    .sheetTitle .t{font-weight: 950;}
+    .sheetTitle .x{
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: var(--txt);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-weight: 950;
+    }
+    .sheetGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .sheetItem{
+      cursor:pointer;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.09);
+      display:flex;
+      align-items:flex-start;
+      gap: 12px;
+      user-select:none;
+    }
+    .sheetItem:active{transform: translateY(1px)}
+    .sheetItem .ico{
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-size: 18px;
+      flex:0 0 auto;
+    }
+    .sheetItem .tx .h{font-weight: 950; margin-bottom: 4px;}
+    .sheetItem .tx .p{color: var(--mut); font-size: 13px; line-height:1.35;}
+
+    /* BOTTOM NAV */
+    .nav{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      width: min(860px, calc(100vw - 18px));
+      background: rgba(10,20,25,.78);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      padding: 10px;
+      display:flex;
+      gap: 10px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      backdrop-filter: blur(16px);
+      z-index: 40;
+    }
+    .navBtn{
+      flex:1;
+      cursor:pointer;
+      user-select:none;
+      padding: 12px 12px;
+      border-radius: 22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      font-weight: 950;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--txt);
+    }
+    .navBtn.active{
+      background: rgba(52,199,89,.18);
+      border-color: rgba(52,199,89,.22);
+    }
+
+    @media (min-width: 700px){
+      .teams .t1,.teams .t2{max-width: 520px}
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
+
     <div class="topbar">
-      <div class="brand">
-        <div class="title">Radar Jogos PRO</div>
-        <div class="online"><span class="dot"></span> Online</div>
+      <div class="toprow">
+        <div class="brand">
+          <div class="statusdot" id="onlineDot"></div>
+          <div class="brandtext">
+            <div class="t1">Radar Jogos PRO</div>
+            <div class="t2"><span id="onlineText">Online</span></div>
+          </div>
+        </div>
+        <button class="menuBtn" id="btnMenu">… Menu</button>
       </div>
-      <button class="btn ghost" id="btnMenu">… Menu</button>
+
+      <div class="panel">
+        <div class="searchRow">
+          <input class="search" id="search" placeholder="Buscar time, liga ou país..." autocomplete="off" />
+          <button class="btn" id="btnClear">Limpar</button>
+        </div>
+
+        <div class="pills">
+          <div class="pill green active" id="pillLiveUpcoming" data-mode="live+upcoming">
+            <span class="dot"></span> ⚡ Ao vivo + Próximos
+          </div>
+          <div class="pill red" id="pillLive" data-mode="live">
+            <span class="dot"></span> 🔴 Ao vivo
+          </div>
+        </div>
+
+        <div class="subpills">
+          <div class="pill active" id="pillCalendar" data-mode="calendar">
+            <span class="dot"></span> 📅 Calendário
+          </div>
+          <div class="pill" id="pillBrazil" data-country="Brazil">
+            <span class="dot"></span> 🇧🇷 Brasil
+          </div>
+          <div class="pill" id="pillEurope" data-country="Europe">
+            <span class="dot"></span> 🇪🇺 Europa
+          </div>
+          <div class="pill" id="pillAll" data-country="all">
+            <span class="dot"></span> 🌎 Todos
+          </div>
+        </div>
+
+        <div class="windowBox">
+          <div class="windowRow">
+            <div class="lbl">Janela</div>
+            <div id="windowInfo">Próximas 24h • BRT</div>
+          </div>
+          <div class="chips" id="windowChips">
+            <div class="chipBtn" data-hours="1">1h</div>
+            <div class="chipBtn" data-hours="2">2h</div>
+            <div class="chipBtn" data-hours="3">3h</div>
+            <div class="chipBtn" data-hours="6">6h</div>
+            <div class="chipBtn" data-hours="12">12h</div>
+            <div class="chipBtn active" data-hours="24">24h</div>
+          </div>
+        </div>
+
+        <div class="dateRow">
+          <div class="lbl">Data (BRT)</div>
+          <div class="controls">
+            <input class="datePick" id="datePicker" type="date" />
+            <button class="btn" id="btnApplyDate">Aplicar</button>
+          </div>
+        </div>
+
+        <div class="proPanel">
+          <div class="proHead">
+            <div class="ttl">✨ Painel PRO</div>
+            <div class="sub" id="proSub">Janela ativa: 24h • Fuso: BRT</div>
+          </div>
+
+          <div class="proCard">
+            <div class="h">⚡ Próximos por janela</div>
+            <div class="p">Escolha 1–24h para ver só o que começa nessa faixa (AO VIVO continua no topo).</div>
+          </div>
+
+          <div class="proCard">
+            <div class="h">📊 Odds / Mais-Menoss</div>
+            <div class="p">Estimativa local já aparece. Com API paga, dá pra puxar odds reais e mais mercados.</div>
+          </div>
+
+          <div class="proCard">
+            <div class="h">⭐ Favoritos</div>
+            <div class="p">Salva jogos que você acompanha (localStorage). Layout e menu já preparados.</div>
+          </div>
+
+          <div class="proCard">
+            <div class="h">🕘 Histórico</div>
+            <div class="p">Marca jogos vistos e revisa depois (localStorage). Ótimo pra rotina diária.</div>
+          </div>
+        </div>
+
+        <div class="meta">
+          <button class="btn btnPrimary" id="btnRefresh">Atualizar</button>
+          <div style="margin-top:10px" id="metaLine">
+            Última atualização: — • Fonte: —<br/>
+            Jogos no arquivo: — • Hoje: — • Próx 24h: — • Ao vivo: —
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="row">
-        <div class="search">
-          <input id="q" placeholder="Buscar time, liga ou país..." autocomplete="off" />
-        </div>
-        <button class="btn ghost" id="btnClear">Limpar</button>
-      </div>
-
-      <div class="row" style="margin-top:10px;">
-        <button class="btn primary" id="btnRefresh">Atualizar</button>
-      </div>
-
-      <div class="meta" id="meta">Carregando…</div>
-
-      <div class="chips">
-        <div class="chip active" data-mode="next"><span class="pill"></span> ⚡ Ao vivo + Próximos</div>
-        <div class="chip" data-mode="live"><span class="pill"></span> 🔴 Ao vivo</div>
-        <div class="chip" data-mode="calendar"><span class="pill"></span> 📅 Calendário</div>
-        <div class="chip" data-region="Brazil"><span class="pill"></span> 🇧🇷 Brasil</div>
-        <div class="chip" data-region="Europe"><span class="pill"></span> 🇪🇺 Europa</div>
-        <div class="chip" data-region="All"><span class="pill"></span> 🌍 Todos</div>
-      </div>
-
-      <div class="subpanel" id="calendarPanel" style="display:none;">
-        <div class="label">
-          <span>Data (BRT)</span>
-          <span id="calendarHint"></span>
-        </div>
-        <div class="row">
-          <input id="datePick" type="date" class="btn" style="flex:1 1 auto; text-align:left;" />
-          <button class="btn" id="applyDate">Aplicar</button>
-        </div>
-      </div>
-
-      <div class="subpanel" id="windowPanel">
-        <div class="label">
-          <span>Janela</span>
-          <span id="windowHint">Próximas 1h • BRT</span>
-        </div>
-        <div class="window" id="windowBtns">
-          <div class="wbtn active" data-h="1">1h</div>
-          <div class="wbtn" data-h="2">2h</div>
-          <div class="wbtn" data-h="3">3h</div>
-          <div class="wbtn" data-h="6">6h</div>
-          <div class="wbtn" data-h="12">12h</div>
-          <div class="wbtn" data-h="24">24h</div>
-        </div>
-      </div>
-
-      <div class="propanel">
-        <div class="label">
-          <span>✨ Painel PRO</span>
-          <span id="proStatus">Janela ativa: 1h • Fuso: BRT</span>
-        </div>
-        <div class="progrid">
-          <div class="proitem"><b>Próximos por janela</b><br>Escolha 1–24h para ver só o que começa nessa faixa (ideal pra “puxar” jogo em cima da hora).</div>
-          <div class="proitem"><b>Odds / Mais–Menos</b><br>Aba pronta para probabilidades reais assim que você migrar para API paga.</div>
-          <div class="proitem"><b>Favoritos</b><br>Salva jogos/ligas que você acompanha (localStorage). Layout e menu já preparados.</div>
-          <div class="proitem"><b>Histórico</b><br>Marca jogos vistos e revisa depois (localStorage). Ótimo pra rotina diária.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="list" id="list"></div>
-    <div class="empty" id="empty" style="display:none;">Nada para mostrar. Tente mudar filtros (Ao vivo / Próximos / Calendário) ou a janela (1h–24h).</div>
+    <div id="games"></div>
   </div>
 
-  <div class="bottomnav">
-    <div class="bnwrap">
-      <div class="navbtn active" data-page="games">🗓️ Jogos</div>
-      <div class="navbtn" data-page="fav">★ Favoritos</div>
-      <div class="navbtn" data-page="hist">⏱️ Histórico</div>
+  <!-- Bottom nav -->
+  <div class="nav">
+    <div class="navBtn active" id="navGames">🗓️ Jogos</div>
+    <div class="navBtn" id="navFavs">★ Favoritos</div>
+    <div class="navBtn" id="navHist">⏱ Histórico</div>
+  </div>
+
+  <!-- Menu sheet -->
+  <div class="sheetBack" id="sheetBack"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheetHandle"></div>
+    <div class="sheetTitle">
+      <div class="t">Menu</div>
+      <button class="x" id="sheetClose">Fechar</button>
+    </div>
+    <div class="sheetGrid">
+      <div class="sheetItem" data-go="favs">
+        <div class="ico">★</div>
+        <div class="tx">
+          <div class="h">Favoritos</div>
+          <div class="p">Ver e gerenciar seus jogos salvos.</div>
+        </div>
+      </div>
+      <div class="sheetItem" data-go="hist">
+        <div class="ico">⏱</div>
+        <div class="tx">
+          <div class="h">Histórico</div>
+          <div class="p">Revisar jogos marcados como vistos.</div>
+        </div>
+      </div>
+      <div class="sheetItem" data-go="config">
+        <div class="ico">⚙️</div>
+        <div class="tx">
+          <div class="h">Configurações</div>
+          <div class="p">BRT, janela, limpeza de dados e modo PRO.</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Menu -->
-  <div class="overlay" id="overlay">
-    <div class="sheet">
-      <h3>Menu</h3>
-      <div class="sitem" data-menu="games">Jogos <span>lista principal</span></div>
-      <div class="sitem" data-menu="fav">Favoritos <span>salvos</span></div>
-      <div class="sitem" data-menu="hist">Histórico <span>vistos</span></div>
-      <div class="sitem" data-menu="settings">Configurações <span>ajustes</span></div>
-      <div class="sclose" id="closeMenu">Fechar</div>
-    </div>
-  </div>
+<script>
+(() => {
+  "use strict";
 
-  <script>
-    // ===== Helpers de BRT =====
-    const TZ = "America/Sao_Paulo";
+  // ============ CONFIG ============
+  const TZ = "America/Sao_Paulo";
+  const DATA_URL = "./jogos.json?v=" + Date.now();
+  const PAGE_SIZE = 30;
+  const OU_LINES = [1.5, 2.5, 3.5];
+  const TEAM_FT_SAMPLE = 6;
 
-    function nowBRT(){
-      // Date "em BRT" (via toLocaleString). Suficiente para comparar janelas no front.
-      return new Date(new Date().toLocaleString("en-US", { timeZone: TZ }));
+  // ============ DOM ============
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+  const el = {
+    games: $("#games"),
+    metaLine: $("#metaLine"),
+    btnRefresh: $("#btnRefresh"),
+    btnClear: $("#btnClear"),
+    search: $("#search"),
+    datePicker: $("#datePicker"),
+    btnApplyDate: $("#btnApplyDate"),
+    windowInfo: $("#windowInfo"),
+    proSub: $("#proSub"),
+    windowChips: $("#windowChips"),
+
+    pills: {
+      liveUpcoming: $("#pillLiveUpcoming"),
+      live: $("#pillLive"),
+      calendar: $("#pillCalendar"),
+      brazil: $("#pillBrazil"),
+      europe: $("#pillEurope"),
+      all: $("#pillAll"),
+    },
+
+    nav: {
+      games: $("#navGames"),
+      favs: $("#navFavs"),
+      hist: $("#navHist"),
+    },
+
+    sheet: {
+      btn: $("#btnMenu"),
+      back: $("#sheetBack"),
+      sheet: $("#sheet"),
+      close: $("#sheetClose"),
+      items: $$(".sheetItem"),
     }
+  };
 
-    function isoDateBRT(d){
-      // yyyy-mm-dd em BRT
-      const parts = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year:"numeric", month:"2-digit", day:"2-digit" }).formatToParts(d);
-      const y = parts.find(p=>p.type==="year").value;
-      const m = parts.find(p=>p.type==="month").value;
-      const da = parts.find(p=>p.type==="day").value;
-      return `${y}-${m}-${da}`;
+  // ============ STATE ============
+  const state = {
+    data: null,
+    games: [],
+    gamesByDate: new Map(),
+    liveGames: [],
+    upcomingSorted: [],
+    ftByTeam: new Map(),
+
+    view: "games", // games | favs | hist | config
+    filter: {
+      mode: "live+upcoming", // live+upcoming | live | calendar
+      country: "all",        // all | Brazil | Europe
+      q: "",
+      windowHours: 24,
+      dateKey: null,         // YYYY-MM-DD
+    },
+
+    render: {
+      page: 1,
+      list: [],
+      lastHash: "",
     }
+  };
 
-    function parseKickoffBRT(dateStr, timeStr){
-      // Interpreta date+time como BRT.
-      // Preferência: usar offset -03:00 (Brasil sem DST hoje). Se falhar, fallback.
-      const t = (timeStr || "00:00").slice(0,5);
-      const iso = `${dateStr}T${t}:00-03:00`;
-      const d = new Date(iso);
-      if (!isNaN(d)) return d;
+  // ============ STORAGE ============
+  const LS_FAV = "rjp_favs";
+  const LS_HIST = "rjp_hist";
 
-      // fallback: construir e "re-interpretar" em BRT
-      const fallback = new Date(`${dateStr}T${t}:00`);
-      return new Date(fallback.toLocaleString("en-US", { timeZone: TZ }));
-    }
+  const getSet = (k) => new Set(JSON.parse(localStorage.getItem(k) || "[]"));
+  const saveSet = (k, set) => localStorage.setItem(k, JSON.stringify(Array.from(set)));
 
-    // ===== Status =====
-    const FINISHED = new Set(["FT","AET","PEN"]);
-    const CANCELED = new Set(["PST","CANC","ABD","SUSP","AWD","WO","TBD"]);
-    const NOT_STARTED = new Set(["NS"]);
+  // ============ HELPERS ============
+  const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
+  const normalizeText = (s) => (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 
-    function isLive(g){
-      const s = (g.status || "").toUpperCase().trim();
-      if (!s) return false;
-      if (FINISHED.has(s) || CANCELED.has(s) || NOT_STARTED.has(s)) return false;
-      // Qualquer coisa que não seja FT/NS/etc consideramos ao vivo (HT, 1H, 2H, LIVE, IN_PLAY…)
-      return true;
-    }
+  function fmtBrtDate(ts){
+    try { return new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(ts)); }
+    catch { return "—"; }
+  }
+  function fmtBrtTime(ts){
+    try { return new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,hour:"2-digit",minute:"2-digit"}).format(new Date(ts)); }
+    catch { return "—"; }
+  }
+  function todayKeyBRT(){
+    return new Intl.DateTimeFormat("en-CA",{timeZone:TZ}).format(new Date());
+  }
 
-    function isFinished(g){
-      const s = (g.status || "").toUpperCase().trim();
-      return FINISHED.has(s);
-    }
+  function isEurope(countryStr){
+    const c = normalizeText(countryStr);
+    return ["england","spain","italy","france","germany","portugal","netherlands","belgium","turkey","greece",
+            "scotland","wales","ireland","sweden","norway","denmark","finland","poland","austria","switzerland",
+            "czech","slovakia","hungary","romania","bulgaria","croatia","serbia","slovenia","ukraine","russia",
+            "moldova","iceland","latvia","lithuania","estonia"].some(x => c.includes(x));
+  }
 
-    function isNotStarted(g){
-      const s = (g.status || "").toUpperCase().trim();
-      return NOT_STARTED.has(s) || s === "";
-    }
+  // ============ POISSON ============
+  function poissonPMF(k, lambda){
+    let fact=1;
+    for(let i=2;i<=k;i++) fact*=i;
+    return Math.exp(-lambda)*Math.pow(lambda,k)/fact;
+  }
+  function poissonCDF(k, lambda){
+    let sum=0;
+    for(let i=0;i<=k;i++) sum += poissonPMF(i, lambda);
+    return sum;
+  }
+  function probOver(line, lambda){
+    const k = Math.floor(line);
+    return 1 - poissonCDF(k, lambda);
+  }
+  function probUnder(line, lambda){
+    const k = Math.floor(line);
+    return poissonCDF(k, lambda);
+  }
+  function fairOdd(p){ return (!p || p<=0) ? null : (1/p); }
+  function pct(p){ return (p==null || Number.isNaN(p)) ? "—" : (Math.round(p*100)+"%"); }
+  function oddStr(o){ return (!o || !Number.isFinite(o)) ? "—" : o.toFixed(2); }
 
-    // ===== Estado =====
-    let DATA = null;
-    let MODE = "next"; // next | live | calendar
-    let REGION = "All"; // All | Brazil | Europe
-    let WINDOW_H = 1; // 1..24
-    let DATE_PICK = null; // yyyy-mm-dd
-    let PAGE = "games"; // games | fav | hist
+  function estimateLambdaTotal(home, away){
+    const a = state.ftByTeam.get(home) || [];
+    const b = state.ftByTeam.get(away) || [];
+    const sample = a.concat(b);
+    if(sample.length < 4) return null;
+    const avg = sample.reduce((acc,x)=>acc+(x.totalGoals||0),0)/sample.length;
+    return clamp(avg, 0.6, 4.2);
+  }
 
-    const EUROPE = new Set([
-      "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria",
-      "Croatia","Cyprus","Czech Republic","Denmark","England","Estonia","Finland","France","Georgia","Germany","Gibraltar",
-      "Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Luxembourg","Malta",
-      "Moldova","Montenegro","Netherlands","North Macedonia","Northern Ireland","Norway","Poland","Portugal","Romania",
-      "Russia","San Marino","Scotland","Serbia","Slovakia","Slovenia","Spain","Sweden","Switzerland","Turkey","Ukraine",
-      "Wales"
-    ]);
+  function buildMarkets(game){
+    const lambda = estimateLambdaTotal(game.home, game.away);
+    return OU_LINES.map(line=>{
+      if(!lambda) return {line, overP:null, underP:null, overOdd:null, underOdd:null};
+      const overP = probOver(line, lambda);
+      const underP = probUnder(line, lambda);
+      return {line, overP, underP, overOdd: fairOdd(overP), underOdd: fairOdd(underP)};
+    });
+  }
 
-    // localStorage
-    const LS_FAV = "rjp_favs_v1";
-    const LS_HIST = "rjp_hist_v1";
-    function loadSet(key){
-      try{ return new Set(JSON.parse(localStorage.getItem(key) || "[]")); }
-      catch{ return new Set(); }
-    }
-    function saveSet(key, set){
-      localStorage.setItem(key, JSON.stringify([...set]));
-    }
-    let favs = loadSet(LS_FAV);
-    let hist = loadSet(LS_HIST);
+  // ============ DATA / INDEXES ============
+  async function loadData(){
+    const res = await fetch(DATA_URL, {cache:"no-store"});
+    if(!res.ok) throw new Error("Falha ao carregar jogos.json");
+    return await res.json();
+  }
 
-    // ===== UI refs =====
-    const elList = document.getElementById("list");
-    const elEmpty = document.getElementById("empty");
-    const elMeta = document.getElementById("meta");
-    const elQ = document.getElementById("q");
-    const elWindowHint = document.getElementById("windowHint");
-    const elProStatus = document.getElementById("proStatus");
-    const elCalendarPanel = document.getElementById("calendarPanel");
-    const elWindowPanel = document.getElementById("windowPanel");
-    const elDatePick = document.getElementById("datePick");
-    const elCalendarHint = document.getElementById("calendarHint");
+  function buildIndexes(games){
+    state.gamesByDate.clear();
+    state.liveGames = [];
+    state.upcomingSorted = [];
+    state.ftByTeam.clear();
 
-    // ===== Fetch =====
-    async function fetchData(){
-      // cache-bust
-      const url = `./jogos.json?v=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if(!res.ok) throw new Error("Falha ao carregar jogos.json");
-      return await res.json();
-    }
+    for(const g of games){
+      // kickoffTs
+      let kickoff = g.kickoffTs;
+      if(!kickoff && g.date && g.time){
+        // tenta montar com -03:00
+        kickoff = Date.parse(`${g.date}T${g.time}:00-03:00`);
+      }
+      g.kickoffTs = kickoff || null;
 
-    function gameId(g){
-      // id estável para fav/hist
-      return `${g.date}|${g.time}|${g.country}|${g.league}|${g.home}|${g.away}`.toLowerCase();
-    }
+      const dateKey = g.date || (g.kickoffTs ? new Intl.DateTimeFormat("en-CA",{timeZone:TZ}).format(new Date(g.kickoffTs)) : null);
+      g._dateKey = dateKey;
 
-    function regionOk(g){
-      if (REGION === "All") return true;
-      if (REGION === "Brazil") return (g.country || "").toLowerCase() === "brazil";
-      if (REGION === "Europe") return EUROPE.has(g.country || "");
-      return true;
-    }
+      g._isLive = !!g.isLive || g.status==="LIVE" || g.status==="1H" || g.status==="2H";
+      g._isFT = g.status==="FT" || g.status==="AET" || g.status==="PEN";
 
-    function queryOk(g){
-      const q = (elQ.value || "").trim().toLowerCase();
-      if(!q) return true;
-      const s = `${g.home} ${g.away} ${g.league} ${g.country}`.toLowerCase();
-      return s.includes(q);
-    }
-
-    function modeOk(g){
-      const n = nowBRT();
-      const kickoff = parseKickoffBRT(g.date, g.time);
-      const s = (g.status || "").toUpperCase().trim();
-
-      if (MODE === "live"){
-        return isLive(g);
+      if(dateKey){
+        if(!state.gamesByDate.has(dateKey)) state.gamesByDate.set(dateKey, []);
+        state.gamesByDate.get(dateKey).push(g);
       }
 
-      if (MODE === "calendar"){
-        const pick = DATE_PICK || isoDateBRT(n);
-        return g.date === pick;
+      if(g._isLive) state.liveGames.push(g);
+
+      if(g.kickoffTs && !g._isLive) state.upcomingSorted.push(g);
+
+      if(g._isFT){
+        const totalGoals = (Number(g.scoreHome)||0)+(Number(g.scoreAway)||0);
+        const ts = g.kickoffTs || 0;
+        for(const t of [g.home, g.away].filter(Boolean)){
+          const key = t.trim();
+          if(!state.ftByTeam.has(key)) state.ftByTeam.set(key, []);
+          state.ftByTeam.get(key).push({ts, totalGoals});
+        }
       }
-
-      // MODE === "next" (Ao vivo + Próximos por janela)
-      // - inclui ao vivo
-      // - inclui não iniciados dentro da janela
-      // - exclui finalizados e cancelados
-      if (isFinished(g)) return false;
-      if (CANCELED.has(s)) return false;
-
-      if (isLive(g)) return true;
-
-      const diffMs = kickoff - n;
-      const diffH = diffMs / (1000*60*60);
-
-      // só futuros dentro da janela
-      return diffH >= 0 && diffH <= WINDOW_H;
     }
 
-    function sortGames(a,b){
-      const da = parseKickoffBRT(a.date, a.time);
-      const db = parseKickoffBRT(b.date, b.time);
-      return da - db;
+    for(const [k,arr] of state.gamesByDate.entries()){
+      arr.sort((a,b)=>(a.kickoffTs||0)-(b.kickoffTs||0));
     }
+    state.upcomingSorted.sort((a,b)=>(a.kickoffTs||0)-(b.kickoffTs||0));
+    state.liveGames.sort((a,b)=>(b.elapsed||0)-(a.elapsed||0));
 
-    function formatMeta(){
-      if(!DATA) return;
+    for(const [team,arr] of state.ftByTeam.entries()){
+      arr.sort((a,b)=>b.ts-a.ts);
+      state.ftByTeam.set(team, arr.slice(0, TEAM_FT_SAMPLE));
+    }
+  }
 
-      const total = (DATA.games || []).length;
-      const n = nowBRT();
-      const today = isoDateBRT(n);
+  // ============ FILTERS ============
+  function passCountry(g){
+    const c = state.filter.country;
+    if(c==="all") return true;
+    if(c==="Brazil") return normalizeText(g.country)==="brazil";
+    if(c==="Europe") return isEurope(g.country);
+    return true;
+  }
+  function passSearch(g){
+    const q = state.filter.q;
+    if(!q) return true;
+    const hay = normalizeText(`${g.home} ${g.away} ${g.league} ${g.country}`);
+    return hay.includes(q);
+  }
 
-      let liveCount = 0, todayCount = 0, next24 = 0;
-      for(const g of (DATA.games||[])){
-        if (isLive(g)) liveCount++;
-        if (g.date === today) todayCount++;
+  function getFilteredList(){
+    const f = state.filter;
+    let base = [];
 
-        const k = parseKickoffBRT(g.date, g.time);
-        const dh = (k - n) / 3600000;
-        if (dh >= 0 && dh <= 24 && !isFinished(g)) next24++;
+    if(f.mode==="live"){
+      base = state.liveGames;
+    } else if(f.mode==="calendar"){
+      const dk = f.dateKey;
+      base = dk && state.gamesByDate.has(dk) ? state.gamesByDate.get(dk) : [];
+    } else {
+      // live+upcoming
+      const now = Date.now();
+      const max = now + f.windowHours*3600*1000;
+      const upcoming = [];
+      for(const g of state.upcomingSorted){
+        const ts = g.kickoffTs || 0;
+        if(ts < now) continue;
+        if(ts > max) break;
+        upcoming.push(g);
       }
-
-      elMeta.innerHTML =
-        `Última atualização: <b>${(DATA.updatedAt || "—")}</b> • Fonte: <b>${(DATA.source || "—")}</b><br>` +
-        `Jogos no arquivo: <b>${total}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo: <b>${liveCount}</b>`;
+      base = state.liveGames.concat(upcoming);
     }
 
-    function setMode(mode){
-      MODE = mode;
+    const out = [];
+    for(const g of base){
+      if(!passCountry(g)) continue;
+      if(!passSearch(g)) continue;
+      out.push(g);
+    }
 
-      // chips active
-      document.querySelectorAll(".chip[data-mode]").forEach(ch=>{
-        ch.classList.toggle("active", ch.dataset.mode === MODE);
+    // live topo
+    out.sort((a,b)=>{
+      if(a._isLive && !b._isLive) return -1;
+      if(!a._isLive && b._isLive) return 1;
+      return (a.kickoffTs||0)-(b.kickoffTs||0);
+    });
+
+    return out;
+  }
+
+  // ============ UI RENDER ============
+  function scoreChip(g){
+    const hs = (g.scoreHome ?? "—");
+    const as = (g.scoreAway ?? "—");
+    const score = `${hs}\u2013${as}`;
+
+    if(g._isLive){
+      const elp = Number(g.elapsed);
+      const min = Number.isFinite(elp) && elp>0 ? `${elp}'` : "AO VIVO";
+      return `<span class="chip live">${score} <span style="opacity:.7">•</span> ${min}</span>`;
+    }
+    if(g._isFT){
+      return `<span class="chip ft">${score} <span style="opacity:.7">•</span> FT</span>`;
+    }
+    return `<span class="chip time">${fmtBrtTime(g.kickoffTs || Date.now())}</span>`;
+  }
+
+  function renderCard(g){
+    const dateLabel = g.kickoffTs ? fmtBrtDate(g.kickoffTs) : (g.date || "—");
+    const meta = `${g.league||"—"} • ${g.country||"—"} • ${fmtBrtTime(g.kickoffTs || Date.now())}`;
+    const dotCls = g._isLive ? "dotLive live" : "dotLive";
+
+    const favs = getSet(LS_FAV);
+    const isFav = favs.has(String(g.id||""));
+    const favTxt = isFav ? "★ Favoritado" : "★ Favoritar";
+
+    const mk = buildMarkets(g);
+    const rows = mk.map(m=>`
+      <div class="mk-row"><div class="mk-l">Over ${m.line}</div><div class="mk-r">${pct(m.overP)} <span class="mk-odd">${oddStr(m.overOdd)}</span></div></div>
+      <div class="mk-row"><div class="mk-l">Under ${m.line}</div><div class="mk-r">${pct(m.underP)} <span class="mk-odd">${oddStr(m.underOdd)}</span></div></div>
+    `).join("");
+
+    return `
+      <article class="game-card">
+        <header class="gc-head">
+          <div class="gc-left">
+            <div class="${dotCls}"></div>
+            <div class="teams">
+              <div class="t1">${g.home||"—"} <span style="opacity:.7">x</span> ${g.away||"—"}</div>
+              <div class="t2">${meta}</div>
+            </div>
+          </div>
+          <div class="gc-right">
+            ${scoreChip(g)}
+            <div class="dateMini">${dateLabel}</div>
+          </div>
+        </header>
+
+        <div class="gc-actions">
+          <button class="btnGhost" data-action="details">Detalhes</button>
+          <button class="btnGhost" data-action="fav" data-id="${String(g.id||"")}">${favTxt}</button>
+          <button class="btnGhost" data-action="seen" data-id="${String(g.id||"")}">Marcar visto</button>
+        </div>
+
+        <details class="gc-more">
+          <summary>Insights / Odds</summary>
+          <div class="mk-box">
+            ${rows}
+            <div class="mk-foot">
+              Estimativa local (FREE). Com API paga: odds reais, + mercados e mais precisão.
+            </div>
+          </div>
+        </details>
+      </article>
+    `;
+  }
+
+  function renderEmpty(msg){
+    el.games.innerHTML = `<div class="empty">${msg}</div>`;
+  }
+
+  function renderList(){
+    if(state.view==="favs") return renderFavs();
+    if(state.view==="hist") return renderHist();
+    if(state.view==="config") return renderConfig();
+
+    const list = getFilteredList();
+    state.render.list = list;
+
+    const total = list.length;
+    const page = clamp(state.render.page, 1, Math.ceil(total/PAGE_SIZE)||1);
+    state.render.page = page;
+    const shown = list.slice(0, page*PAGE_SIZE);
+
+    const hash = `${state.view}|${state.filter.mode}|${state.filter.country}|${state.filter.q}|${state.filter.windowHours}|${state.filter.dateKey}|${page}|${total}`;
+    if(hash === state.render.lastHash) return;
+    state.render.lastHash = hash;
+
+    if(!total){
+      return renderEmpty("Nenhum jogo encontrado com esses filtros. Tente mudar a janela (1h/24h), país ou buscar outro termo.");
+    }
+
+    const html = shown.map(renderCard).join("");
+    const canMore = shown.length < total;
+    const more = canMore ? `<button class="btn" id="btnMore" style="margin: 14px 0 90px;">Carregar mais (${shown.length}/${total})</button>` : `<div style="height:90px"></div>`;
+    el.games.innerHTML = html + more;
+
+    const btnMore = $("#btnMore");
+    if(btnMore){
+      btnMore.addEventListener("click", () => {
+        state.render.page += 1;
+        renderList();
+      }, { once:true });
+    }
+  }
+
+  function renderFavs(){
+    const favs = getSet(LS_FAV);
+    const ids = new Set(Array.from(favs));
+    const list = state.games.filter(g => ids.has(String(g.id||"")));
+    list.sort((a,b)=> (b.kickoffTs||0)-(a.kickoffTs||0));
+
+    if(!list.length){
+      return renderEmpty("Você ainda não favoritou nenhum jogo. Toque em <b>★ Favoritar</b> em algum card.");
+    }
+
+    el.games.innerHTML = `
+      <div class="empty"><b>Favoritos</b><br/><span style="color:rgba(255,255,255,.7)">Seus jogos salvos (localStorage).</span></div>
+      ${list.map(renderCard).join("")}
+      <div style="height:90px"></div>
+    `;
+  }
+
+  function renderHist(){
+    const hist = getSet(LS_HIST);
+    const ids = new Set(Array.from(hist));
+    const list = state.games.filter(g => ids.has(String(g.id||"")));
+    list.sort((a,b)=> (b.kickoffTs||0)-(a.kickoffTs||0));
+
+    if(!list.length){
+      return renderEmpty("Seu histórico está vazio. Use <b>Marcar visto</b> em algum jogo.");
+    }
+
+    el.games.innerHTML = `
+      <div class="empty"><b>Histórico</b><br/><span style="color:rgba(255,255,255,.7)">Jogos marcados como vistos (localStorage).</span></div>
+      ${list.map(renderCard).join("")}
+      <div style="height:90px"></div>
+    `;
+  }
+
+  function renderConfig(){
+    el.games.innerHTML = `
+      <div class="empty">
+        <b>Configurações</b><br/>
+        <span style="color:rgba(255,255,255,.7)">
+          Tudo aqui é local (no seu celular).<br/><br/>
+          <button class="btn" id="btnClearFav">Limpar Favoritos</button>
+          <button class="btn" id="btnClearHist" style="margin-left:10px">Limpar Histórico</button>
+        </span>
+      </div>
+      <div style="height:90px"></div>
+    `;
+
+    const bf = $("#btnClearFav");
+    const bh = $("#btnClearHist");
+    if(bf) bf.addEventListener("click", ()=>{ localStorage.removeItem(LS_FAV); alert("Favoritos limpos."); renderList(); });
+    if(bh) bh.addEventListener("click", ()=>{ localStorage.removeItem(LS_HIST); alert("Histórico limpo."); renderList(); });
+  }
+
+  // ============ META / COUNTS ============
+  function updateMeta(){
+    if(!state.data){
+      el.metaLine.textContent = "Última atualização: — • Fonte: —";
+      return;
+    }
+    const updatedAt = state.data.updatedAt || "—";
+    const source = state.data.source || "—";
+    const total = state.games.length;
+
+    const dk = state.filter.dateKey || todayKeyBRT();
+    const todayCount = state.gamesByDate.get(dk)?.length || 0;
+
+    const now = Date.now();
+    const max24 = now + 24*3600*1000;
+    let next24 = 0;
+    for(const g of state.upcomingSorted){
+      const ts = g.kickoffTs || 0;
+      if(ts < now) continue;
+      if(ts > max24) break;
+      next24++;
+    }
+    const live = state.liveGames.length;
+
+    el.metaLine.innerHTML = `
+      Última atualização: <b>${updatedAt}</b> • Fonte: <b>${source}</b><br/>
+      Jogos no arquivo: <b>${total}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo: <b>${live}</b>
+    `;
+  }
+
+  // ============ UI STATE (pills/nav) ============
+  function setActivePills(){
+    // mode
+    el.pills.liveUpcoming.classList.toggle("active", state.filter.mode==="live+upcoming");
+    el.pills.live.classList.toggle("active", state.filter.mode==="live");
+    el.pills.calendar.classList.toggle("active", state.filter.mode==="calendar");
+
+    // country
+    el.pills.brazil.classList.toggle("active", state.filter.country==="Brazil");
+    el.pills.europe.classList.toggle("active", state.filter.country==="Europe");
+    el.pills.all.classList.toggle("active", state.filter.country==="all");
+
+    // window chips
+    $$("#windowChips .chipBtn").forEach(b=>{
+      b.classList.toggle("active", Number(b.dataset.hours)===state.filter.windowHours);
+    });
+
+    el.windowInfo.textContent = `Próximas ${state.filter.windowHours}h • BRT`;
+    el.proSub.textContent = `Janela ativa: ${state.filter.windowHours}h • Fuso: BRT`;
+
+    // nav
+    el.nav.games.classList.toggle("active", state.view==="games");
+    el.nav.favs.classList.toggle("active", state.view==="favs");
+    el.nav.hist.classList.toggle("active", state.view==="hist");
+  }
+
+  function setView(v){
+    state.view = v;
+    state.render.page = 1;
+    setActivePills();
+    renderList();
+  }
+
+  // ============ MENU SHEET ============
+  function openSheet(){
+    el.sheet.back.classList.add("open");
+    el.sheet.sheet.classList.add("open");
+  }
+  function closeSheet(){
+    el.sheet.back.classList.remove("open");
+    el.sheet.sheet.classList.remove("open");
+  }
+
+  // ============ EVENTS ============
+  function bind(){
+    // Menu
+    el.sheet.btn.addEventListener("click", openSheet);
+    el.sheet.close.addEventListener("click", closeSheet);
+    el.sheet.back.addEventListener("click", closeSheet);
+    el.sheet.items.forEach(item=>{
+      item.addEventListener("click", ()=>{
+        const go = item.dataset.go;
+        closeSheet();
+        if(go==="favs") setView("favs");
+        if(go==="hist") setView("hist");
+        if(go==="config") setView("config");
       });
+    });
 
-      // painéis
-      elCalendarPanel.style.display = (MODE === "calendar") ? "" : "none";
-      elWindowPanel.style.display = (MODE === "next") ? "" : "none";
+    // Nav
+    el.nav.games.addEventListener("click", ()=>setView("games"));
+    el.nav.favs.addEventListener("click", ()=>setView("favs"));
+    el.nav.hist.addEventListener("click", ()=>setView("hist"));
 
-      render();
-    }
+    // Pills modes
+    el.pills.liveUpcoming.addEventListener("click", ()=>{
+      state.filter.mode="live+upcoming";
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
+    el.pills.live.addEventListener("click", ()=>{
+      state.filter.mode="live";
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
+    el.pills.calendar.addEventListener("click", ()=>{
+      state.filter.mode="calendar";
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
 
-    function setRegion(region){
-      REGION = region;
-      document.querySelectorAll(".chip[data-region]").forEach(ch=>{
-        ch.classList.toggle("active", ch.dataset.region === REGION);
-      });
-      render();
-    }
+    // Country
+    el.pills.brazil.addEventListener("click", ()=>{
+      state.filter.country="Brazil";
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
+    el.pills.europe.addEventListener("click", ()=>{
+      state.filter.country="Europe";
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
+    el.pills.all.addEventListener("click", ()=>{
+      state.filter.country="all";
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
 
-    function setWindow(h){
-      WINDOW_H = h;
-      document.querySelectorAll(".wbtn").forEach(b=>{
-        b.classList.toggle("active", Number(b.dataset.h) === WINDOW_H);
-      });
-      elWindowHint.textContent = `Próximas ${WINDOW_H}h • BRT`;
-      elProStatus.textContent = `Janela ativa: ${WINDOW_H}h • Fuso: BRT`;
-      render();
-    }
+    // Window chips
+    el.windowChips.addEventListener("click", (e)=>{
+      const btn = e.target.closest(".chipBtn");
+      if(!btn) return;
+      const h = Number(btn.dataset.hours);
+      if(!Number.isFinite(h) || h<=0) return;
+      state.filter.windowHours = h;
+      state.render.page=1;
+      setActivePills();
+      renderList();
+    });
 
-    function setDatePick(v){
-      DATE_PICK = v;
-      elCalendarHint.textContent = v ? v.split("-").reverse().join("/") : "";
-      render();
-    }
+    // Date apply
+    el.btnApplyDate.addEventListener("click", ()=>{
+      const v = el.datePicker.value;
+      if(v){
+        state.filter.dateKey = v;
+        state.filter.mode = "calendar";
+        state.render.page=1;
+        setActivePills();
+        renderList();
+      }
+    });
 
-    function render(){
-      if(!DATA){
-        elList.innerHTML = "";
-        elEmpty.style.display = "";
+    // Search (debounce)
+    let t=null;
+    el.search.addEventListener("input", ()=>{
+      clearTimeout(t);
+      t=setTimeout(()=>{
+        state.filter.q = normalizeText(el.search.value);
+        state.render.page=1;
+        renderList();
+      }, 160);
+    });
+
+    // Clear
+    el.btnClear.addEventListener("click", ()=>{
+      el.search.value="";
+      state.filter.q="";
+      state.render.page=1;
+      renderList();
+    });
+
+    // Refresh
+    el.btnRefresh.addEventListener("click", async ()=>{
+      await boot(true);
+    });
+
+    // Delegação de ações nos cards
+    el.games.addEventListener("click", (e)=>{
+      const b = e.target.closest("button[data-action]");
+      if(!b) return;
+      const action = b.dataset.action;
+
+      if(action==="details"){
+        const card = b.closest(".game-card");
+        const det = card?.querySelector("details");
+        if(det) det.open = !det.open;
         return;
       }
 
-      // página: games/fav/hist
-      let games = [...(DATA.games || [])];
+      const id = String(b.dataset.id || "");
+      if(!id) return;
 
-      if (PAGE === "fav"){
-        games = games.filter(g => favs.has(gameId(g)));
-      } else if (PAGE === "hist"){
-        games = games.filter(g => hist.has(gameId(g)));
-      }
-
-      games = games
-        .filter(regionOk)
-        .filter(queryOk)
-        .filter(modeOk)
-        .sort(sortGames);
-
-      elList.innerHTML = "";
-      elEmpty.style.display = games.length ? "none" : "";
-
-      for(const g of games){
-        elList.appendChild(renderMatch(g));
-      }
-    }
-
-    function renderMatch(g){
-      const id = gameId(g);
-      const live = isLive(g);
-      const kickoff = parseKickoffBRT(g.date, g.time);
-
-      const m = document.createElement("div");
-      m.className = "match";
-
-      const title = `${g.home} x ${g.away}`;
-      const sub = `${g.league || "—"} • ${g.country || "—"} • ${String(g.time||"—").slice(0,5)}`;
-      const dateBadge = (g.date || "").split("-").reverse().join("/");
-
-      m.innerHTML = `
-        <div class="mhead">
-          <div>
-            <div class="teams">${escapeHtml(title)}</div>
-            <div class="sub">
-              <span>${escapeHtml(sub)}</span>
-              <span class="tag">${escapeHtml(dateBadge)}</span>
-            </div>
-          </div>
-          ${live ? `<div class="tag live"><span class="ldot"></span> AO VIVO</div>` : ``}
-        </div>
-
-        <div class="actions">
-          <button class="btn small secondary" data-action="details">Detalhes</button>
-          <button class="btn small ${favs.has(id) ? "primary" : "secondary"}" data-action="fav">★ Favoritar</button>
-        </div>
-
-        <div class="accordion">
-          <div class="acc-head" data-action="toggle">
-            <span>INSIGHTS</span>
-            <span style="color:var(--muted); font-weight:900;">${live ? "Ao vivo" : (isNotStarted(g) ? "Não iniciado" : (g.status||"—"))}</span>
-          </div>
-          <div class="acc-body">
-            <div class="tabs">
-              <div class="tab active" data-tab="odds">Odds</div>
-              <div class="tab" data-tab="mm">Mais/Menos</div>
-              <div class="tab" data-tab="forma">Forma</div>
-            </div>
-
-            <div class="grid2" data-pane="odds">
-              <b>Over 1,5</b><span>—% • odd —</span>
-              <b>Over 2,5</b><span>—% • odd —</span>
-              <b>Under 1,5</b><span>—% • odd —</span>
-              <b>Under 2,5</b><span>—% • odd —</span>
-              <span style="grid-column:1/3; color:var(--muted2); font-weight:800;">
-                No FREE, o cálculo pode não aparecer. Layout pronto para API paga.
-              </span>
-            </div>
-
-            <div class="grid2" data-pane="mm" style="display:none;">
-              <b>+</b><span>tendência ofensiva</span>
-              <b>−</b><span>tendência defensiva</span>
-              <b>Gols recentes</b><span>últimos 3 jogos (quando disponível)</span>
-              <span style="grid-column:1/3; color:var(--muted2); font-weight:800;">
-                (Em breve: dados reais via API paga.)
-              </span>
-            </div>
-
-            <div class="grid2" data-pane="forma" style="display:none;">
-              <b>Forma Casa</b><span>—</span>
-              <b>Forma Fora</b><span>—</span>
-              <b>H2H</b><span>—</span>
-              <span style="grid-column:1/3; color:var(--muted2); font-weight:800;">
-                (Em breve: forma/placares e histórico via API paga.)
-              </span>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // handlers
-      m.querySelector('[data-action="toggle"]').addEventListener("click", ()=>{
-        const body = m.querySelector(".acc-body");
-        body.classList.toggle("open");
-      });
-
-      m.querySelector('[data-action="fav"]').addEventListener("click", ()=>{
-        if (favs.has(id)) favs.delete(id); else favs.add(id);
+      if(action==="fav"){
+        const favs = getSet(LS_FAV);
+        if(favs.has(id)) favs.delete(id); else favs.add(id);
         saveSet(LS_FAV, favs);
-        render();
-      });
+        b.textContent = favs.has(id) ? "★ Favoritado" : "★ Favoritar";
+        return;
+      }
 
-      m.querySelector('[data-action="details"]').addEventListener("click", ()=>{
-        // marca como visto automaticamente ao abrir detalhes
-        hist.add(id);
+      if(action==="seen"){
+        const hist = getSet(LS_HIST);
+        if(hist.has(id)) hist.delete(id); else hist.add(id);
         saveSet(LS_HIST, hist);
-
-        const k = parseKickoffBRT(g.date, g.time);
-        alert(
-          `${g.home} x ${g.away}\n` +
-          `${g.league} • ${g.country}\n` +
-          `Data: ${dateBadge} • Hora: ${String(g.time||"—").slice(0,5)} (BRT)\n` +
-          `Status: ${(g.status||"—")}\n\n` +
-          `Kickoff(BRT): ${k.toLocaleString("pt-BR")}`
-        );
-        render();
-      });
-
-      // tabs
-      const tabs = [...m.querySelectorAll(".tab")];
-      tabs.forEach(t=>{
-        t.addEventListener("click", ()=>{
-          tabs.forEach(x=>x.classList.toggle("active", x===t));
-          const sel = t.dataset.tab;
-          m.querySelectorAll("[data-pane]").forEach(p=>{
-            p.style.display = (p.dataset.pane === sel) ? "" : "none";
-          });
-        });
-      });
-
-      return m;
-    }
-
-    function escapeHtml(s){
-      return String(s ?? "").replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
-
-    // ===== Menu / Navegação =====
-    const overlay = document.getElementById("overlay");
-    document.getElementById("btnMenu").addEventListener("click", ()=> overlay.classList.add("open"));
-    document.getElementById("closeMenu").addEventListener("click", ()=> overlay.classList.remove("open"));
-    overlay.addEventListener("click", (e)=>{ if(e.target === overlay) overlay.classList.remove("open"); });
-
-    overlay.querySelectorAll("[data-menu]").forEach(it=>{
-      it.addEventListener("click", ()=>{
-        const to = it.dataset.menu;
-        overlay.classList.remove("open");
-        setPage(to);
-      });
-    });
-
-    function setPage(p){
-      PAGE = (p === "settings") ? "games" : p;
-
-      document.querySelectorAll(".navbtn").forEach(nb=>{
-        nb.classList.toggle("active", nb.dataset.page === PAGE);
-      });
-
-      // só para “configurações” (layout pronto)
-      if (p === "settings"){
-        alert("Configurações: em breve (alertas, ligas favoritas, notificações).");
+        b.textContent = hist.has(id) ? "Visto ✓" : "Marcar visto";
+        return;
       }
-      render();
-    }
-
-    document.querySelectorAll(".navbtn").forEach(nb=>{
-      nb.addEventListener("click", ()=> setPage(nb.dataset.page));
     });
+  }
 
-    // ===== Chips =====
-    document.querySelectorAll(".chip[data-mode]").forEach(ch=>{
-      ch.addEventListener("click", ()=> setMode(ch.dataset.mode));
-    });
-    document.querySelectorAll(".chip[data-region]").forEach(ch=>{
-      ch.addEventListener("click", ()=> setRegion(ch.dataset.region));
-    });
-
-    // janela
-    document.querySelectorAll(".wbtn").forEach(b=>{
-      b.addEventListener("click", ()=> setWindow(Number(b.dataset.h)));
-    });
-
-    // calendário default hoje (BRT)
-    const today = isoDateBRT(nowBRT());
-    elDatePick.value = today;
-    setDatePick(today);
-
-    document.getElementById("applyDate").addEventListener("click", ()=>{
-      setDatePick(elDatePick.value);
-    });
-
-    // busca
-    elQ.addEventListener("input", ()=> render());
-    document.getElementById("btnClear").addEventListener("click", ()=>{
-      elQ.value = "";
-      render();
-    });
-
-    // refresh
-    document.getElementById("btnRefresh").addEventListener("click", async ()=>{
-      await init(true);
-    });
-
-    async function init(force){
-      try{
-        if(force) elMeta.textContent = "Atualizando…";
-        DATA = await fetchData();
-        formatMeta();
-        // aplica estado atual sem perder seleção
-        elWindowHint.textContent = `Próximas ${WINDOW_H}h • BRT`;
-        elProStatus.textContent = `Janela ativa: ${WINDOW_H}h • Fuso: BRT`;
-        render();
-      }catch(err){
-        console.error(err);
-        elMeta.textContent = "Falha ao carregar jogos. Verifique jogos.json / GitHub Pages.";
-        DATA = { updatedAt:"—", source:"—", games:[] };
-        render();
+  // ============ BOOT ============
+  async function boot(force=false){
+    try{
+      if(!force && state.data){
+        setActivePills();
+        updateMeta();
+        renderList();
+        return;
       }
-    }
 
-    // inicial
-    setMode("next");
-    setRegion("All");
-    setWindow(1);
-    init(false);
-  </script>
+      const json = await loadData();
+      state.data = json;
+      state.games = Array.isArray(json.games) ? json.games : [];
+      buildIndexes(state.games);
+
+      if(!state.filter.dateKey) state.filter.dateKey = todayKeyBRT();
+      el.datePicker.value = state.filter.dateKey;
+
+      setActivePills();
+      updateMeta();
+      renderList();
+    }catch(err){
+      console.error(err);
+      renderEmpty(`<b>Erro ao carregar jogos</b><br/><span style="color:rgba(255,255,255,.75)">${err?.message || "Tente novamente."}</span>`);
+    }
+  }
+
+  // start
+  bind();
+  boot(false);
+
+})();
+</script>
 </body>
-</html>
+  </html>
