@@ -8,26 +8,22 @@
 
   <style>
     :root{
-      /* Base */
       --bg0:#061818;
       --bg1:#071f1f;
 
-      /* PALETA UNIFICADA (um “skin” só) */
-      --surfaceA: rgba(255,255,255,.055);
-      --surfaceB: rgba(255,255,255,.028);
-      --surfaceC: rgba(0,0,0,.16);
+      /* ✅ Skin único (um gradiente claro só) */
+      --cardA: rgba(255,255,255,.060);
+      --cardB: rgba(255,255,255,.030);
 
-      --stroke: rgba(255,255,255,.09);
-      --stroke2: rgba(255,255,255,.13);
+      --stroke: rgba(255,255,255,.10);
+      --stroke2: rgba(255,255,255,.14);
 
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.66);
-      --muted2: rgba(255,255,255,.52);
 
-      --accent:#22c55e;   /* emerald */
-      --accent2:#06b6d4;  /* cyan */
+      --accent:#22c55e;
+      --accent2:#06b6d4;
       --danger:#ef4444;
-      --warn:#f59e0b;
 
       --shadow: 0 18px 55px rgba(0,0,0,.55);
       --radius: 22px;
@@ -41,53 +37,37 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
-        radial-gradient(1100px 650px at 25% -10%, rgba(34,197,94,.13), transparent 60%),
-        radial-gradient(900px 520px at 90% 10%, rgba(6,182,212,.11), transparent 55%),
+        radial-gradient(1100px 650px at 25% -10%, rgba(34,197,94,.12), transparent 60%),
+        radial-gradient(900px 520px at 90% 10%, rgba(6,182,212,.10), transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
       overflow-x:hidden;
     }
 
-    .wrap{
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 16px 14px 92px;
-    }
+    .wrap{ max-width:760px; margin:0 auto; padding:16px 14px 92px; }
 
-    /* Superfície padrão (usada em tudo: topbar, panel, game) */
+    /* ✅ Superfície ÚNICA */
     .surface{
-      background: linear-gradient(145deg, var(--surfaceA), var(--surfaceB));
+      background: linear-gradient(145deg, var(--cardA), var(--cardB));
       border: 1px solid var(--stroke);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
 
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding: 16px 16px;
       border-radius: var(--radius);
-      position: sticky;
-      top: 10px;
-      z-index: 20;
+      position: sticky; top: 10px; z-index: 20;
     }
 
     .brand{ display:flex; flex-direction:column; gap:6px; min-width:0; }
     .brand .title{
-      font-weight:800;
-      letter-spacing:.2px;
-      font-size: 20px;
-      line-height: 1.1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:800; letter-spacing:.2px; font-size:20px; line-height:1.1;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .statusline{
       display:flex; align-items:center; gap:10px;
-      color:var(--muted);
-      font-size: 13px;
-      font-weight: 700;
+      color:var(--muted); font-size:13px; font-weight:700;
     }
     .dot{
       width:10px; height:10px; border-radius:999px;
@@ -117,28 +97,18 @@
     .btn.ghost{ background: rgba(255,255,255,.03); }
     .btn.menu{ display:flex; align-items:center; gap:10px; padding: 10px 14px; }
 
-    .panel{
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: var(--radius);
-      position: relative;
-      overflow:hidden;
-    }
+    .panel{ margin-top:14px; padding:14px; border-radius: var(--radius); position:relative; overflow:hidden; }
     .panel:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0/24px 24px;
-      opacity:.28;
-      pointer-events:none;
+      content:""; position:absolute; inset:-2px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0/24px 24px;
+      opacity:.26; pointer-events:none;
       mask-image: linear-gradient(180deg, rgba(0,0,0,.75), rgba(0,0,0,0));
     }
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     .searchWrap{ display:flex; gap:10px; align-items:center; width:100%; }
     .search{
-      flex: 1 1 auto;
-      display:flex;
+      flex: 1 1 auto; display:flex;
       padding: 10px 12px;
       border-radius: 18px;
       border:1px solid var(--stroke);
@@ -146,37 +116,23 @@
       backdrop-filter: blur(6px);
     }
     .search input{
-      width:100%;
-      border:0; outline:none;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
+      width:100%; border:0; outline:none;
+      background: transparent; color: var(--text);
+      font-size: 14px; font-weight: 700;
     }
 
-    .meta{
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.35;
-    }
+    .meta{ margin-top:10px; color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.35; }
 
     .chips{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
     .chip{
-      padding: 10px 12px;
-      border-radius: 999px;
+      padding: 10px 12px; border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      font-weight: 900;
-      font-size: 13px;
+      font-weight: 900; font-size: 13px;
       display:flex; align-items:center; gap:10px;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .2s ease, border-color .2s ease, transform .08s ease;
+      cursor:pointer; user-select:none; -webkit-tap-highlight-color: transparent;
     }
-    .chip:active{ transform: scale(.985); }
+    .chip .miniDot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.22); }
     .chip.active{
       border-color: rgba(6,182,212,.35);
       background: linear-gradient(180deg, rgba(6,182,212,.16), rgba(6,182,212,.07));
@@ -185,7 +141,6 @@
       border-color: rgba(34,197,94,.40);
       background: linear-gradient(180deg, rgba(34,197,94,.18), rgba(34,197,94,.08));
     }
-    .chip .miniDot{ width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.22); }
     .chip.active .miniDot{ background: var(--accent2); }
     .chip.active.green .miniDot{ background: var(--accent); }
 
@@ -194,42 +149,24 @@
       padding: 12px;
       border-radius: var(--radius2);
       border: 1px solid var(--stroke);
-      background: var(--surfaceC);
+      background: rgba(0,0,0,.14);
     }
     .labelRow{
       display:flex; justify-content:space-between; align-items:center;
-      color: var(--muted);
-      font-weight: 900;
-      font-size: 12px;
+      color: var(--muted); font-weight: 900; font-size: 12px;
       margin-bottom: 10px;
     }
     .windowChips{ display:flex; gap:10px; flex-wrap:wrap; }
     .wchip{
-      padding: 9px 12px;
-      border-radius: 999px;
+      padding: 9px 12px; border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      font-weight: 950;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
+      font-weight: 950; font-size: 13px;
+      cursor:pointer; user-select:none; -webkit-tap-highlight-color: transparent;
     }
     .wchip.active{
       border-color: rgba(34,197,94,.40);
       background: linear-gradient(180deg, rgba(34,197,94,.18), rgba(34,197,94,.08));
-    }
-
-    .dateRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top: 12px; }
-    select{
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      padding: 11px 12px;
-      border-radius: 16px;
-      font-weight: 900;
-      font-size: 14px;
-      outline:none;
     }
 
     .proPanel{
@@ -237,70 +174,42 @@
       padding: 12px;
       border-radius: var(--radius2);
       border: 1px solid var(--stroke);
-      background: var(--surfaceC);
+      background: rgba(0,0,0,.14);
     }
-    .proTitle{
-      display:flex; justify-content:space-between; align-items:center;
-      font-weight: 950;
-      margin-bottom: 10px;
-      letter-spacing:.2px;
-    }
+    .proTitle{ display:flex; justify-content:space-between; align-items:center; font-weight: 950; margin-bottom: 10px; letter-spacing:.2px; }
     .proTitle small{ color: var(--muted); font-weight: 800; }
-    .proCards{ display:grid; gap:10px; }
     .proCard{
       padding: 11px 12px;
       border-radius: 16px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
+      margin-top:10px;
     }
     .proCard b{ display:block; margin-bottom: 2px; }
     .proCard span{ color: var(--muted); font-weight: 700; font-size: 13px; line-height: 1.25; }
 
     .list{ margin-top: 14px; display:flex; flex-direction:column; gap: 12px; }
 
-    /* CARD do jogo: agora usa o MESMO “skin” de superfície */
-    .game{
-      border-radius: var(--radius);
-      overflow:hidden;
-    }
-    .gameHeader{ padding: 14px 14px 10px; position: relative; }
+    /* ✅ Card do jogo: 1 superfície só, internos transparentes */
+    .game{ border-radius: var(--radius); overflow:hidden; }
+    .gameHeader{ padding: 14px 14px 10px; background: transparent; }
     .gameTop{ display:flex; justify-content:space-between; gap: 12px; align-items:flex-start; }
-    .teams{
-      font-weight: 950;
-      font-size: 18px;
-      line-height: 1.15;
-      letter-spacing:.15px;
-    }
+    .teams{ font-weight: 950; font-size: 18px; line-height: 1.15; letter-spacing:.15px; }
     .sub{
       color: var(--muted);
       margin-top: 6px;
       font-size: 13px;
       font-weight: 800;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
     }
 
-    .badgeLive{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
-      min-width: 108px;
-    }
+    .badgeLive{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; min-width: 108px; }
     .liveTag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 7px 10px;
-      border-radius: 999px;
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px; border-radius: 999px;
       border: 1px solid rgba(239,68,68,.35);
       background: rgba(239,68,68,.12);
-      font-weight: 950;
-      font-size: 12px;
-      letter-spacing:.3px;
-      white-space:nowrap;
+      font-weight: 950; font-size: 12px; letter-spacing:.3px; white-space:nowrap;
     }
     .liveTag .ldot{
       width:10px; height:10px; border-radius:999px;
@@ -309,63 +218,47 @@
     }
 
     .scorePill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 7px 10px;
-      border-radius: 14px;
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 7px 10px; border-radius: 14px;
       border: 1px solid var(--stroke2);
-      background: rgba(0,0,0,.18);
-      font-weight: 950;
-      font-size: 13px;
-      white-space:nowrap;
+      background: rgba(0,0,0,.14);
+      font-weight: 950; font-size: 13px; white-space:nowrap;
     }
     .scorePill .min{ color: rgba(255,255,255,.80); font-weight: 900; }
 
     .pillDate{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 999px;
+      display:inline-flex; align-items:center;
+      padding: 6px 10px; border-radius: 999px;
       border: 1px solid var(--stroke);
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.12);
       color: rgba(255,255,255,.80);
-      font-weight: 900;
-      font-size: 12px;
-      white-space:nowrap;
+      font-weight: 900; font-size: 12px; white-space:nowrap;
     }
 
     .gameActions{
       padding: 0 14px 12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; gap:10px; flex-wrap:wrap;
+      background: transparent;
     }
-    .gameActions .btn{
-      flex: 1 1 140px;
-      justify-content:center;
-      text-align:center;
-      padding: 10px 12px;
-      border-radius: 16px;
-    }
+    .gameActions .btn{ flex: 1 1 140px; justify-content:center; text-align:center; }
+
+    /* ✅ Accordion: área de detalhes fica escondida por padrão */
+    .detailsWrap{ display:none; }
+    .detailsWrap.open{ display:block; }
 
     .miniTabs{
-      display:flex;
-      gap:10px;
+      display:flex; gap:10px;
       padding: 10px 14px 12px;
       border-top: 1px solid var(--stroke);
-      background: rgba(0,0,0,.10);
+      background: transparent;
       flex-wrap:wrap;
     }
     .tab{
-      padding: 8px 10px;
-      border-radius: 999px;
+      padding: 8px 10px; border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
-      font-weight: 900;
-      font-size: 12px;
-      cursor:pointer;
-      user-select:none;
+      font-weight: 900; font-size: 12px;
+      cursor:pointer; user-select:none;
     }
     .tab.active{
       border-color: rgba(6,182,212,.38);
@@ -375,21 +268,15 @@
     .tabContent{
       padding: 10px 14px 14px;
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 13px; font-weight: 700;
       display:none;
+      background: transparent;
     }
     .tabContent.active{ display:block; }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px 14px;
-    }
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px 14px; }
     .kv{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; justify-content:space-between; gap:10px;
       padding: 9px 10px;
       border-radius: 14px;
       border: 1px solid var(--stroke);
@@ -420,8 +307,7 @@
       border: 1px solid var(--stroke);
       background: rgba(0,0,0,.40);
       backdrop-filter: blur(12px);
-      display:flex;
-      gap:10px;
+      display:flex; gap:10px;
       box-shadow: var(--shadow);
       z-index: 30;
     }
@@ -433,12 +319,8 @@
       background: rgba(255,255,255,.04);
       color: rgba(255,255,255,.86);
       font-weight: 950;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      cursor:pointer;
-      user-select:none;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      cursor:pointer; user-select:none;
     }
     .navBtn.active{
       border-color: rgba(34,197,94,.40);
@@ -469,12 +351,7 @@
       border-bottom: 1px solid var(--stroke);
     }
     .modalHead b{ font-size: 15px; letter-spacing:.2px; }
-    .modalBody{
-      padding: 12px 14px 14px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
+    .modalBody{ padding: 12px 14px 14px; display:flex; flex-direction:column; gap:10px; }
     .menuItem{
       padding: 12px 12px;
       border-radius: 16px;
@@ -482,26 +359,9 @@
       background: rgba(255,255,255,.03);
       font-weight: 900;
       display:flex; align-items:center; justify-content:space-between;
-      cursor:pointer;
-      user-select:none;
+      cursor:pointer; user-select:none;
     }
     .menuItem small{ color: var(--muted); font-weight: 800; }
-
-    /* Alert de dados atrasados */
-    .staleBar{
-      margin-top: 10px;
-      display:none;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(245,158,11,.35);
-      background: rgba(245,158,11,.10);
-      color: rgba(255,255,255,.90);
-      font-weight: 900;
-      gap:10px;
-      align-items:center;
-      width: fit-content;
-    }
-    .staleBar.show{ display:inline-flex; }
 
     @media (max-width: 420px){
       .teams{ font-size: 17px; }
@@ -512,18 +372,16 @@
 
 <body>
   <div class="wrap">
-
     <div class="topbar surface">
       <div class="brand">
         <div class="title">Radar Jogos PRO</div>
         <div class="statusline">
-          <span class="dot" id="onlineDot"></span>
-          <span id="onlineTxt">Online</span>
-          <span style="opacity:.55; font-weight:900;">v2.2</span>
+          <span class="dot"></span>
+          <span>Online</span>
+          <span style="opacity:.55; font-weight:900;">v2.3</span>
           <span style="opacity:.55;">•</span>
           <span style="opacity:.7;" id="checkTxt">Checagem: —</span>
         </div>
-        <div class="staleBar" id="staleBar">⚠️ Dados atrasados (<span id="staleMin">—</span> min)</div>
       </div>
       <button class="btn menu" id="openMenu">… Menu</button>
     </div>
@@ -547,7 +405,6 @@
       <div class="chips">
         <div class="chip green" id="chipUpcoming"><span class="miniDot"></span>⚡ Próximos</div>
         <div class="chip" id="chipLive"><span class="miniDot"></span>🔴 Ao vivo</div>
-        <div class="chip" id="chipCalendar"><span class="miniDot"></span>📅 Calendário</div>
         <div class="chip" id="chipBrazil"><span class="miniDot"></span>🇧🇷 Brasil</div>
         <div class="chip" id="chipEurope"><span class="miniDot"></span>🇪🇺 Europa</div>
         <div class="chip" id="chipAll"><span class="miniDot"></span>🌍 Todos</div>
@@ -561,40 +418,15 @@
         <div class="windowChips" id="windowChips"></div>
       </div>
 
-      <div class="subpanel" id="calendarBox" style="display:none;">
-        <div class="labelRow">
-          <span>Data (BRT)</span>
-          <span id="dateBadge">—</span>
-        </div>
-        <div class="dateRow">
-          <select id="dateSelect"></select>
-          <button class="btn ghost" id="applyDateBtn">Aplicar</button>
-        </div>
-      </div>
-
       <div class="proPanel">
         <div class="proTitle">
           <div>✨ Painel PRO</div>
           <small id="proRight">Janela ativa: 24h • Fuso: BRT</small>
         </div>
 
-        <div class="proCards">
-          <div class="proCard">
-            <b>⚡ Próximos por janela</b>
-            <span>Escolha 1–24h para ver só o que começa nessa faixa (não mistura com AO VIVO).</span>
-          </div>
-          <div class="proCard">
-            <b>📊 Odds / Mais–Menos</b>
-            <span>Estimativa local já aparece. Com API paga, dá pra puxar odds reais e mais mercados.</span>
-          </div>
-          <div class="proCard">
-            <b>⭐ Favoritos</b>
-            <span>Salva jogos/ligas no celular (localStorage). Layout e menu já preparados.</span>
-          </div>
-          <div class="proCard">
-            <b>🧠 Live “limpo”</b>
-            <span>Mesmo que o FREE trave em 90’, o sistema encerra automaticamente (failsafe).</span>
-          </div>
+        <div class="proCard">
+          <b>🧠 Live “limpo”</b>
+          <span>Se o FREE travar em 90’, o sistema encerra automaticamente (failsafe).</span>
         </div>
       </div>
 
@@ -612,41 +444,28 @@
     <div class="navBtn" id="navHist" style="opacity:.65">🕘 Histórico</div>
   </div>
 
-  <div class="modalOverlay" id="menuOverlay" aria-hidden="true">
+  <div class="modalOverlay" id="menuOverlay">
     <div class="modal">
       <div class="modalHead">
         <b>Menu</b>
         <button class="btn ghost" id="closeMenu">Fechar</button>
       </div>
       <div class="modalBody">
-        <div class="menuItem" id="menuGoFav">
-          <span>⭐ Favoritos</span><small>ver salvos</small>
-        </div>
-        <div class="menuItem" id="menuGoGames">
-          <span>🗓️ Jogos</span><small>lista principal</small>
-        </div>
-        <div class="menuItem" id="menuAbout">
-          <span>ℹ️ Sobre</span><small>versão e fonte</small>
-        </div>
+        <div class="menuItem" id="menuGoFav"><span>⭐ Favoritos</span><small>ver salvos</small></div>
+        <div class="menuItem" id="menuGoGames"><span>🗓️ Jogos</span><small>lista principal</small></div>
+        <div class="menuItem" id="menuAbout"><span>ℹ️ Sobre</span><small>versão e fonte</small></div>
       </div>
     </div>
   </div>
 
   <script>
-    /*********************
-     * Radar Jogos PRO v2.2
-     * - UI + filtros + live “limpo” (failsafe)
-     *********************/
-
     const TZ = "America/Sao_Paulo";
-    const LS_KEY = "rjpro_state_v22";
+    const LS_KEY = "rjpro_state_v23";
 
     const state = {
-      mode: "upcoming",  // upcoming | live | favorites
-      region: "all",     // brazil | europe | all
+      mode: "upcoming",   // upcoming | live | favorites
+      region: "all",
       windowH: 24,
-      calendarOn: false,
-      date: null,
       q: "",
       favorites: {},
       autoOn: false
@@ -659,16 +478,8 @@
     const $ = (id) => document.getElementById(id);
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
-    function saveState(){
-      try{ localStorage.setItem(LS_KEY, JSON.stringify({...state})); }catch(e){}
-    }
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(LS_KEY);
-        if(!raw) return;
-        Object.assign(state, JSON.parse(raw));
-      }catch(e){}
-    }
+    function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify({...state})); }catch(e){} }
+    function loadState(){ try{ const raw = localStorage.getItem(LS_KEY); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){} }
 
     function fmtBrtDate(d){
       return new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, day:"2-digit", month:"2-digit", year:"numeric" }).format(d);
@@ -689,13 +500,11 @@
       if(state.region==="all") return true;
       if(state.region==="brazil") return c.includes("brazil") || c.includes("brasil");
       if(state.region==="europe"){
-        const europeCountries = ["england","scotland","wales","ireland","northern ireland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","iceland","poland","czech","slovakia","hungary","romania","bulgaria","greece","turkey","croatia","serbia","slovenia","ukraine","russia","estonia","latvia","lithuania"];
-        if(c.includes("europe")) return true;
-        return europeCountries.some(x => c.includes(x));
+        const eu = ["england","scotland","spain","france","italy","germany","portugal","netherlands","belgium","switzerland","austria","sweden","norway","denmark","finland","poland","czech","slovakia","hungary","romania","bulgaria","greece","turkey","croatia","serbia","slovenia","ukraine"];
+        return eu.some(x => c.includes(x));
       }
       return true;
     }
-
     function qMatch(g){
       const q = (state.q||"").trim().toLowerCase();
       if(!q) return true;
@@ -705,26 +514,18 @@
 
     function getKickoffMs(g){
       if(typeof g.kickoffTs === "number") return g.kickoffTs;
-      if(g.date && g.time){
-        const iso = `${g.date}T${g.time}:00-03:00`;
-        const d = new Date(iso);
-        const ms = d.getTime();
-        return Number.isFinite(ms) ? ms : null;
-      }
       return null;
     }
-
     function gameId(g){
       if(g.id) return String(g.id);
       return `${g.home||""}__${g.away||""}__${g.league||""}__${g.date||""}__${g.time||""}`;
     }
-
     function isFinished(g){
       const st = (g.status||"").toUpperCase();
       return st === "FT" || st === "AET" || st === "PEN";
     }
 
-    // FAILSAFE FRONT: se o status vier travado, a gente limpa no display/filtro
+    // ✅ v2.3: failsafe front mais agressivo (120 min)
     function isLikelyStaleLive(g){
       const st = (g.status||"").toUpperCase();
       const k = getKickoffMs(g);
@@ -735,12 +536,11 @@
       const el = (typeof g.elapsed === "number") ? g.elapsed : null;
 
       const liveSet = ["1H","2H","HT","ET","BT","P","LIVE","IN_PLAY"];
-
       if(!liveSet.includes(st)) return false;
 
-      if(el !== null && el >= 90 && ageMin >= 140) return true;
-      if(st === "ET" && ageMin >= 220) return true;
-      if(el === null && ageMin >= 180) return true;
+      if(el !== null && el >= 90 && ageMin >= 120) return true;
+      if(st === "ET" && ageMin >= 210) return true;
+      if(el === null && ageMin >= 165) return true;
 
       return false;
     }
@@ -748,13 +548,12 @@
     function isLiveGame(g){
       if(isFinished(g)) return false;
       if(isLikelyStaleLive(g)) return false;
-
       if(g.isLive === true) return true;
 
       const st = (g.status||"").toUpperCase();
       if(["1H","2H","HT","ET","P","LIVE","IN_PLAY","BT"].includes(st)) return true;
-
       if(typeof g.elapsed === "number" && st !== "FT") return true;
+
       return false;
     }
 
@@ -796,7 +595,6 @@
       $("chipUpcoming").classList.toggle("active", state.mode==="upcoming");
       $("chipUpcoming").classList.toggle("green", true);
       $("chipLive").classList.toggle("active", state.mode==="live");
-      $("chipCalendar").classList.toggle("active", state.calendarOn);
 
       $("chipBrazil").classList.toggle("active", state.region==="brazil");
       $("chipEurope").classList.toggle("active", state.region==="europe");
@@ -831,99 +629,38 @@
       $("proRight").textContent = `Janela ativa: ${state.windowH}h • Fuso: BRT`;
     }
 
-    function fillDateSelect(){
-      const sel = $("dateSelect");
-      sel.innerHTML = "";
-      const now = new Date();
-      const days = [];
-      for(let i=0;i<10;i++){
-        const d = new Date(now.getTime() + i*24*3600*1000);
-        days.push(brtDayKey(d));
-      }
-      for(const day of days){
-        const opt = document.createElement("option");
-        opt.value = day;
-        const d = new Date(`${day}T12:00:00-03:00`);
-        opt.textContent = fmtBrtDate(d);
-        sel.appendChild(opt);
-      }
-      if(!state.date) state.date = days[0];
-      sel.value = state.date;
-      $("dateBadge").textContent = sel.options[sel.selectedIndex]?.textContent || "—";
-    }
-
     async function loadJogosJson(force=false){
       const bust = force ? `?t=${Date.now()}` : "";
-      const url = "jogos.json" + bust;
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch("jogos.json"+bust, { cache: "no-store" });
       if(!res.ok) throw new Error("Falha ao carregar jogos.json");
-      const j = await res.json();
-      data = j;
-      allGames = Array.isArray(j.games) ? j.games : [];
-    }
-
-    function calcAgeMinutes(updatedAtStr){
-      // updatedAt no formato "DD/MM/YYYY, HH:MM:SS BRT" ou "DD/MM/YYYY, HH:MM BRT"
-      if(!updatedAtStr) return null;
-      const s = String(updatedAtStr).replace(" BRT","").trim();
-
-      // tenta pegar partes no pt-BR
-      // Ex: "14/02/2026, 15:33:58"
-      const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4}),?\s*(\d{2}):(\d{2})(?::(\d{2}))?$/);
-      if(!m) return null;
-
-      const dd = Number(m[1]);
-      const mm = Number(m[2]);
-      const yy = Number(m[3]);
-      const HH = Number(m[4]);
-      const MN = Number(m[5]);
-      const SS = Number(m[6] || "0");
-
-      // cria em BRT fixo (-03:00) para comparar
-      const iso = `${yy}-${String(mm).padStart(2,"0")}-${String(dd).padStart(2,"0")}T${String(HH).padStart(2,"0")}:${String(MN).padStart(2,"0")}:${String(SS).padStart(2,"0")}-03:00`;
-      const t = new Date(iso).getTime();
-      if(!Number.isFinite(t)) return null;
-
-      const ageMin = Math.round((Date.now() - t)/60000);
-      return ageMin >= 0 ? ageMin : 0;
+      data = await res.json();
+      allGames = Array.isArray(data.games) ? data.games : [];
     }
 
     function updateMeta(){
       $("checkTxt").textContent = `Checagem: ${new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(new Date())}`;
-
       if(!data){
         $("meta").textContent = "Sem dados ainda.";
-        $("staleBar").classList.remove("show");
         return;
       }
 
       const upd = data.updatedAt || "—";
       const src = data.source || "—";
-
       const now = Date.now();
-      let liveCount=0, todayCount=0, next24=0, liveClean=0;
 
+      let liveClean=0, todayCount=0, next24=0;
       const todayKey = brtDayKey(new Date());
+
       for(const g of allGames){
         const k = getKickoffMs(g);
-        const live = isLiveGame(g);
-        if(live) liveClean++;
-        if(g.isLive === true) liveCount++;
+        if(isLiveGame(g)) liveClean++;
         if(g.date === todayKey) todayCount++;
         if(k && k >= now && k <= (now + 24*3600*1000)) next24++;
       }
 
-      const ageMin = calcAgeMinutes(upd);
-      if(ageMin !== null && ageMin >= 10){
-        $("staleMin").textContent = ageMin;
-        $("staleBar").classList.add("show");
-      } else {
-        $("staleBar").classList.remove("show");
-      }
-
       $("meta").innerHTML =
-        `Atualizado: <b>${upd}</b> • Idade: <b>${ageMin===null ? "—" : ageMin+" min"}</b> • Ao vivo (limpo): <b>${liveClean}</b><br>` +
-        `Fonte: <b>${src}</b> • Jogos: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b>`;
+        `Atualizado: <b>${upd}</b> • Fonte: <b>${src}</b><br>` +
+        `Jogos: <b>${allGames.length}</b> • Hoje: <b>${todayCount}</b> • Próx 24h: <b>${next24}</b> • Ao vivo (limpo): <b>${liveClean}</b>`;
     }
 
     function filterUpcoming(){
@@ -936,22 +673,15 @@
         const k = getKickoffMs(g);
         if(!k) return false;
         if(isFinished(g)) return false;
-
-        if(state.calendarOn && state.date){
-          if(g.date !== state.date) return false;
-          return true; // calendário mostra o dia inteiro
-        }
         return (k >= now && k <= max);
-      })
-      .sort((a,b) => (getKickoffMs(a)||0) - (getKickoffMs(b)||0));
+      }).sort((a,b) => (getKickoffMs(a)||0) - (getKickoffMs(b)||0));
     }
 
     function filterLive(){
       return allGames.filter(g => {
         if(!regionMatch(g) || !qMatch(g)) return false;
         return isLiveGame(g);
-      })
-      .sort((a,b) => liveSortScore(b) - liveSortScore(a));
+      }).sort((a,b) => liveSortScore(b) - liveSortScore(a));
     }
 
     function renderEmpty(msg){
@@ -1004,62 +734,66 @@
           <button class="btn ${fav ? "primary":"ghost"}" data-act="fav">${fav ? "★ Favoritado" : "☆ Favoritar"}</button>
         </div>
 
-        <div class="miniTabs" data-tabs>
-          <div class="tab active" data-tab="insights">Insights / Odds</div>
-          <div class="tab" data-tab="maismenos">Mais/Menos</div>
-          <div class="tab" data-tab="forma">Forma</div>
-        </div>
+        <div class="detailsWrap" data-details>
+          <div class="miniTabs" data-tabs>
+            <div class="tab active" data-tab="insights">Insights / Odds</div>
+            <div class="tab" data-tab="maismenos">Mais/Menos</div>
+            <div class="tab" data-tab="forma">Forma</div>
+          </div>
 
-        <div class="tabContent active" data-content="insights">
-          <div class="grid2">
-            <div class="kv"><span>Over 1,5</span><b>—%</b></div>
-            <div class="kv"><span>Under 2,5</span><b>—%</b></div>
-            <div class="kv"><span>Over 2,5</span><b>—%</b></div>
-            <div class="kv"><span>BTTS</span><b>—%</b></div>
+          <div class="tabContent active" data-content="insights">
+            <div class="grid2">
+              <div class="kv"><span>Over 1,5</span><b>—%</b></div>
+              <div class="kv"><span>Under 2,5</span><b>—%</b></div>
+              <div class="kv"><span>Over 2,5</span><b>—%</b></div>
+              <div class="kv"><span>BTTS</span><b>—%</b></div>
+            </div>
+            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:750;">
+              No modo FREE, alguns cálculos podem não aparecer. Layout pronto para a API paga.
+            </div>
           </div>
-          <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:750;">
-            No modo FREE, alguns cálculos podem não aparecer. Layout pronto para a API paga.
-          </div>
-        </div>
 
-        <div class="tabContent" data-content="maismenos">
-          <div class="grid2">
-            <div class="kv"><span>Over 0,5</span><b>—%</b></div>
-            <div class="kv"><span>Over 3,5</span><b>—%</b></div>
-            <div class="kv"><span>Under 1,5</span><b>—%</b></div>
-            <div class="kv"><span>Under 3,5</span><b>—%</b></div>
+          <div class="tabContent" data-content="maismenos">
+            <div class="grid2">
+              <div class="kv"><span>Over 0,5</span><b>—%</b></div>
+              <div class="kv"><span>Over 3,5</span><b>—%</b></div>
+              <div class="kv"><span>Under 1,5</span><b>—%</b></div>
+              <div class="kv"><span>Under 3,5</span><b>—%</b></div>
+            </div>
+            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:750;">
+              Em PRO: odds reais e mercados extras.
+            </div>
           </div>
-          <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:750;">
-            Em PRO: odds reais e mercados extras.
-          </div>
-        </div>
 
-        <div class="tabContent" data-content="forma">
-          <div style="display:grid; gap:10px">
-            <div class="kv"><span>Forma (casa)</span><b>—</b></div>
-            <div class="kv"><span>Forma (fora)</span><b>—</b></div>
-            <div class="kv"><span>H2H (últimos)</span><b>—</b></div>
-          </div>
-          <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:750;">
-            Em PRO: últimos jogos reais e tendências por liga.
+          <div class="tabContent" data-content="forma">
+            <div style="display:grid; gap:10px">
+              <div class="kv"><span>Forma (casa)</span><b>—</b></div>
+              <div class="kv"><span>Forma (fora)</span><b>—</b></div>
+              <div class="kv"><span>H2H (últimos)</span><b>—</b></div>
+            </div>
+            <div style="margin-top:10px; color:rgba(255,255,255,.60); font-weight:750;">
+              Em PRO: últimos jogos reais e tendências por liga.
+            </div>
           </div>
         </div>
       `;
 
-      // actions
+      const detailsWrap = el.querySelector('[data-details]');
+      const btnDetails = el.querySelector('[data-act="details"]');
+
+      // ✅ Accordion real
+      btnDetails.onclick = () => {
+        const open = detailsWrap.classList.toggle("open");
+        btnDetails.textContent = open ? "Fechar" : "Detalhes";
+      };
+
       el.querySelector('[data-act="fav"]').onclick = () => {
         state.favorites[id] = !state.favorites[id];
         saveState();
         render();
       };
 
-      el.querySelector('[data-act="details"]').onclick = () => {
-        // leve e funcional: centraliza tabs
-        const tabs = el.querySelector('[data-tabs]');
-        tabs.scrollIntoView({behavior:"smooth", block:"center"});
-      };
-
-      // tabs
+      // Tabs
       const tabs = el.querySelectorAll(".tab");
       const contents = el.querySelectorAll(".tabContent");
       tabs.forEach(t => {
@@ -1102,13 +836,6 @@
       setActiveChip();
       updateMeta();
 
-      $("calendarBox").style.display = state.calendarOn ? "block" : "none";
-      if(state.calendarOn){
-        fillDateSelect();
-        $("dateSelect").value = state.date || $("dateSelect").value;
-        $("dateBadge").textContent = $("dateSelect").options[$("dateSelect").selectedIndex]?.textContent || "—";
-      }
-
       if(state.mode==="favorites"){
         renderFavorites();
         return;
@@ -1123,14 +850,13 @@
       if(state.mode==="live"){
         list = filterLive();
         if(list.length===0){
-          renderEmpty("Nada ao vivo agora com esses filtros. Troque região ou use Próximos.");
+          renderEmpty("Nada ao vivo agora com esses filtros.");
           return;
         }
       } else {
         list = filterUpcoming();
         if(list.length===0){
-          const hint = state.calendarOn ? "Não há jogos nessa data com esses filtros." : "Sem jogos nessa janela. Tente 12h/24h ou ative Calendário.";
-          renderEmpty(hint);
+          renderEmpty("Sem jogos nessa janela. Tente 12h/24h.");
           return;
         }
       }
@@ -1140,14 +866,18 @@
       for(const g of list) root.appendChild(renderGameCard(g));
     }
 
+    // ✅ Auto refresh inteligente:
+    // - Se estiver em "Ao vivo" e Auto ON: 30s
+    // - Caso contrário: 60s
     function startAuto(){
       stopAuto();
+      const interval = (state.mode === "live") ? 30_000 : 60_000;
       autoTimer = setInterval(async () => {
         try{
           await loadJogosJson(true);
           render();
         }catch(e){}
-      }, 60_000); // 1 min
+      }, interval);
     }
     function stopAuto(){
       if(autoTimer) clearInterval(autoTimer);
@@ -1155,14 +885,13 @@
     }
 
     function wire(){
-      $("chipUpcoming").onclick = () => { state.mode="upcoming"; saveState(); render(); };
-      $("chipLive").onclick = () => { state.mode="live"; state.calendarOn=false; saveState(); render(); };
-
-      $("chipCalendar").onclick = () => {
-        state.calendarOn = !state.calendarOn;
-        if(state.calendarOn) state.mode="upcoming";
+      $("chipUpcoming").onclick = () => { state.mode="upcoming"; saveState(); render(); if(state.autoOn) startAuto(); };
+      $("chipLive").onclick = () => {
+        state.mode="live";
         saveState();
         render();
+        // ✅ se o cara entrou em Ao vivo e Auto tá ON, acelera
+        if(state.autoOn) startAuto();
       };
 
       $("chipBrazil").onclick = () => { state.region="brazil"; saveState(); render(); };
@@ -1188,7 +917,7 @@
           await loadJogosJson(true);
           render();
         }catch(e){
-          renderEmpty("Erro ao atualizar dados. Veja se o workflow gerou jogos.json e se o link está público.");
+          renderEmpty("Erro ao atualizar dados.");
         }finally{
           $("refreshBtn").textContent = "Atualizar";
         }
@@ -1205,22 +934,10 @@
       $("infoBtn").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar Jogos PRO v2.2\nFonte: ${src}\nAtualizado: ${upd}\n\nAuto-finish: ON (failsafe)\nBRT: ${TZ}`);
+        alert(`Radar Jogos PRO v2.3\nFonte: ${src}\nAtualizado: ${upd}\n\nObs: GitHub Actions atualiza o JSON a cada 5 min.\nAuto (site) recarrega a cada 30–60s.`);
       };
 
       $("scrollTopBtn").onclick = () => window.scrollTo({top:0, behavior:"smooth"});
-
-      $("applyDateBtn").onclick = () => {
-        state.date = $("dateSelect").value;
-        saveState();
-        render();
-      };
-
-      $("dateSelect").addEventListener("change", () => {
-        state.date = $("dateSelect").value;
-        saveState();
-        render();
-      });
 
       $("navGames").onclick = () => { if(state.mode==="favorites") state.mode="upcoming"; saveState(); render(); };
       $("navFav").onclick = () => { state.mode="favorites"; saveState(); render(); };
@@ -1235,7 +952,7 @@
       $("menuAbout").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar Jogos PRO v2.2\nFonte: ${src}\nAtualizado: ${upd}\n\nBRT: ${TZ}`);
+        alert(`Radar Jogos PRO v2.3\nFonte: ${src}\nAtualizado: ${upd}`);
       };
     }
 
@@ -1248,7 +965,6 @@
       $("q").value = state.q || "";
 
       renderWindowChips();
-      fillDateSelect();
       wire();
       setActiveChip();
 
