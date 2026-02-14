@@ -8,32 +8,29 @@
 
   <style>
     :root{
-      /* Fundo (estilo do print) */
       --bg0:#06131a;
       --bg1:#071a23;
-      --bg2:#081f2a;
 
-      /* Cards (1 tom só, consistente) */
-      --card:#0b2430;
-      --card2:#0a212c;
       --cardStroke: rgba(255,255,255,.08);
-      --cardStroke2: rgba(255,255,255,.12);
-
-      /* Texto */
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.62);
-      --muted2: rgba(255,255,255,.48);
 
-      /* Destaques */
-      --accent:#22c55e;     /* verde */
-      --cyan:#22d3ee;       /* azul/ciano */
-      --danger:#ff4d4d;     /* live */
-      --pink:#ff2d7a;       /* botão */
+      --accent:#22c55e;
+      --cyan:#22d3ee;
+      --danger:#ff4d4d;
+      --pink:#ff2d7a;
       --shadow: 0 18px 55px rgba(0,0,0,.55);
 
       --r1: 22px;
       --r2: 16px;
       --r3: 14px;
+
+      /* ✅ tipografia menor (app todo) */
+      --fsTitle: 15px;
+      --fsSub: 12px;
+      --fsBody: 13px;
+      --fsTeams: 15px;
+      --fsMeta: 12px;
     }
 
     *{ box-sizing:border-box; }
@@ -51,7 +48,6 @@
 
     .wrap{ max-width:780px; margin:0 auto; padding:14px 12px 92px; }
 
-    /* Superfície única */
     .surface{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border: 1px solid var(--cardStroke);
@@ -59,41 +55,47 @@
       backdrop-filter: blur(10px);
     }
 
-    /* ===== Top AppBar (estilo do print) ===== */
+    /* ✅ Appbar NÃO dança: sticky sem “top:10px” grande, com altura estável */
     .appbar{
-      position: sticky; top: 10px; z-index: 30;
+      position: sticky;
+      top: 0;
+      z-index: 30;
       border-radius: var(--r1);
-      padding: 12px 12px;
+      padding: 10px 10px;
       display:flex; align-items:center; justify-content:space-between;
       gap: 10px;
+
+      /* evita cobrir conteúdo quando cola no topo */
+      margin-top: 10px;
     }
 
-    .logo{
-      display:flex; align-items:center; gap:10px;
-      min-width:0;
-    }
+    .logo{ display:flex; align-items:center; gap:10px; min-width:0; }
     .mark{
-      width:38px; height:38px; border-radius: 14px;
+      width:34px; height:34px; border-radius: 14px;
       background: linear-gradient(135deg, rgba(34,211,238,.20), rgba(255,255,255,.06));
       border: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:center;
       font-weight: 950;
       letter-spacing:.3px;
+      flex:0 0 auto;
     }
-    .brand{
-      display:flex; flex-direction:column; gap:4px;
-      min-width:0;
-    }
+    .brand{ display:flex; flex-direction:column; gap:4px; min-width:0; }
     .brand .title{
-      font-weight: 950; font-size: 16px; letter-spacing:.2px;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      font-weight: 950;
+      font-size: var(--fsTitle);
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
       line-height: 1.1;
+      max-width: 220px; /* ✅ impede cortar feio */
     }
     .brand .sub{
       display:flex; align-items:center; gap:8px;
       color: var(--muted);
       font-weight: 850;
-      font-size: 12px;
+      font-size: var(--fsSub);
+      white-space:nowrap;
     }
     .dot{
       width:9px; height:9px; border-radius:999px;
@@ -103,9 +105,8 @@
     }
 
     .appbarRight{ display:flex; align-items:center; gap:8px; }
-
     .iconBtn{
-      width:38px; height:38px;
+      width:36px; height:36px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
@@ -125,7 +126,6 @@
       box-shadow: 0 0 0 6px rgba(255,77,77,.12);
       border: 1px solid rgba(0,0,0,.25);
     }
-
     .pillMoney{
       display:flex; align-items:center; gap:10px;
       padding: 8px 10px;
@@ -137,6 +137,7 @@
       cursor:pointer;
       -webkit-tap-highlight-color: transparent;
       user-select:none;
+      font-size: var(--fsBody);
     }
     .pillMoney small{ color: var(--muted); font-weight: 850; }
 
@@ -151,10 +152,11 @@
       -webkit-tap-highlight-color: transparent;
       user-select:none;
       white-space:nowrap;
+      font-size: var(--fsBody);
     }
     .cta:active, .iconBtn:active, .pillMoney:active{ transform: scale(.98); }
 
-    /* ===== Sports tabs ===== */
+    /* Sports tabs */
     .sportsRow{
       margin-top: 12px;
       display:flex; gap:12px;
@@ -165,7 +167,6 @@
       scrollbar-width: none;
     }
     .sportsRow::-webkit-scrollbar{ display:none; }
-
     .sportTab{
       display:flex; flex-direction:column; align-items:center; gap:6px;
       min-width: 66px;
@@ -174,9 +175,10 @@
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
+      font-size: var(--fsBody);
     }
     .sportIcon{
-      width:44px; height:44px; border-radius: 18px;
+      width:42px; height:42px; border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       display:flex; align-items:center; justify-content:center;
@@ -188,24 +190,17 @@
       background: linear-gradient(180deg, rgba(34,211,238,.14), rgba(255,255,255,.03));
     }
 
-    /* ===== Filtros (3h / 12h / Hoje...) ===== */
-    .filters{
-      margin-top: 10px;
-      border-radius: var(--r1);
-      padding: 12px;
-    }
+    /* Filters card */
+    .filters{ margin-top: 10px; border-radius: var(--r1); padding: 12px; }
 
-    .filterRow{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    }
-
+    .filterRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     .chip{
       padding: 10px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       font-weight: 950;
-      font-size: 13px;
+      font-size: var(--fsBody);
       color: rgba(255,255,255,.86);
       cursor:pointer;
       user-select:none;
@@ -220,10 +215,7 @@
     }
     .chip.active .miniDot{ background: var(--cyan); }
 
-    .searchWrap{
-      margin-top: 10px;
-      display:flex; gap:10px; align-items:center;
-    }
+    .searchWrap{ margin-top: 10px; display:flex; gap:10px; align-items:center; }
     .search{
       flex: 1 1 auto;
       display:flex;
@@ -237,7 +229,7 @@
       width:100%; border:0; outline:none;
       background: transparent;
       color: var(--text);
-      font-size: 14px;
+      font-size: var(--fsBody);
       font-weight: 800;
     }
 
@@ -252,6 +244,7 @@
       -webkit-tap-highlight-color: transparent;
       user-select:none;
       white-space:nowrap;
+      font-size: var(--fsBody);
     }
     .btn.primary{
       border-color: rgba(34,197,94,.35);
@@ -262,7 +255,7 @@
     .meta{
       margin-top: 10px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: var(--fsMeta);
       font-weight: 850;
       line-height: 1.35;
     }
@@ -273,22 +266,35 @@
       gap: 10px;
       color: var(--muted);
       font-weight: 900;
-      font-size: 13px;
+      font-size: var(--fsBody);
     }
-    .sortRow .right{
+    .sortBtn{
       display:flex; align-items:center; gap:8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      color: rgba(255,255,255,.78);
+      font-weight: 950;
+      flex: 1 1 auto;
+      min-width: 170px;
     }
+    .sortBtn b{ color: rgba(255,255,255,.92); }
+    .sortBtn:active{ transform: scale(.98); }
 
-    /* ===== Lista / Seções por liga ===== */
+    .sortRow .right{ display:flex; align-items:center; gap:8px; }
+
+    /* List / sections */
     .list{ margin-top: 12px; display:flex; flex-direction:column; gap: 12px; }
-
     .section{
       border-radius: var(--r1);
       overflow:hidden;
       border: 1px solid rgba(255,255,255,.08);
       background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
     }
-
     .sectionHead{
       padding: 12px 12px;
       display:flex; align-items:center; justify-content:space-between;
@@ -299,10 +305,7 @@
       background: rgba(0,0,0,.10);
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
-    .leagueLeft{
-      display:flex; align-items:center; gap:10px;
-      min-width:0;
-    }
+    .leagueLeft{ display:flex; align-items:center; gap:10px; min-width:0; }
     .flag{
       width:26px; height:26px; border-radius: 10px;
       border: 1px solid rgba(255,255,255,.12);
@@ -317,6 +320,7 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      font-size: var(--fsBody);
     }
     .caret{
       opacity:.75;
@@ -327,56 +331,53 @@
       background: rgba(255,255,255,.03);
       flex:0 0 auto;
     }
-
     .sectionBody{ padding: 10px 10px 12px; display:grid; gap:10px; }
     .sectionBody.closed{ display:none; }
 
-    /* ===== Card do jogo (estilo odds 1/X/2) ===== */
+    /* Match card */
     .match{
       border-radius: var(--r1);
       background: linear-gradient(180deg, rgba(11,36,48,.92), rgba(10,33,44,.92));
       border: 1px solid rgba(255,255,255,.08);
       overflow:hidden;
     }
-
     .matchTop{
       padding: 12px 12px 10px;
       display:flex; align-items:flex-start; justify-content:space-between;
       gap:12px;
     }
-
-    .teams{
-      min-width:0;
-    }
+    .teams{ min-width:0; }
     .teamRow{
       display:flex; align-items:center; gap:10px;
       font-weight: 950;
-      font-size: 16px;
+      font-size: var(--fsTeams);
       line-height: 1.15;
     }
+
+    /* ✅ Sem escudo: bola */
     .crest{
-      width:22px; height:22px; border-radius: 8px;
+      width:22px; height:22px; border-radius: 10px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
       flex:0 0 auto;
+      display:flex; align-items:center; justify-content:center;
+      font-size: 14px;
+      color: rgba(255,255,255,.85);
     }
+
     .teamRow span{
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-
     .metaRight{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
+      display:flex; flex-direction:column; align-items:flex-end;
       gap:8px;
       min-width: 92px;
     }
     .timeTxt{
       color: rgba(255,255,255,.82);
       font-weight: 950;
-      font-size: 13px;
+      font-size: var(--fsBody);
     }
-
     .livePill{
       display:inline-flex; align-items:center; gap:8px;
       padding: 7px 10px;
@@ -393,7 +394,6 @@
       background: var(--danger);
       box-shadow: 0 0 0 6px rgba(255,77,77,.10);
     }
-
     .scoreLine{
       display:inline-flex;
       align-items:center;
@@ -411,11 +411,9 @@
     .oddsRow{
       display:grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 0;
       border-top: 1px solid rgba(255,255,255,.06);
       background: rgba(0,0,0,.08);
     }
-
     .odd{
       padding: 10px 10px;
       display:flex; align-items:center; justify-content:space-between;
@@ -425,6 +423,7 @@
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
+      font-size: var(--fsBody);
     }
     .odd:last-child{ border-right: 0; }
     .odd small{ color: var(--muted); font-weight: 900; }
@@ -438,7 +437,6 @@
     }
     .actions .btn{ flex: 1 1 140px; text-align:center; }
 
-    /* Detalhes */
     .detailsWrap{ display:none; }
     .detailsWrap.open{ display:block; }
     .detailsInner{
@@ -447,13 +445,12 @@
       background: rgba(0,0,0,.06);
       color: var(--muted);
       font-weight: 800;
-      font-size: 13px;
+      font-size: var(--fsBody);
       line-height: 1.35;
     }
     .grid2{
       display:grid; grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top: 10px;
+      gap:10px; margin-top: 10px;
     }
     .kv{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
@@ -474,9 +471,9 @@
       color: var(--muted);
       text-align:center;
       font-weight: 950;
+      font-size: var(--fsBody);
     }
 
-    /* ===== Bottom Nav ===== */
     .bottomNav{
       position: fixed;
       left: 50%;
@@ -503,13 +500,13 @@
       display:flex; align-items:center; justify-content:center; gap:10px;
       cursor:pointer; user-select:none;
       -webkit-tap-highlight-color: transparent;
+      font-size: var(--fsBody);
     }
     .navBtn.active{
       border-color: rgba(34,211,238,.35);
       background: linear-gradient(180deg, rgba(34,211,238,.14), rgba(255,255,255,.03));
     }
 
-    /* Modal menu */
     .modalOverlay{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -533,7 +530,7 @@
       display:flex; align-items:center; justify-content:space-between;
       border-bottom: 1px solid rgba(255,255,255,.10);
     }
-    .modalHead b{ font-size: 15px; letter-spacing:.2px; }
+    .modalHead b{ font-size: 14px; letter-spacing:.2px; }
     .modalBody{ padding: 12px 14px 14px; display:flex; flex-direction:column; gap:10px; }
     .menuItem{
       padding: 12px 12px;
@@ -543,20 +540,19 @@
       font-weight: 900;
       display:flex; align-items:center; justify-content:space-between;
       cursor:pointer; user-select:none;
+      font-size: var(--fsBody);
     }
     .menuItem small{ color: var(--muted); font-weight: 800; }
 
     @media (max-width: 420px){
-      .teamRow{ font-size: 15px; }
-      .pillMoney{ display:none; } /* em telas bem pequenas, fica mais clean */
+      .pillMoney{ display:none; }
+      .brand .title{ max-width: 170px; }
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-
-    <!-- Appbar -->
     <div class="appbar surface">
       <div class="logo">
         <div class="mark">R</div>
@@ -565,7 +561,7 @@
           <div class="sub">
             <span class="dot"></span>
             <span>Online</span>
-            <span style="opacity:.55;">v2.4</span>
+            <span style="opacity:.55;">v2.4.1</span>
             <span style="opacity:.55;">•</span>
             <span id="checkTxt" style="opacity:.8;">Checagem: —</span>
           </div>
@@ -574,7 +570,6 @@
 
       <div class="appbarRight">
         <button class="iconBtn" id="openMenu" aria-label="Menu">⋯</button>
-        <button class="iconBtn" id="icoGift" aria-label="Brindes">🎁</button>
         <button class="iconBtn" id="icoSearch" aria-label="Buscar">🔎</button>
         <button class="iconBtn" id="icoUser" aria-label="Conta">👤<span class="badge"></span></button>
         <div class="pillMoney" id="moneyPill"><small>R$</small><span>0,00</span></div>
@@ -582,39 +577,14 @@
       </div>
     </div>
 
-    <!-- Sports tabs -->
     <div class="sportsRow" aria-label="Esportes">
-      <div class="sportTab active" data-sport="all">
-        <div class="sportIcon">📡</div>
-        <div>Tudo</div>
-      </div>
-      <div class="sportTab" data-sport="football">
-        <div class="sportIcon">⚽</div>
-        <div>Futebol</div>
-      </div>
-      <div class="sportTab" data-sport="tennis">
-        <div class="sportIcon">🎾</div>
-        <div>Tênis</div>
-      </div>
-      <div class="sportTab" data-sport="basket">
-        <div class="sportIcon">🏀</div>
-        <div>Basquete</div>
-      </div>
-      <div class="sportTab" data-sport="volei">
-        <div class="sportIcon">🏐</div>
-        <div>Vôlei</div>
-      </div>
-      <div class="sportTab" data-sport="base">
-        <div class="sportIcon">⚾</div>
-        <div>Beisebol</div>
-      </div>
-      <div class="sportTab" data-sport="boxe">
-        <div class="sportIcon">🥊</div>
-        <div>Boxe</div>
-      </div>
+      <div class="sportTab active" data-sport="all"><div class="sportIcon">📡</div><div>Tudo</div></div>
+      <div class="sportTab" data-sport="football"><div class="sportIcon">⚽</div><div>Futebol</div></div>
+      <div class="sportTab" data-sport="tennis"><div class="sportIcon">🎾</div><div>Tênis</div></div>
+      <div class="sportTab" data-sport="basket"><div class="sportIcon">🏀</div><div>Basquete</div></div>
+      <div class="sportTab" data-sport="volei"><div class="sportIcon">🏐</div><div>Vôlei</div></div>
     </div>
 
-    <!-- Filters -->
     <div class="filters surface">
       <div class="filterRow">
         <div class="chip" id="chipUpcoming"><span class="miniDot"></span>🗓️ Próximos</div>
@@ -640,10 +610,10 @@
       <div class="meta" id="meta">Carregando…</div>
 
       <div class="sortRow">
-        <div>
+        <div class="sortBtn" id="sortBtn" title="Alternar ordenação">
           <span style="opacity:.85;">⇅</span>
-          <span style="margin-left:8px;">Popular primeiro</span>
-          <span style="opacity:.65; margin-left:6px;">▾</span>
+          <b id="sortTxt">Popular primeiro</b>
+          <span style="opacity:.65;">▾</span>
         </div>
         <div class="right">
           <button class="iconBtn" id="icoSettings" aria-label="Config">⚙️</button>
@@ -655,14 +625,12 @@
     <div class="list" id="list"></div>
   </div>
 
-  <!-- Bottom nav -->
   <div class="bottomNav">
     <div class="navBtn active" id="navGames">🏟️ Jogos</div>
     <div class="navBtn" id="navLive">🔴 Ao vivo</div>
     <div class="navBtn" id="navFav">⭐ Favoritos</div>
   </div>
 
-  <!-- Menu modal -->
   <div class="modalOverlay" id="menuOverlay">
     <div class="modal">
       <div class="modalHead">
@@ -679,7 +647,7 @@
 
   <script>
     const TZ = "America/Sao_Paulo";
-    const LS_KEY = "rjpro_state_v24";
+    const LS_KEY = "rjpro_state_v241";
 
     const state = {
       mode: "upcoming",      // upcoming | live | favorites
@@ -687,9 +655,10 @@
       q: "",
       favorites: {},
       autoOn: false,
-      sport: "all",          // ui only (por enquanto)
-      openDetails: {},       // persist do accordion por jogo
-      closedLeagues: {}      // persist seção colapsada
+      sport: "all",
+      openDetails: {},
+      closedLeagues: {},
+      sortMode: "popular"    // popular | time
     };
 
     let data = null;
@@ -698,42 +667,25 @@
     let tickerTimer = null;
 
     const $ = (id) => document.getElementById(id);
-    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
-    function saveState(){
-      try{ localStorage.setItem(LS_KEY, JSON.stringify({...state})); }catch(e){}
-    }
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(LS_KEY);
-        if(raw) Object.assign(state, JSON.parse(raw));
-      }catch(e){}
-    }
+    function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify({...state})); }catch(e){} }
+    function loadState(){ try{ const raw = localStorage.getItem(LS_KEY); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){} }
 
     function fmtBrtDate(d){
-      return new Intl.DateTimeFormat("pt-BR", {
-        timeZone: TZ, day:"2-digit", month:"2-digit", year:"numeric"
-      }).format(d);
+      return new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, day:"2-digit", month:"2-digit", year:"numeric" }).format(d);
     }
     function fmtBrtTime(d){
-      return new Intl.DateTimeFormat("pt-BR", {
-        timeZone: TZ, hour:"2-digit", minute:"2-digit"
-      }).format(d);
+      return new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, hour:"2-digit", minute:"2-digit" }).format(d);
     }
     function brtDayKey(d){
-      const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: TZ, year:"numeric", month:"2-digit", day:"2-digit"
-      }).formatToParts(d);
+      const parts = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year:"numeric", month:"2-digit", day:"2-digit" }).formatToParts(d);
       const y = parts.find(p=>p.type==="year").value;
       const m = parts.find(p=>p.type==="month").value;
       const da = parts.find(p=>p.type==="day").value;
       return `${y}-${m}-${da}`;
     }
-
     function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
+      return String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
     }
 
     function gameId(g){
@@ -743,10 +695,7 @@
 
     function getKickoffMs(g){
       if(typeof g.kickoffTs === "number") return g.kickoffTs;
-
-      // fallback: tenta montar com date+time (não é perfeito, mas ajuda)
       if(g.date && g.time){
-        // g.date no formato YYYY-MM-DD; g.time HH:MM
         const iso = `${g.date}T${g.time}:00-03:00`;
         const ms = Date.parse(iso);
         if(!Number.isNaN(ms)) return ms;
@@ -759,7 +708,6 @@
       return st === "FT" || st === "AET" || st === "PEN";
     }
 
-    // v2.4: evita “ao vivo fantasma”
     function isLikelyStaleLive(g){
       const st = (g.status||"").toUpperCase();
       const k = getKickoffMs(g);
@@ -790,21 +738,14 @@
       return false;
     }
 
-    // ✅ MINUTO A MINUTO NO FRONT:
-    // calcula elapsed baseado no kickoffTs (mesmo que JSON não atualize)
     function computedElapsed(g){
       const k = getKickoffMs(g);
       if(!k) return null;
-
-      // se não está live, não inventa minuto
       if(!isLiveGame(g)) return null;
 
       const now = Date.now();
       const mins = Math.max(0, Math.floor((now - k) / 60000));
-
-      // se API já trouxe elapsed, usa o maior (evita “voltar”)
       if(typeof g.elapsed === "number") return Math.max(g.elapsed, mins);
-
       return mins;
     }
 
@@ -894,11 +835,12 @@
 
       $("autoBtn").textContent = `Auto: ${state.autoOn ? "ON" : "OFF"}`;
       $("autoBtn").classList.toggle("primary", state.autoOn);
+
+      $("sortTxt").textContent = (state.sortMode === "popular") ? "Popular primeiro" : "Horário primeiro";
     }
 
     function filterUpcoming(){
       const now = Date.now();
-      // janela padrão 24h (você pode voltar a colocar chips de janela se quiser)
       const max = now + 24 * 3600 * 1000;
 
       return allGames.filter(g => {
@@ -908,18 +850,43 @@
         if(!k) return false;
         if(isFinished(g)) return false;
         return (k >= now && k <= max);
-      }).sort((a,b) => (getKickoffMs(a)||0) - (getKickoffMs(b)||0));
+      });
     }
 
     function filterLive(){
       return allGames.filter(g => {
         if(!regionMatch(g) || !qMatch(g)) return false;
         return isLiveGame(g);
-      }).sort((a,b) => {
-        const ea = computedElapsed(a) || 0;
-        const eb = computedElapsed(b) || 0;
-        return eb - ea;
       });
+    }
+
+    function popularityScore(g){
+      // ✅ heurística “popular” (sem API): prioriza Brasil/Europa, ligas grandes, ao vivo, e favorito
+      const id = gameId(g);
+      const favBoost = state.favorites[id] ? 2000 : 0;
+
+      const country = (g.country||"").toLowerCase();
+      const league = (g.league||"").toLowerCase();
+      const liveBoost = isLiveGame(g) ? 1500 : 0;
+
+      let regionBoost = 0;
+      if(country.includes("brazil") || country.includes("brasil")) regionBoost += 900;
+      if(["england","spain","italy","france","germany","portugal","netherlands"].some(x=>country.includes(x))) regionBoost += 700;
+
+      let leagueBoost = 0;
+      const big = ["champions","libertadores","premier","la liga","serie a","bundesliga","ligue 1","copa","brasile","carioca","paulista"];
+      if(big.some(x=>league.includes(x))) leagueBoost += 500;
+
+      const timeBoost = 0; // deixa neutro
+      return favBoost + liveBoost + regionBoost + leagueBoost + timeBoost;
+    }
+
+    function sortGames(list){
+      if(state.sortMode === "time"){
+        return list.sort((a,b) => (getKickoffMs(a)||0) - (getKickoffMs(b)||0));
+      }
+      // popular primeiro
+      return list.sort((a,b) => popularityScore(b) - popularityScore(a));
     }
 
     function flagEmojiFromCountry(country){
@@ -955,21 +922,14 @@
       $("list").innerHTML = `<div class="empty">${msg}</div>`;
     }
 
-    // Odds fake por enquanto (layout pronto)
     function fakeOddsForGame(g){
-      // gera algo estável por id (sempre igual pro mesmo jogo)
       const id = gameId(g);
       let h = 0;
       for(let i=0;i<id.length;i++) h = (h*31 + id.charCodeAt(i)) >>> 0;
-
-      const a = 1.20 + (h % 180)/100;   // 1.20..2.99
-      const b = 2.50 + ((h>>8) % 260)/100; // 2.50..5.09
-      const c = 2.10 + ((h>>16) % 420)/100; // 2.10..6.29
-      return {
-        "1": a.toFixed(2),
-        "X": b.toFixed(2),
-        "2": c.toFixed(2),
-      };
+      const a = 1.20 + (h % 180)/100;
+      const b = 2.50 + ((h>>8) % 260)/100;
+      const c = 2.10 + ((h>>16) % 420)/100;
+      return { "1": a.toFixed(2), "X": b.toFixed(2), "2": c.toFixed(2) };
     }
 
     function renderMatch(g){
@@ -983,9 +943,7 @@
       const score = scoreText(g);
       const mins = minutesText(g);
       const fav = !!state.favorites[id];
-
       const odds = fakeOddsForGame(g);
-
       const open = !!state.openDetails[id];
 
       const wrap = document.createElement("div");
@@ -996,11 +954,11 @@
         <div class="matchTop">
           <div class="teams">
             <div class="teamRow">
-              <span class="crest"></span>
+              <span class="crest">⚽</span>
               <span>${escapeHtml(g.home||"—")}</span>
             </div>
             <div class="teamRow" style="margin-top:8px; opacity:.92;">
-              <span class="crest"></span>
+              <span class="crest">⚽</span>
               <span>${escapeHtml(g.away||"—")}</span>
             </div>
             <div style="margin-top:10px; color: rgba(255,255,255,.55); font-weight: 850; font-size: 12px;">
@@ -1043,17 +1001,16 @@
               <div class="kv"><span>BTTS</span><b>—%</b></div>
             </div>
             <div style="margin-top:10px; color: rgba(255,255,255,.55);">
-              Layout pronto pra quando você plugar as probabilidades reais na API paga.
+              PRO: conta + assinatura + odds reais + exportar picks.
             </div>
           </div>
         </div>
       `;
 
-      // eventos
       wrap.querySelector('[data-act="details"]').onclick = () => {
         state.openDetails[id] = !state.openDetails[id];
         saveState();
-        render(); // re-render geral (mantém estado persistido)
+        render();
       };
 
       wrap.querySelector('[data-act="fav"]').onclick = () => {
@@ -1062,11 +1019,10 @@
         render();
       };
 
-      // odds click (só UI por enquanto)
       wrap.querySelectorAll(".odd").forEach(o=>{
         o.onclick = () => {
           const which = o.getAttribute("data-odd");
-          alert(`Selecionado: ${which}\n\nNo PRO: você pode copiar/colar a pick e abrir na casa.`);
+          alert(`Selecionado: ${which}\n\nNo PRO: você pode salvar a pick e copiar/colar nas casas.`);
         };
       });
 
@@ -1076,7 +1032,6 @@
     function renderSection(leagueKey, games){
       const [country, league] = leagueKey.split(" • ").map(s=>s.trim());
       const flag = flagEmojiFromCountry(country);
-
       const closed = !!state.closedLeagues[leagueKey];
 
       const sec = document.createElement("div");
@@ -1114,14 +1069,12 @@
       const map = new Map(allGames.map(g => [gameId(g), g]));
       const favGames = favIds.map(id => map.get(id)).filter(Boolean);
 
-      // live primeiro
+      // favorece live
       favGames.sort((a,b) => {
         const la = isLiveGame(a), lb = isLiveGame(b);
         if(la && !lb) return -1;
         if(lb && !la) return 1;
-        const ea = computedElapsed(a) || 0;
-        const eb = computedElapsed(b) || 0;
-        return eb - ea;
+        return (computedElapsed(b)||0) - (computedElapsed(a)||0);
       });
 
       const root = $("list");
@@ -1150,32 +1103,28 @@
       let list = [];
       if(state.mode==="live"){
         list = filterLive();
-        if(list.length===0){
-          renderEmpty("Nada ao vivo agora com esses filtros.");
-          return;
-        }
+        if(list.length===0){ renderEmpty("Nada ao vivo agora com esses filtros."); return; }
       } else {
         list = filterUpcoming();
-        if(list.length===0){
-          renderEmpty("Sem jogos nas próximas 24h com esses filtros.");
-          return;
-        }
+        if(list.length===0){ renderEmpty("Sem jogos nas próximas 24h com esses filtros."); return; }
       }
+
+      list = sortGames(list);
 
       const root = $("list");
       root.innerHTML = "";
 
       const groups = groupByLeague(list);
       for(const [k, arr] of groups.entries()){
-        root.appendChild(renderSection(k, arr));
+        // dentro da liga, aplica a mesma ordenação “popular/time”
+        const ordered = sortGames([...arr]);
+        root.appendChild(renderSection(k, ordered));
       }
     }
 
-    // ✅ ticker minuto-a-minuto (não depende do JSON)
     function startTicker(){
       stopTicker();
       tickerTimer = setInterval(() => {
-        // atualiza só os elementos visíveis com data-livebox
         document.querySelectorAll("[data-livebox]").forEach(box=>{
           const match = box.closest(".match");
           if(!match) return;
@@ -1192,14 +1141,10 @@
           if(scoreEl) scoreEl.textContent = (score ? score : "—");
           if(minEl) minEl.textContent = `• ${mins}`;
         });
-      }, 15000); // 15s deixa suave e “vivo”
+      }, 15000);
     }
-    function stopTicker(){
-      if(tickerTimer) clearInterval(tickerTimer);
-      tickerTimer = null;
-    }
+    function stopTicker(){ if(tickerTimer) clearInterval(tickerTimer); tickerTimer = null; }
 
-    // Auto refresh do JSON (30–60s)
     function startAuto(){
       stopAuto();
       const interval = (state.mode === "live") ? 30_000 : 60_000;
@@ -1210,66 +1155,48 @@
         }catch(e){}
       }, interval);
     }
-    function stopAuto(){
-      if(autoTimer) clearInterval(autoTimer);
-      autoTimer = null;
-    }
+    function stopAuto(){ if(autoTimer) clearInterval(autoTimer); autoTimer = null; }
 
     function wire(){
-      // chips modo/region
       $("chipUpcoming").onclick = () => { state.mode="upcoming"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("chipLive").onclick = () => { state.mode="live"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("chipBrazil").onclick = () => { state.region="brazil"; saveState(); render(); };
       $("chipEurope").onclick = () => { state.region="europe"; saveState(); render(); };
       $("chipAll").onclick = () => { state.region="all"; saveState(); render(); };
 
-      // bottom nav
       $("navGames").onclick = () => { state.mode="upcoming"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("navLive").onclick = () => { state.mode="live"; saveState(); render(); if(state.autoOn) startAuto(); };
       $("navFav").onclick = () => { state.mode="favorites"; saveState(); render(); stopAuto(); };
 
-      // busca
-      $("q").addEventListener("input", () => {
-        state.q = $("q").value;
-        saveState();
-        render();
-      });
-      $("clearBtn").onclick = () => {
-        state.q = "";
-        $("q").value = "";
-        saveState();
-        render();
-      };
+      $("q").addEventListener("input", () => { state.q = $("q").value; saveState(); render(); });
+      $("clearBtn").onclick = () => { state.q=""; $("q").value=""; saveState(); render(); };
 
-      // refresh
       $("refreshBtn").onclick = async () => {
         $("refreshBtn").textContent = "Atualizando…";
-        try{
-          await loadJogosJson(true);
-          render();
-        }catch(e){
-          renderEmpty("Erro ao atualizar dados.");
-        }finally{
-          $("refreshBtn").textContent = "Atualizar";
-        }
+        try{ await loadJogosJson(true); render(); }
+        catch(e){ renderEmpty("Erro ao atualizar dados."); }
+        finally{ $("refreshBtn").textContent = "Atualizar"; }
       };
 
-      // auto
       $("autoBtn").onclick = () => {
         state.autoOn = !state.autoOn;
         saveState();
         setActiveChips();
-        if(state.autoOn) startAuto();
-        else stopAuto();
+        if(state.autoOn) startAuto(); else stopAuto();
+      };
+
+      $("sortBtn").onclick = () => {
+        state.sortMode = (state.sortMode === "popular") ? "time" : "popular";
+        saveState();
+        render();
       };
 
       $("infoBtn").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar Jogos PRO v2.4\nFonte: ${src}\nAtualizado: ${upd}\n\n• JSON (GitHub Actions): pode atualizar a cada 5 min.\n• AO VIVO: minuto a minuto calculado no front.\n• Auto: recarrega JSON a cada 30–60s.`);
+        alert(`Radar Jogos PRO v2.4.1\nFonte: ${src}\nAtualizado: ${upd}\n\n• “Popular primeiro” agora funciona (heurística)\n• Live minuto-a-minuto no front\n• PRO: conta+assinatura (fase 2).`);
       };
 
-      // menu
       $("openMenu").onclick = () => $("menuOverlay").classList.add("show");
       $("closeMenu").onclick = () => $("menuOverlay").classList.remove("show");
       $("menuOverlay").onclick = (e) => { if(e.target === $("menuOverlay")) $("menuOverlay").classList.remove("show"); };
@@ -1279,38 +1206,49 @@
       $("menuAbout").onclick = () => {
         const upd = data?.updatedAt || "—";
         const src = data?.source || "—";
-        alert(`Radar Jogos PRO v2.4\nFonte: ${src}\nAtualizado: ${upd}`);
+        alert(`Radar Jogos PRO v2.4.1\nFonte: ${src}\nAtualizado: ${upd}`);
       };
 
-      // sports tabs (UI)
+      // placeholders
+      $("icoSettings").onclick = () => alert("Configurações: vamos ligar mais pra frente.");
+      $("icoTune").onclick = () => alert("Filtros avançados: vamos ligar mais pra frente.");
+      $("icoSearch").onclick = () => $("q").focus();
+      $("icoUser").onclick = () => alert("Conta/Entrar: fase 2 (PRO).");
+
+      $("moneyPill").onclick = () => alert("Saldo (demo).");
+
+      $("proBtn").onclick = () => {
+        alert(
+`PLANO PRO (fase 2)
+• Criar conta / Entrar
+• Assinatura mensal (Pix/Cartão)
+• Odds reais e mercados extras
+• Exportar picks (copiar/colar)
+• Favoritos em nuvem
+
+Agora: estamos finalizando layout e estabilidade.`
+        );
+      };
+
+      // Sports tabs (só UI por enquanto)
       document.querySelectorAll(".sportTab").forEach(tab=>{
         tab.onclick = () => {
           document.querySelectorAll(".sportTab").forEach(x=>x.classList.remove("active"));
           tab.classList.add("active");
           state.sport = tab.getAttribute("data-sport") || "all";
           saveState();
-          // por enquanto não filtra no backend; quando você tiver esporte no JSON, a gente filtra
         };
       });
-
-      // ícones (placeholder)
-      $("icoSettings").onclick = () => alert("Configurações: vamos ligar depois.");
-      $("icoTune").onclick = () => alert("Filtros avançados: vamos ligar depois.");
-      $("icoGift").onclick = () => alert("Bônus/Promo: só layout por enquanto.");
-      $("icoSearch").onclick = () => $("q").focus();
-      $("icoUser").onclick = () => alert("Conta: só layout por enquanto.");
-      $("moneyPill").onclick = () => alert("Saldo (demo).");
-      $("proBtn").onclick = () => alert("Plano PRO: aqui você coloca sua assinatura.");
     }
 
     (async function init(){
       loadState();
-
-      if(!state.mode) state.mode = "upcoming";
-      if(!state.region) state.region = "all";
-      if(!state.favorites) state.favorites = {};
-      if(!state.openDetails) state.openDetails = {};
-      if(!state.closedLeagues) state.closedLeagues = {};
+      if(!state.mode) state.mode="upcoming";
+      if(!state.region) state.region="all";
+      if(!state.favorites) state.favorites={};
+      if(!state.openDetails) state.openDetails={};
+      if(!state.closedLeagues) state.closedLeagues={};
+      if(!state.sortMode) state.sortMode="popular";
 
       $("q").value = state.q || "";
 
@@ -1320,11 +1258,9 @@
       try{ await loadJogosJson(false); }catch(e){}
       render();
 
-      // sempre liga o ticker (minuto a minuto)
       startTicker();
-
       if(state.autoOn) startAuto();
     })();
   </script>
 </body>
-  </html>
+</html>
