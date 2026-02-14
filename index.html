@@ -1,230 +1,736 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Radar Jogos PRO</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>Radar Jogos PRO</title>
 
-<style>
-:root{
-  --bg1:#0b1f24;
-  --bg2:#09171b;
-  --card:rgba(15,40,46,0.75);
-  --border:rgba(0,255,150,0.08);
-  --primary:#00ff9c;
-  --live:#ff3b3b;
-  --text:#eafdf7;
-  --muted:#7fa6a0;
-}
+  <style>
+    :root{
+      /* Base */
+      --bg-0:#071a1d;
+      --bg-1:#0a2327;
+      --bg-2:#0b2b30;
 
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui;}
+      /* Glass */
+      --glass: rgba(12, 34, 39, .62);
+      --glass-2: rgba(10, 30, 34, .72);
+      --stroke: rgba(255,255,255,.07);
+      --stroke-2: rgba(0,255,170,.12);
 
-body{
-  background: radial-gradient(circle at top left,#0f2c33,var(--bg2));
-  color:var(--text);
-  padding:16px;
-}
+      /* Text */
+      --text:#e9fff7;
+      --muted:#96b7af;
+      --muted-2:#6e8f88;
 
-/* HEADER */
+      /* Accent */
+      --accent:#19f7a5;
+      --accent-2:#00c98b;
+      --accent-soft: rgba(25,247,165,.14);
 
-.header{
-  background:linear-gradient(135deg,#11353d,#0c2429);
-  padding:18px;
-  border-radius:18px;
-  box-shadow:0 10px 40px rgba(0,0,0,0.4);
-  margin-bottom:18px;
-}
+      /* Live */
+      --live:#ff3b3b;
+      --live-soft: rgba(255,59,59,.14);
 
-.header h1{
-  font-size:22px;
-  font-weight:600;
-}
+      /* Shadow */
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --shadow-soft: 0 12px 30px rgba(0,0,0,.28);
 
-.status{
-  margin-top:6px;
-  color:var(--primary);
-  font-size:14px;
-}
+      /* Radius */
+      --r-xl: 22px;
+      --r-lg: 18px;
+      --r-md: 14px;
+      --r-sm: 12px;
+    }
 
-/* BUTTONS */
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 0%, rgba(25,247,165,.18), transparent 55%),
+        radial-gradient(900px 600px at 85% 10%, rgba(0,170,255,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg-2), var(--bg-0));
+      padding: 14px 14px 92px;
+    }
 
-.btn{
-  padding:10px 16px;
-  border-radius:12px;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-  background:linear-gradient(135deg,#00ff9c,#00c97d);
-  color:#062018;
-  margin:6px 4px;
-}
+    /* subtle dotted texture */
+    body:before{
+      content:"";
+      position:fixed; inset:0;
+      background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+      opacity:.22;
+      pointer-events:none;
+      mix-blend-mode: overlay;
+    }
 
-.btn-secondary{
-  background:#142e33;
-  color:var(--text);
-  border:1px solid var(--border);
-}
+    a{ color:inherit; text-decoration:none; }
 
-/* FILTERS */
+    .wrap{ max-width: 760px; margin:0 auto; }
 
-.filters{
-  background:var(--card);
-  backdrop-filter:blur(8px);
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:20px;
-  border:1px solid var(--border);
-}
+    /* Top bar */
+    .top{
+      position:relative;
+      background: linear-gradient(180deg, rgba(25,247,165,.08), rgba(0,0,0,0)) , var(--glass);
+      border:1px solid var(--stroke);
+      border-radius: var(--r-xl);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-.chips{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+    .topRow{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
 
-.chip{
-  padding:8px 14px;
-  border-radius:30px;
-  background:#10282d;
-  border:1px solid var(--border);
-  font-size:13px;
-  cursor:pointer;
-}
+    .brand{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 0;
+    }
 
-.chip.active{
-  background:linear-gradient(135deg,#00ff9c,#00c97d);
-  color:#062018;
-  font-weight:600;
-}
+    .brandTitle{
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing:.2px;
+      line-height:1.05;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
-/* CARD JOGO */
+    .online{
+      display:flex; align-items:center; gap:8px;
+      color: var(--accent);
+      font-weight:700;
+      font-size:14px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(25,247,165,.10);
+    }
 
-.game-card{
-  background:var(--card);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:18px;
-  border:1px solid var(--border);
-  box-shadow:0 12px 40px rgba(0,0,0,0.35);
-  transition:0.2s ease;
-}
+    .menuBtn{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      display:flex; align-items:center; gap:8px;
+      box-shadow: var(--shadow-soft);
+      cursor:pointer;
+      user-select:none;
+    }
 
-.game-card:hover{
-  transform:translateY(-3px);
-}
+    /* Search row */
+    .searchRow{
+      display:flex; gap:10px; margin-top: 14px;
+    }
+    .search{
+      flex:1;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 12px 14px;
+      outline:none;
+    }
+    .clearBtn{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 12px 14px;
+      font-weight: 800;
+      cursor:pointer;
+      white-space:nowrap;
+    }
 
-.game-title{
-  font-size:16px;
-  font-weight:600;
-  margin-bottom:6px;
-}
+    .refreshRow{
+      display:flex; align-items:center; gap:12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .refreshBtn{
+      border:none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color:#062018;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 900;
+      cursor:pointer;
+      box-shadow: 0 12px 26px rgba(25,247,165,.18);
+    }
+    .meta{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .meta strong{ color: var(--text); font-weight: 800; }
 
-.league{
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:12px;
-}
+    /* Chips */
+    .chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
 
-.live-badge{
-  background:var(--live);
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:600;
-  margin-left:8px;
-  animation:pulse 1.5s infinite;
-}
+    .chip{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 13px;
+      display:flex; align-items:center; gap:8px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip .miniDot{
+      width:10px; height:10px; border-radius:50%;
+      background: rgba(255,255,255,.25);
+    }
+    .chip.active{
+      border-color: rgba(25,247,165,.35);
+      background: linear-gradient(135deg, rgba(25,247,165,.28), rgba(0,201,139,.18));
+      box-shadow: 0 10px 24px rgba(25,247,165,.10);
+    }
+    .chip.active .miniDot{ background: var(--accent); }
+    .chip.liveDot .miniDot{ background: var(--live); box-shadow: 0 0 0 6px rgba(255,59,59,.08); }
 
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,59,59,0.7);}
-  70%{box-shadow:0 0 0 8px rgba(255,59,59,0);}
-  100%{box-shadow:0 0 0 0 rgba(255,59,59,0);}
-}
+    /* Window panel */
+    .panel{
+      margin-top: 14px;
+      background: var(--glass-2);
+      border:1px solid var(--stroke);
+      border-radius: var(--r-xl);
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
 
-.score{
-  font-size:18px;
-  font-weight:700;
-  margin-top:6px;
-}
+    .panelRow{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-/* FOOTER MENU */
+    .panelTitle{
+      display:flex; align-items:center; gap:8px;
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--text);
+    }
 
-.footer{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#08191d;
-  padding:12px;
-  display:flex;
-  justify-content:space-around;
-  border-top:1px solid var(--border);
-}
+    .panelSub{
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
 
-.footer button{
-  background:none;
-  border:none;
-  color:var(--muted);
-  font-weight:600;
-}
+    .winRow{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
 
-.footer button.active{
-  color:var(--primary);
-}
-</style>
+    .winLabel{
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+      margin-right: 6px;
+    }
+
+    .winBtn{
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight: 900;
+      cursor:pointer;
+      min-width: 54px;
+      text-align:center;
+    }
+    .winBtn.active{
+      border-color: rgba(25,247,165,.35);
+      background: linear-gradient(135deg, rgba(25,247,165,.28), rgba(0,201,139,.18));
+      color: var(--text);
+      box-shadow: 0 10px 22px rgba(25,247,165,.10);
+    }
+
+    .dateRow{
+      margin-top: 14px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .dateLabel{
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 13px;
+      margin-right: 6px;
+    }
+    .dateSelect{
+      flex:1;
+      min-width: 170px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 12px;
+      outline:none;
+    }
+    .applyBtn{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 900;
+      cursor:pointer;
+    }
+
+    /* PRO info cards inside panel */
+    .proStack{ margin-top: 14px; display:grid; gap:10px; }
+    .proCard{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      border-radius: var(--r-lg);
+      padding: 12px 12px;
+    }
+    .proCard h4{
+      margin:0;
+      font-size: 14px;
+      font-weight: 900;
+      display:flex; align-items:center; gap:8px;
+    }
+    .proCard p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.35;
+      font-weight: 650;
+    }
+
+    /* List */
+    .list{ margin-top: 16px; display:grid; gap:12px; }
+
+    .game{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,0)) , var(--glass);
+      border:1px solid var(--stroke);
+      border-radius: var(--r-xl);
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
+
+    .gTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .gNames{
+      min-width: 0;
+    }
+    .gTitle{
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing:.1px;
+      line-height:1.15;
+      margin:0;
+      word-break: break-word;
+    }
+    .gMeta{
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .gRight{
+      display:flex;
+      align-items:flex-end;
+      gap:10px;
+      flex-direction: column;
+      flex-shrink:0;
+    }
+
+    .livePill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-weight: 950;
+      font-size: 12px;
+      border:1px solid rgba(255,59,59,.28);
+      background: linear-gradient(135deg, rgba(255,59,59,.20), rgba(255,59,59,.08));
+    }
+    .livePill .lDot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--live);
+      box-shadow: 0 0 0 6px rgba(255,59,59,.10);
+    }
+
+    .scoreBox{
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      border-radius: 16px;
+      padding: 8px 10px;
+      text-align:right;
+      min-width: 108px;
+    }
+    .scoreLine{
+      font-weight: 1000;
+      font-size: 18px;
+      letter-spacing:.3px;
+    }
+    .timeLine{
+      margin-top: 2px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .gActions{
+      display:flex;
+      gap:10px;
+      margin-top: 12px;
+    }
+    .actionBtn{
+      flex:1;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 12px;
+      font-weight: 950;
+      cursor:pointer;
+    }
+    .actionBtn.primary{
+      border:none;
+      background: linear-gradient(135deg, rgba(25,247,165,.34), rgba(0,201,139,.18));
+      box-shadow: 0 10px 22px rgba(25,247,165,.10);
+    }
+
+    .tabs{
+      margin-top: 12px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .tab{
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 950;
+      font-size: 12px;
+      cursor:pointer;
+    }
+    .tab.active{
+      border-color: rgba(25,247,165,.35);
+      background: rgba(25,247,165,.10);
+    }
+
+    .insights{
+      margin-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 10px;
+      display:grid;
+      gap:10px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .stat{
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      padding: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .stat b{ font-size: 13px; font-weight: 950; color: var(--text); }
+    .stat span{ color: var(--muted); font-weight: 950; }
+
+    .hint{
+      color: var(--muted-2);
+      font-size: 12px;
+      font-weight: 800;
+      line-height:1.35;
+      opacity:.9;
+    }
+
+    /* Back to top */
+    .backTop{
+      margin-top: 14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 12px 14px;
+      font-weight: 950;
+      width:100%;
+      cursor:pointer;
+    }
+
+    /* Bottom nav */
+    .nav{
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      padding: 10px 12px 12px;
+      background: linear-gradient(180deg, rgba(7,26,29,0), rgba(7,26,29,.92) 30%, rgba(7,26,29,.98));
+      backdrop-filter: blur(12px);
+    }
+    .navBar{
+      max-width: 760px;
+      margin: 0 auto;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(10,30,34,.70);
+      border-radius: 999px;
+      padding: 8px;
+      display:flex;
+      gap:8px;
+      box-shadow: var(--shadow);
+    }
+    .navBtn{
+      flex:1;
+      border:none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 12px 10px;
+      font-weight: 1000;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+    }
+    .navBtn.active{
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(25,247,165,.22), rgba(0,201,139,.12));
+      border:1px solid rgba(25,247,165,.18);
+      box-shadow: 0 10px 22px rgba(25,247,165,.08);
+    }
+
+    /* Utilities */
+    .hidden{ display:none !important; }
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
 
-<div class="header">
-  <h1>Radar Jogos PRO</h1>
-  <div class="status">● Online</div>
-</div>
+    <!-- HEADER -->
+    <section class="top">
+      <div class="topRow">
+        <div class="brand">
+          <div class="brandTitle">Radar Jogos PRO</div>
+          <div class="online"><span class="dot"></span> Online</div>
+        </div>
+        <button class="menuBtn" id="btnMenu">… Menu</button>
+      </div>
 
-<div class="filters">
-  <div class="chips">
-    <div class="chip active">⚡ Próximos</div>
-    <div class="chip">🔴 Ao vivo</div>
-    <div class="chip">🇧🇷 Brasil</div>
-    <div class="chip">🌍 Todos</div>
+      <div class="searchRow">
+        <input id="searchInput" class="search" placeholder="Buscar time, liga ou país..." />
+        <button id="btnClear" class="clearBtn">Limpar</button>
+      </div>
+
+      <div class="refreshRow">
+        <button id="btnRefresh" class="refreshBtn">Atualizar</button>
+        <div class="meta" id="metaInfo">
+          Última atualização: <strong>—</strong> • Fonte: <strong>—</strong><br/>
+          Jogos no arquivo: <strong>—</strong> • Hoje: <strong>—</strong> • Próx 24h: <strong>—</strong> • Ao vivo: <strong>—</strong>
+        </div>
+      </div>
+
+      <div class="chips" aria-label="filtros principais">
+        <button class="chip active" id="chipProximos"><span class="miniDot"></span> ⚡ Próximos</button>
+        <button class="chip liveDot" id="chipAoVivo"><span class="miniDot"></span> 🔴 Ao vivo</button>
+        <button class="chip" id="chipCalendario"><span class="miniDot"></span> 📅 Calendário</button>
+        <button class="chip" id="chipBrasil"><span class="miniDot"></span> 🇧🇷 Brasil</button>
+        <button class="chip" id="chipEuropa"><span class="miniDot"></span> 🇪🇺 Europa</button>
+        <button class="chip" id="chipTodos"><span class="miniDot"></span> 🌍 Todos</button>
+      </div>
+
+      <!-- PAINEL / JANELA / DATA -->
+      <div class="panel" id="panelControls">
+        <div class="panelRow">
+          <div>
+            <div class="panelTitle">✨ Painel PRO</div>
+            <div class="panelSub" id="panelSubText">Janela ativa: 24h • Fuso: BRT</div>
+          </div>
+          <div class="panelSub" id="panelRightText">Próximas 24h • BRT</div>
+        </div>
+
+        <div class="winRow">
+          <span class="winLabel">Janela</span>
+          <button class="winBtn" data-win="1">1h</button>
+          <button class="winBtn" data-win="2">2h</button>
+          <button class="winBtn" data-win="3">3h</button>
+          <button class="winBtn" data-win="6">6h</button>
+          <button class="winBtn" data-win="12">12h</button>
+          <button class="winBtn active" data-win="24">24h</button>
+        </div>
+
+        <div class="dateRow" id="dateRow">
+          <span class="dateLabel">Data (BRT)</span>
+          <select class="dateSelect" id="dateSelect">
+            <option value="">—</option>
+          </select>
+          <button class="applyBtn" id="btnApplyDate">Aplicar</button>
+        </div>
+
+        <div class="proStack">
+          <div class="proCard">
+            <h4>⚡ Próximos por janela</h4>
+            <p>Escolha 1–24h para ver só o que começa nessa faixa (não mistura com AO VIVO).</p>
+          </div>
+          <div class="proCard">
+            <h4>📊 Odds / Mais–Menos</h4>
+            <p>Estimativa local já aparece. Com API paga, dá pra puxar odds reais e mais mercados.</p>
+          </div>
+          <div class="proCard">
+            <h4>⭐ Favoritos</h4>
+            <p>Salva jogos/ligas no celular (localStorage). Layout e menu já preparados.</p>
+          </div>
+        </div>
+
+        <button class="backTop" id="btnTop">Voltar pro topo</button>
+      </div>
+    </section>
+
+    <!-- LISTA -->
+    <section class="list" id="gamesList">
+      <!-- jogos.js vai renderizar aqui -->
+    </section>
+
   </div>
-</div>
 
-<div id="games"></div>
+  <!-- BOTTOM NAV -->
+  <div class="nav">
+    <div class="navBar">
+      <button class="navBtn active" id="navJogos">📅 Jogos</button>
+      <button class="navBtn" id="navFav">⭐ Favoritos</button>
+      <button class="navBtn" id="navHist">🕒 Histórico</button>
+    </div>
+  </div>
 
-<div class="footer">
-  <button class="active">📅 Jogos</button>
-  <button>⭐ Favoritos</button>
-  <button>🕒 Histórico</button>
-</div>
+  <!-- Template de jogo (jogos.js pode clonar isso) -->
+  <template id="tplGame">
+    <article class="game">
+      <div class="gTop">
+        <div class="gNames">
+          <h3 class="gTitle" data-home></h3>
+          <div class="gMeta" data-meta></div>
+        </div>
 
-<script>
-fetch("jogos.json")
-.then(r=>r.json())
-.then(data=>{
-  const container=document.getElementById("games");
-  container.innerHTML="";
+        <div class="gRight">
+          <div class="livePill hidden" data-live>
+            <span class="lDot"></span> AO VIVO
+          </div>
 
-  data.games.slice(0,30).forEach(g=>{
-    const card=document.createElement("div");
-    card.className="game-card";
-
-    card.innerHTML=`
-      <div class="game-title">
-        ${g.home} x ${g.away}
-        ${g.isLive?'<span class="live-badge">AO VIVO</span>':''}
+          <div class="scoreBox">
+            <div class="scoreLine" data-score>—</div>
+            <div class="timeLine" data-time>—</div>
+          </div>
+        </div>
       </div>
-      <div class="league">${g.league} • ${g.country}</div>
-      <div class="score">
-        ${g.scoreHome??"-"} - ${g.scoreAway??"-"}
-        ${g.elapsed?(" • "+g.elapsed+"'"):""}
+
+      <div class="gActions">
+        <button class="actionBtn primary" data-details>Detalhes</button>
+        <button class="actionBtn" data-fav>☆ Favoritar</button>
       </div>
-    `;
 
-    container.appendChild(card);
-  });
-});
-</script>
+      <div class="tabs">
+        <button class="tab active" data-tab="insights">Insights / Odds</button>
+        <button class="tab" data-tab="maismenos">Mais/Menos</button>
+        <button class="tab" data-tab="forma">Forma</button>
+      </div>
 
+      <div class="insights" data-pane="insights">
+        <div class="grid2">
+          <div class="stat"><b>Over 1,5</b><span data-o15>—%</span></div>
+          <div class="stat"><b>Under 2,5</b><span data-u25>—%</span></div>
+          <div class="stat"><b>Over 2,5</b><span data-o25>—%</span></div>
+          <div class="stat"><b>BTTS</b><span data-btts>—%</span></div>
+        </div>
+        <div class="hint">No modo FREE, alguns cálculos podem não aparecer. Layout pronto para a API paga.</div>
+      </div>
+
+      <div class="insights hidden" data-pane="maismenos">
+        <div class="hint">Aba pronta: ao migrar para API paga, você pode popular mercados reais aqui.</div>
+      </div>
+
+      <div class="insights hidden" data-pane="forma">
+        <div class="hint">Aba pronta: exiba forma dos times (5 últimos jogos, ranking, etc.).</div>
+      </div>
+    </article>
+  </template>
+
+  <!-- Mantém seu JS separado -->
+  <script src="jogos.js?v=1"></script>
+
+  <!-- fallback leve se jogos.js ainda não renderizar (não atrapalha) -->
+  <script>
+    // scroll topo
+    document.getElementById("btnTop").addEventListener("click", ()=>window.scrollTo({top:0, behavior:"smooth"}));
+
+    // estado ativo das abas dentro dos cards (caso jogos.js não faça)
+    document.addEventListener("click", (e)=>{
+      const tab = e.target.closest(".tab");
+      if(!tab) return;
+      const card = tab.closest(".game");
+      const key = tab.getAttribute("data-tab");
+      card.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t===tab));
+      card.querySelectorAll("[data-pane]").forEach(p=>p.classList.toggle("hidden", p.getAttribute("data-pane")!==key));
+    });
+
+    // janela ativa (visual) — jogos.js deve usar data-win pra filtrar
+    document.querySelectorAll(".winBtn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        document.querySelectorAll(".winBtn").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+
+    // chips ativos (visual)
+    const chips = ["chipProximos","chipAoVivo","chipCalendario","chipBrasil","chipEuropa","chipTodos"];
+    chips.forEach(id=>{
+      const el = document.getElementById(id);
+      el?.addEventListener("click", ()=>{
+        chips.forEach(x=>document.getElementById(x)?.classList.remove("active"));
+        el.classList.add("active");
+      });
+    });
+
+    // nav ativo (visual)
+    const nav = ["navJogos","navFav","navHist"];
+    nav.forEach(id=>{
+      const el = document.getElementById(id);
+      el?.addEventListener("click", ()=>{
+        nav.forEach(x=>document.getElementById(x)?.classList.remove("active"));
+        el.classList.add("active");
+      });
+    });
+  </script>
 </body>
 </html>
