@@ -614,8 +614,9 @@
         </div>
 
         <div class="pills">
-          <div class="pill green active" id="pillLiveUpcoming" data-mode="live+upcoming">
-            <span class="dot"></span> ⚡ Ao vivo + Próximos
+          <!-- AGORA É SÓ PRÓXIMOS -->
+          <div class="pill green active" id="pillUpcoming" data-mode="upcoming">
+            <span class="dot"></span> ⚡ Próximos
           </div>
           <div class="pill red" id="pillLive" data-mode="live">
             <span class="dot"></span> 🔴 Ao vivo
@@ -668,7 +669,7 @@
 
           <div class="proCard">
             <div class="h">⚡ Próximos por janela</div>
-            <div class="p">Escolha 1–24h para ver só o que começa nessa faixa (AO VIVO continua no topo).</div>
+            <div class="p">Escolha 1–24h para ver só o que começa nessa faixa (não mistura com AO VIVO).</div>
           </div>
 
           <div class="proCard">
@@ -683,7 +684,7 @@
 
           <div class="proCard">
             <div class="h">🕘 Histórico</div>
-            <div class="p">Marca jogos vistos e revisa depois (localStorage). Ótimo pra rotina diária.</div>
+            <div class="p">Reserva para futuro (opcional). Hoje vamos deixar o app mais limpo.</div>
           </div>
         </div>
 
@@ -700,14 +701,13 @@
     <div id="games"></div>
   </div>
 
-  <!-- Bottom nav -->
+  <!-- Bottom nav (sem Histórico) -->
   <div class="nav">
     <div class="navBtn active" id="navGames">🗓️ Jogos</div>
     <div class="navBtn" id="navFavs">★ Favoritos</div>
-    <div class="navBtn" id="navHist">⏱ Histórico</div>
   </div>
 
-  <!-- Menu sheet -->
+  <!-- Menu sheet (sem Histórico) -->
   <div class="sheetBack" id="sheetBack"></div>
   <div class="sheet" id="sheet">
     <div class="sheetHandle"></div>
@@ -721,13 +721,6 @@
         <div class="tx">
           <div class="h">Favoritos</div>
           <div class="p">Ver e gerenciar seus jogos salvos.</div>
-        </div>
-      </div>
-      <div class="sheetItem" data-go="hist">
-        <div class="ico">⏱</div>
-        <div class="tx">
-          <div class="h">Histórico</div>
-          <div class="p">Revisar jogos marcados como vistos.</div>
         </div>
       </div>
       <div class="sheetItem" data-go="config">
@@ -744,14 +737,12 @@
 (() => {
   "use strict";
 
-  // ============ CONFIG ============
   const TZ = "America/Sao_Paulo";
   const DATA_URL = "./jogos.json?v=" + Date.now();
   const PAGE_SIZE = 30;
   const OU_LINES = [1.5, 2.5, 3.5];
   const TEAM_FT_SAMPLE = 6;
 
-  // ============ DOM ============
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
 
@@ -768,7 +759,7 @@
     windowChips: $("#windowChips"),
 
     pills: {
-      liveUpcoming: $("#pillLiveUpcoming"),
+      upcoming: $("#pillUpcoming"),
       live: $("#pillLive"),
       calendar: $("#pillCalendar"),
       brazil: $("#pillBrazil"),
@@ -779,7 +770,6 @@
     nav: {
       games: $("#navGames"),
       favs: $("#navFavs"),
-      hist: $("#navHist"),
     },
 
     sheet: {
@@ -791,7 +781,6 @@
     }
   };
 
-  // ============ STATE ============
   const state = {
     data: null,
     games: [],
@@ -800,30 +789,22 @@
     upcomingSorted: [],
     ftByTeam: new Map(),
 
-    view: "games", // games | favs | hist | config
+    view: "games", // games | favs | config
     filter: {
-      mode: "live+upcoming", // live+upcoming | live | calendar
-      country: "all",        // all | Brazil | Europe
+      mode: "upcoming", // upcoming | live | calendar
+      country: "all",
       q: "",
       windowHours: 24,
-      dateKey: null,         // YYYY-MM-DD
+      dateKey: null,
     },
 
-    render: {
-      page: 1,
-      list: [],
-      lastHash: "",
-    }
+    render: { page: 1, list: [], lastHash: "" }
   };
 
-  // ============ STORAGE ============
   const LS_FAV = "rjp_favs";
-  const LS_HIST = "rjp_hist";
-
   const getSet = (k) => new Set(JSON.parse(localStorage.getItem(k) || "[]"));
   const saveSet = (k, set) => localStorage.setItem(k, JSON.stringify(Array.from(set)));
 
-  // ============ HELPERS ============
   const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
   const normalizeText = (s) => (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 
@@ -847,7 +828,6 @@
             "moldova","iceland","latvia","lithuania","estonia"].some(x => c.includes(x));
   }
 
-  // ============ POISSON ============
   function poissonPMF(k, lambda){
     let fact=1;
     for(let i=2;i<=k;i++) fact*=i;
@@ -889,7 +869,6 @@
     });
   }
 
-  // ============ DATA / INDEXES ============
   async function loadData(){
     const res = await fetch(DATA_URL, {cache:"no-store"});
     if(!res.ok) throw new Error("Falha ao carregar jogos.json");
@@ -903,10 +882,8 @@
     state.ftByTeam.clear();
 
     for(const g of games){
-      // kickoffTs
       let kickoff = g.kickoffTs;
       if(!kickoff && g.date && g.time){
-        // tenta montar com -03:00
         kickoff = Date.parse(`${g.date}T${g.time}:00-03:00`);
       }
       g.kickoffTs = kickoff || null;
@@ -923,7 +900,6 @@
       }
 
       if(g._isLive) state.liveGames.push(g);
-
       if(g.kickoffTs && !g._isLive) state.upcomingSorted.push(g);
 
       if(g._isFT){
@@ -949,7 +925,6 @@
     }
   }
 
-  // ============ FILTERS ============
   function passCountry(g){
     const c = state.filter.country;
     if(c==="all") return true;
@@ -974,7 +949,7 @@
       const dk = f.dateKey;
       base = dk && state.gamesByDate.has(dk) ? state.gamesByDate.get(dk) : [];
     } else {
-      // live+upcoming
+      // upcoming (sem misturar ao vivo)
       const now = Date.now();
       const max = now + f.windowHours*3600*1000;
       const upcoming = [];
@@ -984,7 +959,7 @@
         if(ts > max) break;
         upcoming.push(g);
       }
-      base = state.liveGames.concat(upcoming);
+      base = upcoming;
     }
 
     const out = [];
@@ -994,17 +969,10 @@
       out.push(g);
     }
 
-    // live topo
-    out.sort((a,b)=>{
-      if(a._isLive && !b._isLive) return -1;
-      if(!a._isLive && b._isLive) return 1;
-      return (a.kickoffTs||0)-(b.kickoffTs||0);
-    });
-
+    out.sort((a,b)=> (a.kickoffTs||0)-(b.kickoffTs||0));
     return out;
   }
 
-  // ============ UI RENDER ============
   function scoreChip(g){
     const hs = (g.scoreHome ?? "—");
     const as = (g.scoreAway ?? "—");
@@ -1055,7 +1023,6 @@
         <div class="gc-actions">
           <button class="btnGhost" data-action="details">Detalhes</button>
           <button class="btnGhost" data-action="fav" data-id="${String(g.id||"")}">${favTxt}</button>
-          <button class="btnGhost" data-action="seen" data-id="${String(g.id||"")}">Marcar visto</button>
         </div>
 
         <details class="gc-more">
@@ -1075,14 +1042,43 @@
     el.games.innerHTML = `<div class="empty">${msg}</div>`;
   }
 
+  function renderFavs(){
+    const favs = getSet(LS_FAV);
+    const ids = new Set(Array.from(favs));
+    const list = state.games.filter(g => ids.has(String(g.id||"")));
+    list.sort((a,b)=> (b.kickoffTs||0)-(a.kickoffTs||0));
+
+    if(!list.length){
+      return renderEmpty("Você ainda não favoritou nenhum jogo. Toque em <b>★ Favoritar</b> em algum card.");
+    }
+
+    el.games.innerHTML = `
+      <div class="empty"><b>Favoritos</b><br/><span style="color:rgba(255,255,255,.7)">Seus jogos salvos (localStorage).</span></div>
+      ${list.map(renderCard).join("")}
+      <div style="height:90px"></div>
+    `;
+  }
+
+  function renderConfig(){
+    el.games.innerHTML = `
+      <div class="empty">
+        <b>Configurações</b><br/>
+        <span style="color:rgba(255,255,255,.7)">
+          Tudo aqui é local (no seu celular).<br/><br/>
+          <button class="btn" id="btnClearFav">Limpar Favoritos</button>
+        </span>
+      </div>
+      <div style="height:90px"></div>
+    `;
+    const bf = $("#btnClearFav");
+    if(bf) bf.addEventListener("click", ()=>{ localStorage.removeItem(LS_FAV); alert("Favoritos limpos."); renderList(); });
+  }
+
   function renderList(){
     if(state.view==="favs") return renderFavs();
-    if(state.view==="hist") return renderHist();
     if(state.view==="config") return renderConfig();
 
     const list = getFilteredList();
-    state.render.list = list;
-
     const total = list.length;
     const page = clamp(state.render.page, 1, Math.ceil(total/PAGE_SIZE)||1);
     state.render.page = page;
@@ -1110,60 +1106,6 @@
     }
   }
 
-  function renderFavs(){
-    const favs = getSet(LS_FAV);
-    const ids = new Set(Array.from(favs));
-    const list = state.games.filter(g => ids.has(String(g.id||"")));
-    list.sort((a,b)=> (b.kickoffTs||0)-(a.kickoffTs||0));
-
-    if(!list.length){
-      return renderEmpty("Você ainda não favoritou nenhum jogo. Toque em <b>★ Favoritar</b> em algum card.");
-    }
-
-    el.games.innerHTML = `
-      <div class="empty"><b>Favoritos</b><br/><span style="color:rgba(255,255,255,.7)">Seus jogos salvos (localStorage).</span></div>
-      ${list.map(renderCard).join("")}
-      <div style="height:90px"></div>
-    `;
-  }
-
-  function renderHist(){
-    const hist = getSet(LS_HIST);
-    const ids = new Set(Array.from(hist));
-    const list = state.games.filter(g => ids.has(String(g.id||"")));
-    list.sort((a,b)=> (b.kickoffTs||0)-(a.kickoffTs||0));
-
-    if(!list.length){
-      return renderEmpty("Seu histórico está vazio. Use <b>Marcar visto</b> em algum jogo.");
-    }
-
-    el.games.innerHTML = `
-      <div class="empty"><b>Histórico</b><br/><span style="color:rgba(255,255,255,.7)">Jogos marcados como vistos (localStorage).</span></div>
-      ${list.map(renderCard).join("")}
-      <div style="height:90px"></div>
-    `;
-  }
-
-  function renderConfig(){
-    el.games.innerHTML = `
-      <div class="empty">
-        <b>Configurações</b><br/>
-        <span style="color:rgba(255,255,255,.7)">
-          Tudo aqui é local (no seu celular).<br/><br/>
-          <button class="btn" id="btnClearFav">Limpar Favoritos</button>
-          <button class="btn" id="btnClearHist" style="margin-left:10px">Limpar Histórico</button>
-        </span>
-      </div>
-      <div style="height:90px"></div>
-    `;
-
-    const bf = $("#btnClearFav");
-    const bh = $("#btnClearHist");
-    if(bf) bf.addEventListener("click", ()=>{ localStorage.removeItem(LS_FAV); alert("Favoritos limpos."); renderList(); });
-    if(bh) bh.addEventListener("click", ()=>{ localStorage.removeItem(LS_HIST); alert("Histórico limpo."); renderList(); });
-  }
-
-  // ============ META / COUNTS ============
   function updateMeta(){
     if(!state.data){
       el.metaLine.textContent = "Última atualização: — • Fonte: —";
@@ -1193,19 +1135,15 @@
     `;
   }
 
-  // ============ UI STATE (pills/nav) ============
   function setActivePills(){
-    // mode
-    el.pills.liveUpcoming.classList.toggle("active", state.filter.mode==="live+upcoming");
+    el.pills.upcoming.classList.toggle("active", state.filter.mode==="upcoming");
     el.pills.live.classList.toggle("active", state.filter.mode==="live");
     el.pills.calendar.classList.toggle("active", state.filter.mode==="calendar");
 
-    // country
     el.pills.brazil.classList.toggle("active", state.filter.country==="Brazil");
     el.pills.europe.classList.toggle("active", state.filter.country==="Europe");
     el.pills.all.classList.toggle("active", state.filter.country==="all");
 
-    // window chips
     $$("#windowChips .chipBtn").forEach(b=>{
       b.classList.toggle("active", Number(b.dataset.hours)===state.filter.windowHours);
     });
@@ -1213,10 +1151,8 @@
     el.windowInfo.textContent = `Próximas ${state.filter.windowHours}h • BRT`;
     el.proSub.textContent = `Janela ativa: ${state.filter.windowHours}h • Fuso: BRT`;
 
-    // nav
     el.nav.games.classList.toggle("active", state.view==="games");
     el.nav.favs.classList.toggle("active", state.view==="favs");
-    el.nav.hist.classList.toggle("active", state.view==="hist");
   }
 
   function setView(v){
@@ -1226,7 +1162,6 @@
     renderList();
   }
 
-  // ============ MENU SHEET ============
   function openSheet(){
     el.sheet.back.classList.add("open");
     el.sheet.sheet.classList.add("open");
@@ -1236,9 +1171,7 @@
     el.sheet.sheet.classList.remove("open");
   }
 
-  // ============ EVENTS ============
   function bind(){
-    // Menu
     el.sheet.btn.addEventListener("click", openSheet);
     el.sheet.close.addEventListener("click", closeSheet);
     el.sheet.back.addEventListener("click", closeSheet);
@@ -1247,19 +1180,15 @@
         const go = item.dataset.go;
         closeSheet();
         if(go==="favs") setView("favs");
-        if(go==="hist") setView("hist");
         if(go==="config") setView("config");
       });
     });
 
-    // Nav
     el.nav.games.addEventListener("click", ()=>setView("games"));
     el.nav.favs.addEventListener("click", ()=>setView("favs"));
-    el.nav.hist.addEventListener("click", ()=>setView("hist"));
 
-    // Pills modes
-    el.pills.liveUpcoming.addEventListener("click", ()=>{
-      state.filter.mode="live+upcoming";
+    el.pills.upcoming.addEventListener("click", ()=>{
+      state.filter.mode="upcoming";
       state.render.page=1;
       setActivePills();
       renderList();
@@ -1277,7 +1206,6 @@
       renderList();
     });
 
-    // Country
     el.pills.brazil.addEventListener("click", ()=>{
       state.filter.country="Brazil";
       state.render.page=1;
@@ -1297,7 +1225,6 @@
       renderList();
     });
 
-    // Window chips
     el.windowChips.addEventListener("click", (e)=>{
       const btn = e.target.closest(".chipBtn");
       if(!btn) return;
@@ -1309,7 +1236,6 @@
       renderList();
     });
 
-    // Date apply
     el.btnApplyDate.addEventListener("click", ()=>{
       const v = el.datePicker.value;
       if(v){
@@ -1321,7 +1247,6 @@
       }
     });
 
-    // Search (debounce)
     let t=null;
     el.search.addEventListener("input", ()=>{
       clearTimeout(t);
@@ -1332,7 +1257,6 @@
       }, 160);
     });
 
-    // Clear
     el.btnClear.addEventListener("click", ()=>{
       el.search.value="";
       state.filter.q="";
@@ -1340,12 +1264,10 @@
       renderList();
     });
 
-    // Refresh
     el.btnRefresh.addEventListener("click", async ()=>{
       await boot(true);
     });
 
-    // Delegação de ações nos cards
     el.games.addEventListener("click", (e)=>{
       const b = e.target.closest("button[data-action]");
       if(!b) return;
@@ -1368,18 +1290,9 @@
         b.textContent = favs.has(id) ? "★ Favoritado" : "★ Favoritar";
         return;
       }
-
-      if(action==="seen"){
-        const hist = getSet(LS_HIST);
-        if(hist.has(id)) hist.delete(id); else hist.add(id);
-        saveSet(LS_HIST, hist);
-        b.textContent = hist.has(id) ? "Visto ✓" : "Marcar visto";
-        return;
-      }
     });
   }
 
-  // ============ BOOT ============
   async function boot(force=false){
     try{
       if(!force && state.data){
@@ -1389,7 +1302,10 @@
         return;
       }
 
-      const json = await loadData();
+      const res = await fetch("./jogos.json?v=" + Date.now(), {cache:"no-store"});
+      if(!res.ok) throw new Error("Falha ao carregar jogos.json");
+      const json = await res.json();
+
       state.data = json;
       state.games = Array.isArray(json.games) ? json.games : [];
       buildIndexes(state.games);
@@ -1406,11 +1322,10 @@
     }
   }
 
-  // start
   bind();
   boot(false);
 
 })();
 </script>
 </body>
-  </html>
+        </html>
