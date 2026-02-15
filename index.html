@@ -8,37 +8,26 @@
 
   <style>
     :root{
-      /* Fundo “casa de apostas” */
       --bg0:#071f25;
       --bg1:#08252c;
-      --bg2:#0b2c34;
 
-      /* Texto */
       --t0:#e9f4f6;
       --t1:#b8d2d8;
-      --t2:#7ea8b1;
 
-      /* Chips / cards escuros */
-      --card:#0c2f36;
-      --card2:#0a2a31;
+      --line:rgba(255,255,255,.08);
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
 
-      /* Acentos */
       --pink:#ff2f7d;
       --pink2:#e51f69;
       --aqua:#26d0d8;
 
-      /* Área “branca” da aba Jogos */
       --sheet:#f3f6f7;
       --sheetCard:#dfe8ea;
-      --sheetLine:#cfe0e4;
 
-      /* Bordas */
-      --line:rgba(255,255,255,.08);
-      --shadow: 0 20px 50px rgba(0,0,0,.35);
-      --radius: 18px;
-      --radius2: 22px;
+      --radius:18px;
+      --radius2:22px;
 
-      /* Tipografia (tamanho mais “Novibet”) */
+      /* Tipos menores (mais “Novibet”) */
       --fs-xxs:11px;
       --fs-xs:12px;
       --fs-sm:13px;
@@ -61,13 +50,12 @@
       overflow-x:hidden;
     }
 
-    /* ====== APP WRAPPER ====== */
     .app{
       min-height:100%;
-      padding-bottom: 92px; /* espaço bottom bar */
+      padding-bottom: 86px; /* bottom bar menor */
     }
 
-    /* ====== TOP BAR (igual print) ====== */
+    /* TOP BAR */
     .topbar{
       position:sticky;
       top:0;
@@ -81,50 +69,27 @@
       align-items:center;
       gap:10px;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px; min-width:0;
-    }
+    .brand{display:flex; align-items:center; gap:10px; min-width:0;}
     .logo{
       width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
       background: rgba(255,255,255,.06);
       border:1px solid var(--line);
       box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      font-weight:800;
-      letter-spacing:.5px;
+      font-weight:800; letter-spacing:.5px;
     }
-    .brand-text{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
+    .brand-text{min-width:0; display:flex; flex-direction:column; gap:2px;}
     .brand-title{
       font-size:var(--fs-lg);
       font-weight:800;
       line-height:1.05;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 120px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      max-width: 150px;
     }
-    .status{
-      display:flex; align-items:center; gap:6px;
-      font-size:var(--fs-xs);
-      color:var(--t1);
-    }
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background:#20d070;
-      box-shadow:0 0 0 4px rgba(32,208,112,.16);
-    }
+    .status{display:flex; align-items:center; gap:6px; font-size:var(--fs-xs); color:var(--t1);}
+    .dot{width:10px;height:10px;border-radius:999px;background:#20d070;box-shadow:0 0 0 4px rgba(32,208,112,.16);}
 
-    .top-actions{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .top-actions{margin-left:auto; display:flex; gap:10px; align-items:center;}
     .btn{
       height:38px;
       padding:0 14px;
@@ -134,14 +99,12 @@
       color:var(--t0);
       font-weight:800;
       font-size:var(--fs-sm);
-      letter-spacing:.2px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.25);
-      cursor:pointer;
       user-select:none;
+      cursor:pointer;
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
     }
     .btn.white{
       background: #f5f7f8;
@@ -153,7 +116,7 @@
       border-color: rgba(255,255,255,.10);
     }
 
-    /* ====== SPORTS ROW (ícones com bolinha contagem) ====== */
+    /* SPORTS ROW */
     .sports-row{
       margin-top:10px;
       display:flex;
@@ -177,10 +140,10 @@
       position:relative;
       padding: 8px 8px 10px;
       border-radius:14px;
+      user-select:none;
+      cursor:pointer;
     }
-    .sport-item.active{
-      color:var(--t0);
-    }
+    .sport-item.active{color:var(--t0);}
     .sport-icon{
       width:34px;height:34px;border-radius:999px;
       display:grid;place-items:center;
@@ -201,18 +164,10 @@
       font-size:var(--fs-xxs);
       display:grid;place-items:center;
     }
-    .underline{
-      height:3px;
-      width:44px;
-      border-radius:99px;
-      background: transparent;
-      margin-top:4px;
-    }
-    .sport-item.active .underline{
-      background: rgba(255,255,255,.22);
-    }
+    .underline{height:3px;width:44px;border-radius:99px;background:transparent;margin-top:4px;}
+    .sport-item.active .underline{background: rgba(255,255,255,.22);}
 
-    /* ====== BANNERS (só Inicio/AoVivo) ====== */
+    /* BANNERS */
     .banners{
       margin: 10px 12px 0;
       display:flex;
@@ -248,7 +203,7 @@
       margin-left:6px;
     }
 
-    /* ====== HERO CAROUSEL (inicio/ao vivo) ====== */
+    /* HERO */
     .hero{
       margin: 12px 12px 0;
       display:flex;
@@ -260,7 +215,7 @@
     .hero::-webkit-scrollbar{display:none}
     .hero-card{
       flex:0 0 82%;
-      border-radius: var(--radius2);
+      border-radius: 22px;
       background: rgba(255,255,255,.06);
       border:1px solid var(--line);
       box-shadow: var(--shadow);
@@ -277,43 +232,18 @@
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.10));
       pointer-events:none;
     }
-    .hero-inner{
-      position:relative;
-      padding: 12px 14px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
+    .hero-inner{position:relative;padding: 12px 14px 12px;display:flex;flex-direction:column;gap:10px;}
     .live-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      height:28px;
-      padding:0 12px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;gap:8px;
+      height:28px;padding:0 12px;border-radius:999px;
       background: rgba(255,47,125,.12);
       border:1px solid rgba(255,47,125,.25);
-      font-weight:900;
-      letter-spacing:.3px;
-      font-size:var(--fs-xs);
+      font-weight:900;font-size:var(--fs-xs);
       width:fit-content;
     }
-    .live-dot{
-      width:10px;height:10px;border-radius:999px;background:var(--pink);
-      box-shadow:0 0 0 4px rgba(255,47,125,.16);
-    }
-    .hero-title{
-      font-size: var(--fs-xl);
-      font-weight:900;
-      line-height:1.1;
-    }
-    .hero-sub{
-      font-size: var(--fs-sm);
-      color: var(--t1);
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
+    .live-dot{width:10px;height:10px;border-radius:999px;background:var(--pink);box-shadow:0 0 0 4px rgba(255,47,125,.16);}
+    .hero-title{font-size: var(--fs-xl);font-weight:900;line-height:1.1;}
+    .hero-sub{font-size: var(--fs-sm);color: var(--t1);display:flex;gap:10px;align-items:center;}
     .odds-strip{
       margin-top:auto;
       display:flex;
@@ -336,33 +266,11 @@
     .odd:last-child{border-right:none}
     .odd span{color: rgba(233,244,246,.75); font-weight:900}
 
-    /* ====== SECTIONS ====== */
-    .section-title{
-      margin: 14px 12px 10px;
-      font-size: var(--fs-xxl);
-      font-weight: 950;
-      letter-spacing:.2px;
-    }
-    .section-head{
-      margin: 10px 12px;
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
-      color: var(--t0);
-    }
-    .section-head h3{
-      margin:0;
-      font-size: var(--fs-xl);
-      font-weight: 950;
-    }
-    .section-head .count{
-      color: rgba(233,244,246,.6);
-      font-weight:900;
-      font-size:var(--fs-sm);
-    }
+    .section-title{margin: 14px 12px 10px;font-size: var(--fs-xxl);font-weight: 950;}
+    .section-head{margin: 10px 12px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+    .section-head h3{margin:0;font-size: var(--fs-xl);font-weight: 950;}
+    .section-head .count{color: rgba(233,244,246,.6);font-weight:900;font-size:var(--fs-sm);}
 
-    /* ====== POPULARES (pills) ====== */
     .popular-pills{
       margin: 0 12px;
       display:flex;
@@ -389,36 +297,25 @@
       user-select:none;
       cursor:pointer;
     }
-    .pill .ico{opacity:.95}
 
-    /* ====== LIVE LIST (cards escuros) ====== */
-    .list{
-      padding: 0 12px 10px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+    /* LIVE LIST */
+    .list{padding: 0 12px 10px;display:flex;flex-direction:column;gap:12px;}
     .league{
-      border-radius: var(--radius2);
+      border-radius: 22px;
       background: rgba(255,255,255,.05);
       border:1px solid var(--line);
       overflow:hidden;
       box-shadow: 0 18px 40px rgba(0,0,0,.25);
     }
     .league-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:flex;align-items:center;justify-content:space-between;
       padding: 12px 12px;
       background: rgba(0,0,0,.12);
       border-bottom:1px solid rgba(255,255,255,.06);
-      color: rgba(233,244,246,.88);
       font-weight:950;
       font-size: var(--fs-md);
     }
-    .league-head .left{
-      display:flex; align-items:center; gap:10px; min-width:0;
-    }
+    .league-head .left{display:flex;align-items:center;gap:10px;min-width:0;}
     .flag{
       width:22px;height:22px;border-radius:999px;
       display:grid;place-items:center;
@@ -442,87 +339,39 @@
       background: rgba(255,255,255,.03);
       border-top: 1px solid rgba(255,255,255,.06);
     }
-    .match-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .teams{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      font-weight:950;
-      font-size: var(--fs-xl);
-      line-height:1.05;
-    }
-    .team-row{
-      display:flex; align-items:center; gap:10px;
-    }
+    .match-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .teams{display:flex;flex-direction:column;gap:8px;font-weight:950;font-size: var(--fs-xl);line-height:1.05;}
+    .team-row{display:flex;align-items:center;gap:10px;}
     .ball{
       width:22px;height:22px;border-radius:999px;
       display:grid;place-items:center;
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.10);
       font-size:12px;
-      opacity:.95;
     }
     .meta{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
+      display:flex;flex-direction:column;align-items:flex-end;gap:8px;
       color: rgba(233,244,246,.7);
       font-size: var(--fs-sm);
       font-weight:900;
     }
     .live-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      height:30px;
-      padding:0 12px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;gap:8px;
+      height:30px;padding:0 12px;border-radius:999px;
       background: rgba(255,47,125,.10);
       border:1px solid rgba(255,47,125,.22);
-      font-weight:950;
-      font-size: var(--fs-xs);
+      font-weight:950;font-size: var(--fs-xs);
     }
     .mini-score{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      height:34px;
-      padding:0 12px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;gap:8px;
+      height:34px;padding:0 12px;border-radius:999px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
       font-weight:950;
       color: var(--t0);
-    }
-    .actions{
-      display:flex;
-      gap:10px;
-      margin-top: 4px;
-    }
-    .btn2{
-      flex:1;
-      height:46px;
-      border-radius:18px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      color: var(--t0);
-      font-weight:950;
-      font-size: var(--fs-md);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:10px;
-      cursor:pointer;
-      user-select:none;
     }
 
-    /* ====== ABA JOGOS: “SHEET” branco igual print ====== */
+    /* GAMES SHEET */
     .sheet{
       margin-top: 8px;
       background: var(--sheet);
@@ -533,89 +382,42 @@
       color:#102a30;
     }
     .time-filters{
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width:none;
-      padding-bottom: 8px;
+      display:flex;gap:10px;overflow:auto;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none;padding-bottom: 8px;
     }
     .time-filters::-webkit-scrollbar{display:none}
     .tchip{
-      flex:0 0 auto;
-      height:44px;
-      padding:0 14px;
-      border-radius: 999px;
-      background: #eef2f3;
-      border: 1px solid rgba(0,0,0,.06);
-      color:#163138;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:950;
-      font-size: var(--fs-md);
-      user-select:none;
-      cursor:pointer;
+      flex:0 0 auto;height:44px;padding:0 14px;border-radius:999px;
+      background:#eef2f3;border:1px solid rgba(0,0,0,.06);
+      color:#163138;display:flex;align-items:center;gap:10px;
+      font-weight:950;font-size: var(--fs-md);
+      user-select:none;cursor:pointer;
     }
-    .tchip.active{
-      background:#dff2f2;
-      border-color: rgba(38,208,216,.35);
-    }
-
+    .tchip.active{background:#dff2f2;border-color: rgba(38,208,216,.35);}
     .sheet-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:flex;align-items:center;justify-content:space-between;
       margin: 6px 4px 10px;
-      color:#18343b;
-      font-weight:950;
-      font-size: var(--fs-md);
+      color:#18343b;font-weight:950;font-size: var(--fs-md);
     }
-    .sheet-row .sort{
-      display:flex; align-items:center; gap:10px;
-      color:#24424a;
-      font-weight:950;
-    }
-    .sheet-icons{
-      display:flex; align-items:center; gap:10px;
-    }
+    .sheet-icons{display:flex;align-items:center;gap:10px;}
     .sico{
       width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
-      background: #eef2f3;
-      border:1px solid rgba(0,0,0,.06);
-      cursor:pointer;
-      user-select:none;
-      color:#1b3a42;
-      font-size:18px;
+      background:#eef2f3;border:1px solid rgba(0,0,0,.06);
+      cursor:pointer;user-select:none;color:#1b3a42;font-size:18px;
     }
-
-    .sheet-list{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      padding-bottom: 10px;
-    }
+    .sheet-list{display:flex;flex-direction:column;gap:12px;padding-bottom: 10px;}
     .sheet-league{
-      background:#ffffff;
-      border-radius: 20px;
-      overflow:hidden;
+      background:#ffffff;border-radius:20px;overflow:hidden;
       border:1px solid rgba(0,0,0,.06);
       box-shadow: 0 14px 30px rgba(0,0,0,.10);
     }
     .sheet-league-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(0,0,0,.06);
-      color:#163238;
-      font-weight: 950;
-      font-size: var(--fs-md);
+      display:flex;align-items:center;justify-content:space-between;
+      padding: 12px 12px;border-bottom: 1px solid rgba(0,0,0,.06);
+      color:#163238;font-weight:950;font-size: var(--fs-md);
     }
-    .sheet-league-head .left{
-      display:flex; align-items:center; gap:10px;
-    }
+    .sheet-league-head .left{display:flex;align-items:center;gap:10px;}
     .sheet-card{
       margin: 10px 12px 12px;
       background: var(--sheetCard);
@@ -623,121 +425,120 @@
       padding: 12px;
       border: 1px solid rgba(0,0,0,.06);
     }
-    .sheet-card-top{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-    .sheet-teams{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      font-weight:950;
-      font-size: var(--fs-xl);
-      color:#102a30;
-    }
-    .sheet-meta{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
-      font-size: var(--fs-sm);
-      color:#24424a;
-      font-weight:900;
-    }
+    .sheet-card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+    .sheet-teams{display:flex;flex-direction:column;gap:6px;font-weight:950;font-size: var(--fs-xl);color:#102a30;}
+    .sheet-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size: var(--fs-sm);color:#24424a;font-weight:900;}
     .sheet-odds{
-      margin-top: 10px;
-      display:flex;
-      border-radius: 14px;
-      overflow:hidden;
+      margin-top: 10px;display:flex;border-radius:14px;overflow:hidden;
       border: 1px solid rgba(0,0,0,.08);
       background: rgba(255,255,255,.55);
     }
     .sheet-odd{
-      flex:1;
-      padding: 12px 0;
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      font-weight:950;
-      font-size: var(--fs-md);
-      color:#0b4a4e;
+      flex:1;padding: 12px 0;display:flex;justify-content:center;gap:10px;
+      font-weight:950;font-size: var(--fs-md);color:#0b4a4e;
       border-right: 1px solid rgba(0,0,0,.08);
     }
     .sheet-odd:last-child{border-right:none}
     .sheet-odd span{color:#102a30}
 
-    /* ====== PÁGINAS ====== */
+    /* PAGES */
     .page{display:none}
     .page.active{display:block}
 
-    /* ====== BOTTOM NAV ====== */
+    /* ====== BOTTOM NAV (NOVIBET-LIKE) ====== */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
-      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
       z-index:60;
       pointer-events:none;
     }
     .bottom-inner{
       pointer-events:auto;
-      height:72px;
+      height:64px;                 /* menor */
       border-radius: 22px;
-      background: rgba(10,40,48,.72);
+      background: rgba(10,40,48,.78);
       border:1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       box-shadow: 0 18px 50px rgba(0,0,0,.38);
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding: 10px 12px;
-      gap:10px;
+      padding: 8px 10px;
+      gap:6px;
     }
+
     .navbtn{
       flex:1;
-      height:52px;
+      height:48px;
       border-radius: 18px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.05);
       display:flex;
+      flex-direction:column;       /* ícone em cima, texto embaixo */
       align-items:center;
       justify-content:center;
-      gap:10px;
-      color: rgba(233,244,246,.88);
-      font-weight:950;
-      font-size: var(--fs-md);
+      gap:4px;
+      color: rgba(233,244,246,.72);
+      font-weight:900;
+      font-size: 11.5px;           /* igual print */
       user-select:none;
       cursor:pointer;
       min-width:0;
+      background: transparent;
+      border: 1px solid transparent;
     }
+
+    /* Item ativo com “pill” atrás, igual app */
     .navbtn.active{
+      color: #e9f4f6;
       background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.14);
-      color: var(--t0);
-    }
-    .navico{font-size:18px}
-
-    /* ====== UTIL ====== */
-    .muted{color:rgba(233,244,246,.65)}
-    .muted2{color:rgba(233,244,246,.50)}
-    .center{
-      text-align:center;
-      padding: 18px 12px;
-      color: rgba(233,244,246,.70);
-      font-weight:900;
+      border-color: rgba(255,255,255,.12);
     }
 
-    /* ====== RESPONSIVO ====== */
-    @media (min-width: 560px){
-      .hero-card{flex-basis: 420px}
+    .navico{
+      width:22px;height:22px;
+      display:grid;place-items:center;
+      opacity:.95;
+    }
+    .navbtn.active .navico{
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.30));
+    }
+
+    /* Botão PRO circular na direita (mais “app”) */
+    .pro-fab{
+      width:52px;height:52px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;place-items:center;
+      box-shadow: 0 18px 38px rgba(0,0,0,.35);
+    }
+    .pro-fab.active{
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.18);
+    }
+    .pro-fab .navico{width:24px;height:24px;}
+    .pro-fab span{
+      display:none; /* PRO só ícone, igual “bolinha” */
+    }
+
+    /* SVG default color */
+    svg{display:block}
+    .ico-stroke{
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (min-width:560px){
+      .hero-card{flex-basis:420px}
     }
   </style>
 </head>
 
 <body>
   <div class="app">
-    <!-- TOP BAR -->
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand">
@@ -754,60 +555,39 @@
         </div>
       </div>
 
-      <!-- Sports row (igual print) -->
-      <div class="sports-row" id="sportsRow">
-        <!-- preenchido via JS -->
-      </div>
+      <div class="sports-row" id="sportsRow"></div>
     </header>
 
-    <!-- PAGES -->
     <main>
-      <!-- INÍCIO -->
       <section class="page active" id="page-home">
         <div class="banners" id="bannersHome">
-          <div class="banner-pill">
-            <span class="ico">📱</span>
-            Ganhe R$ 20 com nosso APP
-            <span class="tag-novo">NOVO</span>
-          </div>
-          <div class="banner-pill">
-            <span class="ico">🎉</span>
-            Ganhe R$ 25
-          </div>
+          <div class="banner-pill">📱 Ganhe R$ 20 com nosso APP <span class="tag-novo">NOVO</span></div>
+          <div class="banner-pill">🎉 Ganhe R$ 25</div>
         </div>
 
         <div class="hero" id="heroHome"></div>
 
         <div class="section-title">Populares</div>
-        <div class="popular-pills" id="popularPills">
-          <div class="pill"><span class="ico">🔥</span>Odds Melhoradas</div>
-          <div class="pill"><span class="ico">⚽</span>Ligas principais</div>
-          <div class="pill"><span class="ico">🎾</span>ATP/WTA</div>
-          <div class="pill"><span class="ico">🇧🇷</span>Futebol do Brasil</div>
-          <div class="pill"><span class="ico">🏀</span>NBA</div>
-          <div class="pill"><span class="ico">🎮</span>E-sports</div>
+        <div class="popular-pills">
+          <div class="pill">🔥 Odds Melhoradas</div>
+          <div class="pill">⚽ Ligas principais</div>
+          <div class="pill">🎾 ATP/WTA</div>
+          <div class="pill">🇧🇷 Futebol do Brasil</div>
+          <div class="pill">🏀 NBA</div>
+          <div class="pill">🎮 E-sports</div>
         </div>
 
         <div class="section-head">
           <h3>Jogos ao vivo</h3>
           <div class="count" id="liveCountHome">0</div>
         </div>
-
         <div class="list" id="liveListHome"></div>
       </section>
 
-      <!-- AO VIVO -->
       <section class="page" id="page-live">
         <div class="banners" id="bannersLive">
-          <div class="banner-pill">
-            <span class="ico">📱</span>
-            Ganhe R$ 20 com nosso APP
-            <span class="tag-novo">NOVO</span>
-          </div>
-          <div class="banner-pill">
-            <span class="ico">🎉</span>
-            Ganhe R$ 25
-          </div>
+          <div class="banner-pill">📱 Ganhe R$ 20 com nosso APP <span class="tag-novo">NOVO</span></div>
+          <div class="banner-pill">🎉 Ganhe R$ 25</div>
         </div>
 
         <div class="hero" id="heroLive"></div>
@@ -816,14 +596,12 @@
           <h3>Ao vivo</h3>
           <div class="count" id="liveCount">0</div>
         </div>
-
         <div class="list" id="liveList"></div>
       </section>
 
-      <!-- JOGOS (SHEET BRANCO, sem banners) -->
       <section class="page" id="page-games">
         <div class="sheet">
-          <div class="time-filters" id="timeFilters">
+          <div class="time-filters">
             <div class="tchip active" data-hours="1">🕒 1 hora</div>
             <div class="tchip" data-hours="3">🕒 3 horas</div>
             <div class="tchip" data-hours="6">🕒 6 horas</div>
@@ -833,8 +611,8 @@
           <div class="sheet-row">
             <div class="sort">⇅ Popular primeiro ▾</div>
             <div class="sheet-icons">
-              <div class="sico" title="Configurações">⚙️</div>
-              <div class="sico" title="Filtros">🎚️</div>
+              <div class="sico">⚙️</div>
+              <div class="sico">🎚️</div>
             </div>
           </div>
 
@@ -842,39 +620,82 @@
         </div>
       </section>
 
-      <!-- APOSTAS (só layout) -->
       <section class="page" id="page-bets">
-        <div class="center">
-          Apostas (layout apenas) — podemos habilitar depois.
+        <div style="text-align:center;padding:18px 12px;color:rgba(233,244,246,.70);font-weight:900;">
+          Apostas (layout apenas) — ligamos depois.
         </div>
       </section>
 
-      <!-- PRO -->
       <section class="page" id="page-pro">
-        <div class="center">
-          PRO — aqui entra pagamento, login e conta (depois).<br/><br/>
-          Por enquanto, mantendo o botão e a página prontas.
+        <div style="text-align:center;padding:18px 12px;color:rgba(233,244,246,.70);font-weight:900;">
+          PRO — login/pagamento depois.
         </div>
       </section>
     </main>
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- BOTTOM NAV (NOVIBET-LIKE) -->
   <nav class="bottom">
     <div class="bottom-inner">
-      <div class="navbtn active" data-page="home"><span class="navico">🏠</span>Início</div>
-      <div class="navbtn" data-page="live"><span class="navico">📶</span>Ao vivo</div>
-      <div class="navbtn" data-page="games"><span class="navico">🗓️</span>Jogos</div>
-      <div class="navbtn" data-page="bets"><span class="navico">🧾</span>Apostas</div>
-      <div class="navbtn" data-page="pro"><span class="navico">💎</span>PRO</div>
+      <div class="navbtn active" data-page="home">
+        <div class="navico">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path class="ico-stroke" d="M4 10.5L12 4l8 6.5V20a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 20v-9.5z"/>
+            <path class="ico-stroke" d="M9.5 21v-7h5v7"/>
+          </svg>
+        </div>
+        <span>Início</span>
+      </div>
+
+      <div class="navbtn" data-page="live">
+        <div class="navico">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path class="ico-stroke" d="M6 18c-1.8-1.6-3-3.9-3-6.5S4.2 6.6 6 5"/>
+            <path class="ico-stroke" d="M18 18c1.8-1.6 3-3.9 3-6.5S19.8 6.6 18 5"/>
+            <path class="ico-stroke" d="M9 15c-.9-.8-1.5-2-1.5-3.5S8.1 8.8 9 8.2"/>
+            <path class="ico-stroke" d="M15 15c.9-.8 1.5-2 1.5-3.5S15.9 8.8 15 8.2"/>
+            <path class="ico-stroke" d="M12 12h0"/>
+          </svg>
+        </div>
+        <span>Ao vivo</span>
+      </div>
+
+      <div class="navbtn" data-page="games">
+        <div class="navico">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path class="ico-stroke" d="M7 3v3M17 3v3"/>
+            <path class="ico-stroke" d="M4.5 7h15"/>
+            <path class="ico-stroke" d="M5 6.5V20a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 20V6.5"/>
+            <path class="ico-stroke" d="M8 11h3M8 15h3M13 11h3M13 15h3"/>
+          </svg>
+        </div>
+        <span>Jogos</span>
+      </div>
+
+      <div class="navbtn" data-page="bets">
+        <div class="navico">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path class="ico-stroke" d="M7 4h10v16H7z"/>
+            <path class="ico-stroke" d="M9 8h6M9 12h6M9 16h4"/>
+          </svg>
+        </div>
+        <span>Apostas</span>
+      </div>
+
+      <div class="navbtn pro-fab" data-page="pro" title="PRO">
+        <div class="navico">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path class="ico-stroke" d="M12 2l2.3 6.3 6.7.2-5.2 4 1.9 6.5L12 15.7 6.3 19l1.9-6.5-5.2-4 6.7-.2L12 2z"/>
+          </svg>
+        </div>
+        <span>PRO</span>
+      </div>
     </div>
   </nav>
 
   <script>
-    /***********************
-     * CONFIG
-     ***********************/
-    const DATA_URL = "jogos.json?ts=" + Date.now(); // cache-bust
+    const DATA_URL = "jogos.json?ts=" + Date.now();
+
     const ICONS = {
       all: { icon: "📡", label: "Tudo" },
       football: { icon: "⚽", label: "Futebol" },
@@ -883,26 +704,17 @@
       volley: { icon: "🏐", label: "Vôlei" },
     };
 
-    const state = {
-      page: "home",
-      sport: "all",
-      hours: 1,
-      data: null,
-      collapsed: new Set(),
-      sort: "popular"
-    };
+    const state = { page:"home", sport:"all", hours:1, data:null, collapsed:new Set() };
 
-    /***********************
-     * NAV
-     ***********************/
     const pages = {
       home: document.getElementById("page-home"),
       live: document.getElementById("page-live"),
       games: document.getElementById("page-games"),
       bets: document.getElementById("page-bets"),
-      pro: document.getElementById("page-pro")
+      pro: document.getElementById("page-pro"),
     };
 
+    // Bottom nav
     document.querySelectorAll(".navbtn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const p = btn.dataset.page;
@@ -914,17 +726,16 @@
       state.page = p;
       Object.values(pages).forEach(el=>el.classList.remove("active"));
       pages[p].classList.add("active");
-      document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active", b.dataset.page===p));
-      // scroll topo “como app”
+
+      document.querySelectorAll(".navbtn").forEach(b=>{
+        b.classList.toggle("active", b.dataset.page===p);
+      });
       window.scrollTo({top:0, behavior:"instant"});
       renderAll();
     }
 
-    /***********************
-     * SPORTS ROW
-     ***********************/
+    // Sports row
     const sportsRow = document.getElementById("sportsRow");
-
     function renderSportsRow(counts){
       sportsRow.innerHTML = "";
       const items = [
@@ -934,7 +745,6 @@
         ["basketball", ICONS.basketball],
         ["volley", ICONS.volley],
       ];
-
       items.forEach(([key, meta])=>{
         const el = document.createElement("div");
         el.className = "sport-item" + (state.sport===key ? " active" : "");
@@ -952,9 +762,7 @@
       });
     }
 
-    /***********************
-     * TIME FILTERS (aba Jogos)
-     ***********************/
+    // time chips
     document.querySelectorAll(".tchip").forEach(ch=>{
       ch.addEventListener("click", ()=>{
         document.querySelectorAll(".tchip").forEach(x=>x.classList.remove("active"));
@@ -964,16 +772,13 @@
       });
     });
 
-    /***********************
-     * DATA
-     ***********************/
+    // data
     async function loadData(){
       try{
         const res = await fetch(DATA_URL, {cache:"no-store"});
-        const json = await res.json();
-        state.data = json;
+        state.data = await res.json();
       }catch(e){
-        state.data = { updatedAt: "", source: "", games: [] };
+        state.data = { games: [] };
       }
       renderAll();
     }
@@ -989,22 +794,15 @@
         const status = (g.status || g.state || (g.live ? "LIVE" : "NS")).toUpperCase();
         const minute = (g.minute != null ? String(g.minute) : (g.time || ""));
         const startTs = g.startTs || g.kickoffTs || g.timestamp || null;
-        const scoreHome = (g.scoreHome != null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : null));
-        const scoreAway = (g.scoreAway != null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : null));
-        const odds = g.odds || g.market1x2 || null; // {home,draw,away}
+        const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : null));
+        const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : null));
+        const odds = g.odds || g.market1x2 || null;
         const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
-
         return {
           id, sport, league, country, home, away,
-          status,
-          minute,
-          startTs,
-          scoreHome, scoreAway,
-          odds: odds ? {
-            home: odds.home ?? odds["1"] ?? null,
-            draw: odds.draw ?? odds["x"] ?? null,
-            away: odds.away ?? odds["2"] ?? null
-          } : {home:null,draw:null,away:null}
+          status, minute, startTs, scoreHome, scoreAway,
+          odds: odds ? { home: odds.home ?? odds["1"] ?? null, draw: odds.draw ?? odds["x"] ?? null, away: odds.away ?? odds["2"] ?? null }
+                     : { home:null, draw:null, away:null }
         };
       });
     }
@@ -1014,7 +812,6 @@
     }
 
     function inNextHours(g, hours){
-      // Se não tiver timestamp, deixa passar (não “mata” a lista)
       if(!g.startTs) return true;
       const now = Date.now();
       const ts = Number(g.startTs)*1000;
@@ -1022,9 +819,6 @@
       return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
     }
 
-    /***********************
-     * RENDER HELPERS
-     ***********************/
     function groupByLeague(games){
       const map = new Map();
       games.forEach(g=>{
@@ -1036,7 +830,6 @@
     }
 
     function formatMinute(g){
-      // se tiver número, mostra "45:00" simples (estilo print)
       const m = String(g.minute || "").trim();
       if(!m) return "";
       if(m.includes(":")) return m;
@@ -1047,14 +840,10 @@
     }
 
     function shortName(s){
-      // evita texto gigante
       if(!s) return "";
       return s.length > 20 ? s.slice(0,18) + "…" : s;
     }
 
-    /***********************
-     * RENDER: HERO
-     ***********************/
     function renderHero(el, games){
       el.innerHTML = "";
       const picks = games.slice(0, 6);
@@ -1065,18 +854,17 @@
           <div class="hero-inner">
             <div class="live-chip"><span class="live-dot"></span>AO VIVO</div>
             <div class="hero-title">Sem jogos agora</div>
-            <div class="hero-sub"><span class="muted">Atualize mais tarde.</span></div>
+            <div class="hero-sub"><span>Atualize mais tarde.</span></div>
             <div class="odds-strip">
-              <div class="odd"><span>1</span> —</div>
-              <div class="odd"><span>X</span> —</div>
-              <div class="odd"><span>2</span> —</div>
+              <div class="odd"><span>1</span>—</div>
+              <div class="odd"><span>X</span>—</div>
+              <div class="odd"><span>2</span>—</div>
             </div>
           </div>
         `;
         el.appendChild(card);
         return;
       }
-
       picks.forEach(g=>{
         const card = document.createElement("div");
         card.className = "hero-card";
@@ -1085,8 +873,8 @@
             <div class="live-chip"><span class="live-dot"></span>AO VIVO</div>
             <div class="hero-title">${shortName(g.home)}<br/>${shortName(g.away)}</div>
             <div class="hero-sub">
-              <span class="muted">${g.country || "World"} • ${g.league}</span>
-              <span class="muted2">${formatMinute(g) || ""}</span>
+              <span>${g.country || "World"} • ${g.league}</span>
+              <span>${formatMinute(g) || ""}</span>
             </div>
             <div class="odds-strip">
               <div class="odd"><span>1</span>${g.odds.home ?? "—"}</div>
@@ -1099,43 +887,34 @@
       });
     }
 
-    /***********************
-     * RENDER: LIVE LIST (dark)
-     ***********************/
     function renderLiveList(container, games){
       container.innerHTML = "";
       if(games.length === 0){
-        container.innerHTML = `<div class="center">Sem jogos ao vivo no momento.</div>`;
+        container.innerHTML = `<div style="text-align:center;padding:18px 12px;color:rgba(233,244,246,.70);font-weight:900;">Sem jogos ao vivo no momento.</div>`;
         return;
       }
-
       const groups = groupByLeague(games);
-
       groups.forEach(([leagueName, items])=>{
         const wrap = document.createElement("div");
         wrap.className = "league";
-
-        const key = leagueName;
-        const collapsed = state.collapsed.has(key);
-
+        const collapsed = state.collapsed.has(leagueName);
         wrap.innerHTML = `
           <div class="league-head">
             <div class="left">
               <div class="flag">🌍</div>
               <div style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${leagueName || "Liga"}</div>
             </div>
-            <div class="collapse" data-key="${encodeURIComponent(key)}">${collapsed ? "▾" : "▴"}</div>
+            <div class="collapse" data-key="${encodeURIComponent(leagueName)}">${collapsed ? "▾" : "▴"}</div>
           </div>
           <div class="league-body" style="display:${collapsed ? "none":"block"}"></div>
         `;
         const body = wrap.querySelector(".league-body");
 
         items.slice(0, 6).forEach(g=>{
+          const sh = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome} - ${g.scoreAway}` : "—";
+          const min = formatMinute(g) || "—";
           const m = document.createElement("div");
           m.className = "match";
-          const sh = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome} - ${g.scoreAway}` : "";
-          const min = formatMinute(g);
-
           m.innerHTML = `
             <div class="match-top">
               <div class="teams">
@@ -1144,17 +923,13 @@
               </div>
               <div class="meta">
                 <div class="live-badge"><span class="live-dot" style="width:8px;height:8px;box-shadow:0 0 0 3px rgba(255,47,125,.16)"></span>AO VIVO</div>
-                <div class="mini-score">${sh || "—"} &nbsp;•&nbsp; ${min || "—"}</div>
+                <div class="mini-score">${sh} &nbsp;•&nbsp; ${min}</div>
               </div>
             </div>
             <div class="odds-strip">
               <div class="odd"><span>1</span>${g.odds.home ?? "—"}</div>
               <div class="odd"><span>X</span>${g.odds.draw ?? "—"}</div>
               <div class="odd"><span>2</span>${g.odds.away ?? "—"}</div>
-            </div>
-            <div class="actions">
-              <div class="btn2">Detalhes</div>
-              <div class="btn2">☆ Favoritar</div>
             </div>
           `;
           body.appendChild(m);
@@ -1171,30 +946,19 @@
       });
     }
 
-    /***********************
-     * RENDER: GAMES (white sheet)
-     ***********************/
     function renderGamesSheet(container, games){
       container.innerHTML = "";
       if(games.length === 0){
-        container.innerHTML = `
-          <div class="center" style="color:#214049;font-weight:950;">
-            Sem jogos nas próximas ${state.hours}h com esses filtros.
-          </div>`;
+        container.innerHTML = `<div style="text-align:center;padding:18px 12px;color:#214049;font-weight:950;">Sem jogos nas próximas ${state.hours}h com esses filtros.</div>`;
         return;
       }
-
       const groups = groupByLeague(games);
       groups.forEach(([leagueName, items])=>{
         const block = document.createElement("div");
         block.className = "sheet-league";
-
         block.innerHTML = `
           <div class="sheet-league-head">
-            <div class="left">
-              <div class="flag">🌍</div>
-              <div style="font-weight:950;">${leagueName || "Liga"}</div>
-            </div>
+            <div class="left"><div class="flag">🌍</div><div style="font-weight:950;">${leagueName || "Liga"}</div></div>
             <div class="collapse" style="background:#eef2f3;border-color:rgba(0,0,0,.06);">▴</div>
           </div>
           <div class="sheet-league-body"></div>
@@ -1225,7 +989,6 @@
                 </div>
               </div>
             </div>
-
             <div class="sheet-odds">
               <div class="sheet-odd"><span>1</span>${g.odds.home ?? "—"}</div>
               <div class="sheet-odd"><span>X</span>${g.odds.draw ?? "—"}</div>
@@ -1239,14 +1002,10 @@
       });
     }
 
-    /***********************
-     * MAIN RENDER
-     ***********************/
     function renderAll(){
       const raw = state.data?.games || [];
       const games = normalizeGames(raw);
 
-      // sport filter
       const sportFiltered = games.filter(g=>{
         if(state.sport === "all") return true;
         if(state.sport === "football") return (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football");
@@ -1259,7 +1018,6 @@
       const liveGames = sportFiltered.filter(isLive);
       const nextGames = sportFiltered.filter(g=>!isLive(g)).filter(g=>inNextHours(g, state.hours));
 
-      // counts para o menu de esportes (bolinhas)
       const counts = {
         all: sportFiltered.length,
         football: games.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
@@ -1269,33 +1027,22 @@
       };
       renderSportsRow(counts);
 
-      // HOME
       document.getElementById("liveCountHome").textContent = liveGames.length;
-      renderHero(document.getElementById("heroHome"), liveGames);
-      renderLiveList(document.getElementById("liveListHome"), liveGames);
-
-      // LIVE
       document.getElementById("liveCount").textContent = liveGames.length;
+
+      renderHero(document.getElementById("heroHome"), liveGames);
       renderHero(document.getElementById("heroLive"), liveGames);
+
+      renderLiveList(document.getElementById("liveListHome"), liveGames);
       renderLiveList(document.getElementById("liveList"), liveGames);
 
-      // GAMES (white sheet)
       renderGamesSheet(document.getElementById("gamesList"), nextGames);
     }
 
-    /***********************
-     * BUTTONS (placeholders)
-     ***********************/
-    document.getElementById("btnRegister").addEventListener("click", ()=>{
-      alert("Cadastro (placeholder). Vamos ligar isso no PRO depois.");
-    });
-    document.getElementById("btnLogin").addEventListener("click", ()=>{
-      alert("Login (placeholder). Vamos ligar isso no PRO depois.");
-    });
+    document.getElementById("btnRegister").addEventListener("click", ()=>alert("Cadastro (placeholder)."));
+    document.getElementById("btnLogin").addEventListener("click", ()=>alert("Login (placeholder)."));
 
-    // Inicializa
     loadData();
-    // auto refresh leve (mantém “vendável”)
     setInterval(loadData, 60_000);
   </script>
 </body>
