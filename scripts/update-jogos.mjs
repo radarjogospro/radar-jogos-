@@ -71,10 +71,9 @@ async function apiGet(path) {
 }
 
 function isLiveFromStatusShort(short) {
-  // API-Football status.short comuns:
-  // NS, 1H, HT, 2H, ET, BT, P, SUSP, INT, LIVE, FT, AET, PEN, PST, CANC, ABD...
-  const liveSet = new Set(["1H", "HT", "2H", "ET", "P", "LIVE", "BT", "SUSP", "INT"]);
-  return liveSet.has(short);
+  // Apenas jogo rolando de verdade
+  const realLive = new Set(["1H", "2H", "ET", "LIVE"]);
+  return realLive.has(short);
 }
 
 function normalizeFixture(fx) {
