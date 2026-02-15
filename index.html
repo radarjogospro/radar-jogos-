@@ -48,7 +48,6 @@
 
     .app{min-height:100%; padding-bottom:86px;}
 
-    /* TOP BAR */
     .topbar{
       position:sticky; top:0; z-index:50;
       padding: 10px 12px 8px;
@@ -91,7 +90,6 @@
     .btn.white{background:#f5f7f8; color:#132a30; border-color: rgba(0,0,0,.06);}
     .btn.pink{background: linear-gradient(180deg, var(--pink), var(--pink2)); border-color: rgba(255,255,255,.10);}
 
-    /* SPORTS ROW */
     .sports-row{
       margin-top:10px;
       display:flex; align-items:center; gap:16px;
@@ -132,7 +130,6 @@
     .underline{height:3px;width:44px;border-radius:99px;background:transparent;margin-top:4px;}
     .sport-item.active .underline{background: rgba(255,255,255,.22);}
 
-    /* BANNERS */
     .banners{
       margin: 10px 12px 0;
       display:flex; gap:10px;
@@ -164,7 +161,6 @@
       margin-left:6px;
     }
 
-    /* HERO */
     .hero{
       margin: 12px 12px 0;
       display:flex; gap:12px;
@@ -266,7 +262,6 @@
       color: #e9f4f6;
     }
 
-    /* LIVE LIST */
     .list{padding: 0 12px 10px;display:flex;flex-direction:column;gap:12px;}
     .league{
       border-radius: 22px;
@@ -337,7 +332,6 @@
       white-space:nowrap;
     }
 
-    /* GAMES SHEET */
     .sheet{
       margin-top: 8px;
       background: var(--sheet);
@@ -408,11 +402,9 @@
     .sheet-odd:last-child{border-right:none}
     .sheet-odd span{color:#102a30}
 
-    /* PAGES */
     .page{display:none}
     .page.active{display:block}
 
-    /* ====== BOTTOM NAV ====== */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -492,7 +484,6 @@
     }
     .ico-fill{fill: currentColor}
 
-    /* MODAL */
     .modal{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -667,7 +658,7 @@
             <div class="match" style="border-top:none">
               <div style="color:rgba(233,244,246,.75);font-weight:850;font-size:13px;line-height:1.35">
                 Para puxar jogos de uma API real, coloque a URL no ⚙️.<br/>
-                Se ficar vazio, usa <b>jogos.json</b>.
+                Vazio = usa <b>jogos.json</b>.
               </div>
             </div>
           </div>
@@ -755,10 +746,6 @@
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
-    /* ===== NOVO: cache local de odds (pra não ficar vazio quando a API vier sem odds) ===== */
-    const LS_ODDS_CACHE = "RADAR_ODDS_CACHE_V1";
-    const ODDS_CACHE_MAX_AGE_MS = 36 * 60 * 60 * 1000; // 36h
-
     const EUROPE = new Set([
       "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
       "Czech Republic","Denmark","England","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland",
@@ -795,41 +782,6 @@
       pro: document.getElementById("page-pro"),
     };
 
-    /* ===== NOVO: odds cache helpers ===== */
-    function loadOddsCache(){
-      try{
-        const raw = localStorage.getItem(LS_ODDS_CACHE);
-        const obj = raw ? JSON.parse(raw) : {};
-        if(!obj || typeof obj !== "object") return {};
-        return obj;
-      }catch(_){ return {}; }
-    }
-    function saveOddsCache(cache){
-      try{
-        localStorage.setItem(LS_ODDS_CACHE, JSON.stringify(cache));
-      }catch(_){}
-    }
-    function buildOddsKey(g){
-      // chave estável (liga + times + data/hora)
-      const league = (g.league || "").toLowerCase().trim();
-      const home = (g.home || "").toLowerCase().trim();
-      const away = (g.away || "").toLowerCase().trim();
-      const ts = (g.startTs || "");
-      return `${league}|${home}|${away}|${ts}`;
-    }
-    function hasAnyOdds(o){
-      return !!(o && (o.home != null || o.draw != null || o.away != null));
-    }
-    function sanitizeOdd(v){
-      if(v == null) return null;
-      const n = Number(v);
-      if(!Number.isFinite(n)) return null;
-      if(n <= 1) return null; // decimal odds coerentes
-      // limitar casas pra ficar bonito
-      return Math.round(n * 100) / 100;
-    }
-
-    /* NAV */
     document.querySelectorAll(".navbtn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const p = btn.dataset.page;
@@ -841,11 +793,9 @@
       state.page = p;
       Object.values(pages).forEach(el=>el.classList.remove("active"));
       pages[p].classList.add("active");
-
       document.querySelectorAll(".navbtn").forEach(b=>{
         b.classList.toggle("active", b.dataset.page===p);
       });
-
       window.scrollTo({top:0, behavior:"instant"});
       renderAll();
     }
@@ -861,7 +811,6 @@
     document.getElementById("btnRegister").addEventListener("click", ()=>alert("Cadastro (placeholder)."));
     document.getElementById("btnLogin").addEventListener("click", ()=>alert("Login (placeholder)."));
 
-    /* Popular pills */
     const pillsWrap = document.getElementById("popularPills");
     pillsWrap.querySelectorAll(".pill").forEach(p=>{
       p.addEventListener("click", ()=>{
@@ -879,7 +828,6 @@
       });
     });
 
-    /* Sort */
     const sortLabel = document.getElementById("sortLabel");
     sortLabel.addEventListener("click", ()=>{
       state.sort = (state.sort === "popular") ? "time" : "popular";
@@ -887,7 +835,6 @@
       renderAll();
     });
 
-    /* Time chips */
     document.querySelectorAll(".tchip").forEach(ch=>{
       ch.addEventListener("click", ()=>{
         document.querySelectorAll(".tchip").forEach(x=>x.classList.remove("active"));
@@ -897,7 +844,6 @@
       });
     });
 
-    /* Settings / filters buttons */
     document.getElementById("btnSettings").addEventListener("click", openApiModal);
     document.getElementById("openApiModal").addEventListener("click", openApiModal);
 
@@ -910,7 +856,6 @@
       renderAll();
     });
 
-    /* Long press brand */
     const brandTap = document.getElementById("brandTap");
     let pressTimer = null;
     brandTap.addEventListener("touchstart", ()=>{ pressTimer = setTimeout(openApiModal, 520); }, {passive:true});
@@ -919,7 +864,6 @@
     brandTap.addEventListener("mouseup", ()=>clearTimeout(pressTimer));
     brandTap.addEventListener("mouseleave", ()=>clearTimeout(pressTimer));
 
-    /* MODAL */
     const apiModal = document.getElementById("apiModal");
     const apiInput = document.getElementById("apiInput");
     const apiCancel = document.getElementById("apiCancel");
@@ -952,7 +896,6 @@
       loadData(true);
     });
 
-    /* DATA LOAD */
     function buildDataUrl(){
       const base = state.apiUrl || DEFAULT_LOCAL_URL;
       const sep = base.includes("?") ? "&" : "?";
@@ -981,23 +924,19 @@
 
         state.data = { games };
       }catch(e){
-        if(state.apiUrl){
-          try{
-            const fallback = await fetchJsonWithTimeout(DEFAULT_LOCAL_URL + "?ts=" + Date.now(), 9000);
-            const games = Array.isArray(fallback) ? fallback : (fallback.games || fallback.data || fallback.events || []);
-            state.data = { games: Array.isArray(games) ? games : [] };
-          }catch(_){ state.data = { games: [] }; }
-        }else{
-          state.data = { games: [] };
-        }
+        try{
+          const fallback = await fetchJsonWithTimeout(DEFAULT_LOCAL_URL + "?ts=" + Date.now(), 9000);
+          const games = Array.isArray(fallback) ? fallback : (fallback.games || fallback.data || fallback.events || []);
+          state.data = { games: Array.isArray(games) ? games : [] };
+        }catch(_){ state.data = { games: [] }; }
       }
       renderAll();
     }
 
-    /* ======== FIX PRINCIPAL: PARSE DE DATA/HORA ======== */
+    /* ========= TEMPO: AGORA PEGA date+time ========= */
     function parseStartTsAny(g){
       const candidates = [
-        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
+        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.dateTime, g.datetime,
         g.commence_time, g.kickoff, g.start, g.timeStart, g.beginTime
       ].filter(v=>v!=null && v!=="");
 
@@ -1017,137 +956,152 @@
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
       }
+
+      // ✅ caso típico do seu jogos.json: date + time
+      // exemplo: date: "2026-02-14", time:"21:00"
+      if(g.date && g.time){
+        const dt = String(g.date).trim() + "T" + String(g.time).trim() + ":00";
+        const ms = Date.parse(dt);
+        if(Number.isFinite(ms)) return Math.floor(ms/1000);
+      }
+
+      // variações
+      if(g.date && !g.time){
+        const ms = Date.parse(String(g.date).trim());
+        if(Number.isFinite(ms)) return Math.floor(ms/1000);
+      }
+
       return null;
     }
 
-    /* ===== NOVO: detectar jogo finalizado pra remover “travados de ontem” ===== */
-    function isFinished(g){
-      const s = String(g.status || "").toUpperCase();
-      const finishedSet = new Set([
-        "FT","AET","PEN_FT","FULL_TIME","FINISHED","ENDED","END","FINAL","CANCELLED","CANCELED","POSTPONED","ABANDONED"
-      ]);
-      if(finishedSet.has(s)) return true;
-      // alguns feeds mandam elapsed 90 e status estranho
-      const el = Number(g.elapsed || g.minute || g.time || null);
-      if(Number.isFinite(el) && el >= 120 && !isLive(g)) return true;
-      return false;
+    /* ========= ODDS: tenta vários formatos ========= */
+    function extractOddsAny(g){
+      const o = g.odds || g.market1x2 || g.oneXtwo || null;
+      if(o && (o.home!=null || o.draw!=null || o.away!=null || o["1"]!=null || o["x"]!=null || o["2"]!=null)){
+        return {
+          home: (o.home ?? o["1"] ?? o.h ?? null),
+          draw: (o.draw ?? o["x"] ?? o.d ?? null),
+          away: (o.away ?? o["2"] ?? o.a ?? null),
+        };
+      }
+
+      // Odds API style: bookmakers -> markets -> outcomes
+      // market "h2h" (sem empate) ou "1x2"/"h2h_lay" varia por API
+      const bms = g.bookmakers || g.bookmaker || null;
+      if(Array.isArray(bms) && bms.length){
+        for(const bm of bms){
+          const markets = bm.markets || [];
+          for(const m of markets){
+            const key = String(m.key || m.market || "").toLowerCase();
+            if(!key) continue;
+            if(key.includes("h2h") || key.includes("1x2") || key.includes("match_odds")){
+              const outs = m.outcomes || m.outcome || [];
+              let home=null, draw=null, away=null;
+              for(const out of outs){
+                const name = String(out.name || out.team || out.outcome || "").toLowerCase();
+                const price = (out.price ?? out.odd ?? out.odds ?? out.decimal ?? null);
+                if(price==null) continue;
+
+                if(name.includes("draw") || name.includes("empate") || name==="x") draw = price;
+                else if(name === String(g.home||"").toLowerCase()) home = price;
+                else if(name === String(g.away||"").toLowerCase()) away = price;
+              }
+              if(home!=null || draw!=null || away!=null){
+                return {home, draw, away};
+              }
+            }
+          }
+        }
+      }
+
+      // alguns retornam h2h: [oddHome, oddAway]
+      if(Array.isArray(g.h2h) && g.h2h.length>=2){
+        return { home: g.h2h[0], draw: null, away: g.h2h[1] };
+      }
+
+      return {home:null, draw:null, away:null};
     }
 
     function normalizeGames(raw){
-      const oddsCache = loadOddsCache();
-      const nowMs = Date.now();
-
       if(!Array.isArray(raw)) return [];
-      const normalized = raw.map(g=>{
+      return raw.map(g=>{
         const sport = (g.sport || g.sportKey || g.category || "football").toLowerCase();
         const league = g.league || g.competition || g.leagueName || "Liga";
         const country = g.country || g.area || g.region || "";
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
-        const statusRaw = (g.status || g.state || (g.live ? "LIVE" : "NS"));
+
+        const statusRaw = (g.status || g.state || (g.isLive ? "LIVE" : (g.live ? "LIVE" : "NS")));
         const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
-        const minute = (g.minute != null ? String(g.minute) : (g.time || g.clock || ""));
+        const minute = (g.minute != null ? String(g.minute) : (g.elapsed != null ? String(g.elapsed) : (g.time || g.clock || "")));
+
         const startTs = parseStartTsAny(g);
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
         const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
 
-        const oddsRaw =
-          g.odds || g.market1x2 || g.oneXtwo || g["1x2"] || g.bookmakers?.[0]?.markets?.[0]?.outcomes || null;
-
-        let oh=null, od=null, oa=null;
-
-        // Se vier como objeto
-        if(oddsRaw && !Array.isArray(oddsRaw) && typeof oddsRaw === "object"){
-          oh = sanitizeOdd(oddsRaw.home ?? oddsRaw["1"] ?? oddsRaw.h ?? oddsRaw.H ?? null);
-          od = sanitizeOdd(oddsRaw.draw ?? oddsRaw["x"] ?? oddsRaw.d ?? oddsRaw.D ?? null);
-          oa = sanitizeOdd(oddsRaw.away ?? oddsRaw["2"] ?? oddsRaw.a ?? oddsRaw.A ?? null);
-        }
-
-        // Se vier como array de outcomes (padrão odds-api)
-        if(Array.isArray(oddsRaw)){
-          // tenta mapear por name/description
-          const get = (needle)=>oddsRaw.find(o=>{
-            const n = String(o?.name ?? o?.description ?? "").toLowerCase();
-            return n.includes(needle);
-          });
-          const homeO = get(String(home).toLowerCase()) || get("home") || get("1");
-          const drawO = get("draw") || get("tie") || get("x");
-          const awayO = get(String(away).toLowerCase()) || get("away") || get("2");
-
-          oh = sanitizeOdd(homeO?.price ?? homeO?.odd ?? homeO?.odds ?? null);
-          od = sanitizeOdd(drawO?.price ?? drawO?.odd ?? drawO?.odds ?? null);
-          oa = sanitizeOdd(awayO?.price ?? awayO?.odd ?? awayO?.odds ?? null);
-        }
-
         const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
+        const odds = extractOddsAny(g);
 
-        const obj = {
+        return {
           id, sport, league, country, home, away,
           status, minute, startTs,
           scoreHome, scoreAway,
-          elapsed: (g.elapsed ?? g.minutes ?? null),
-          odds: { home: oh, draw: od, away: oa }
+          odds
         };
-
-        // ===== NOVO: se odds vierem vazias, tenta puxar do cache =====
-        const key = buildOddsKey(obj);
-        const cached = oddsCache[key];
-
-        // limpa cache velho
-        if(cached && cached.ts && (nowMs - cached.ts) > ODDS_CACHE_MAX_AGE_MS){
-          delete oddsCache[key];
-        }else if(!hasAnyOdds(obj.odds) && cached && cached.o){
-          obj.odds = {
-            home: sanitizeOdd(cached.o.home),
-            draw: sanitizeOdd(cached.o.draw),
-            away: sanitizeOdd(cached.o.away)
-          };
-        }
-
-        // ===== NOVO: se odds vierem preenchidas, salva no cache =====
-        if(hasAnyOdds(obj.odds)){
-          oddsCache[key] = { ts: nowMs, o: obj.odds };
-        }
-
-        return obj;
       });
-
-      // salva cache uma vez por normalize
-      saveOddsCache(oddsCache);
-      return normalized;
     }
 
-    /* ======== FIX PRINCIPAL: STATUS LIVE ======== */
-    function isLive(g){
+    /* ========= STATUS LIVE: não deixa FT passar ========= */
+    function isFinished(g){
       const s = (g.status || "").toUpperCase();
+      return s === "FT" || s === "AET" || s === "FT_PEN" || s === "PEN" || s === "FINISHED" || s === "ENDED" || s === "FULL_TIME";
+    }
+
+    function isLive(g){
+      if(g.isLive === true) return true; // se veio pronto
+      const s = (g.status || "").toUpperCase();
+      if(isFinished(g)) return false;
+
       const liveSet = new Set([
-        "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
+        "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET",
         "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
       ]);
       if(liveSet.has(s)) return true;
+
       const m = String(g.minute || "").trim();
       if(m.includes("'")) return true;
-      if((g.scoreHome!=null || g.scoreAway!=null) && (s.includes("LIVE") || s.includes("PLAY"))) return true;
+      if(/^\d+$/.test(m) && Number(m) > 0 && Number(m) <= 130) return true;
+
       return false;
     }
 
-    /* ====== AJUSTE: agora “próximos jogos” usa somente startsWithinHours (sem puxar jogos antigos) ====== */
     function startsWithinHours(g, hours){
       if(!g.startTs) return false;
       const now = Date.now();
       const ts = Number(g.startTs)*1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
+      const diff = ts - now;
+      return diff <= hours*3600*1000 && diff >= 0;
     }
 
-    /* Mantém para hero (quentes) */
-    function startsWithinHoursLoose(g, hours){
-      if(!g.startTs) return false;
+    function inNextHours(g, hours){
+      if(!g.startTs) return false; // melhor: sem horário, não entra no filtro de horas
       const now = Date.now();
       const ts = Number(g.startTs)*1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
+      const diff = ts - now;
+      return diff <= hours*3600*1000 && diff >= 0;
+    }
+
+    // ✅ corta jogos “velhos” (ontem/anteontem) do que não for live
+    function isTooOldNonLive(g){
+      if(!g.startTs) return false;
+      if(isLive(g)) return false;
+      const now = Date.now();
+      const ts = Number(g.startTs)*1000;
+      if(!Number.isFinite(ts)) return false;
+      return (now - ts) > 6*3600*1000; // passou 6h do horário e não é live => some
     }
 
     function groupByLeague(games){
@@ -1213,7 +1167,7 @@
         });
       }
       if(state.pill === "odds"){
-        return games.filter(g=> g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null));
+        return games.filter(g=> (g.odds?.home!=null || g.odds?.draw!=null || g.odds?.away!=null));
       }
       if(state.pill === "esports"){
         return games.filter(g=>/esport|e-sport|cs:go|valorant|lol|league of legends|dota/i.test((g.league||"") + " " + (g.sport||"")));
@@ -1221,7 +1175,6 @@
       return games;
     }
 
-    /* RENDER */
     const sportsRow = document.getElementById("sportsRow");
     function renderSportsRow(counts){
       sportsRow.innerHTML = "";
@@ -1251,7 +1204,6 @@
 
     function renderHero(el, liveGames, hotGames){
       el.innerHTML = "";
-
       const picks = (liveGames.length > 0 ? liveGames.slice(0, 6) : hotGames.slice(0, 6));
 
       if(picks.length === 0){
@@ -1385,7 +1337,7 @@
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
+          const timeTxt = g.startTs ? (formatKickoff(g)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
@@ -1421,22 +1373,14 @@
 
     function renderAll(){
       const raw = state.data?.games || [];
-      const allGames0 = normalizeGames(raw);
-
-      // ===== NOVO: remove “travados de ontem” (finalizados e muito antigos) =====
-      const now = Date.now();
-      const allGames = allGames0.filter(g=>{
-        // remove finalizados
-        if(isFinished(g)) return false;
-        // remove jogos com startTs muito antigo e não-live
-        if(!isLive(g) && g.startTs){
-          const ts = Number(g.startTs) * 1000;
-          if(Number.isFinite(ts) && (now - ts) > 8*60*60*1000) return false; // >8h atrás
-        }
-        return true;
-      });
+      const allGames = normalizeGames(raw);
 
       let games = allGames.slice();
+
+      // remove “velhos” que não são live (isso elimina ontem/FT)
+      games = games.filter(g=>!isTooOldNonLive(g));
+      // também remove FT explicitamente da base (pra não sujar hero/lista)
+      games = games.filter(g=>!isFinished(g));
 
       games = games.filter(g=>{
         if(state.sport === "all") return true;
@@ -1453,24 +1397,20 @@
 
       const hotGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>startsWithinHoursLoose(g, 3))
+        .filter(g=>startsWithinHours(g, 3))
         .sort(safeTimeSort);
 
-      // ===== FIX: próximos jogos agora é "somente começa dentro do horário selecionado" =====
       let nextGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>startsWithinHours(g, state.hours));
-
-      if(state.sort === "time"){
-        nextGames = nextGames.slice().sort(safeTimeSort);
-      }
+        .filter(g=>inNextHours(g, state.hours))
+        .sort(state.sort === "time" ? safeTimeSort : ()=>0);
 
       const counts = {
-        all: allGames.length,
-        football: allGames.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
-        tennis: allGames.filter(g=> g.sport.includes("tennis")).length,
-        basketball: allGames.filter(g=> g.sport.includes("basket")).length,
-        volley: allGames.filter(g=> g.sport.includes("volley")).length,
+        all: games.length,
+        football: games.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
+        tennis: games.filter(g=> g.sport.includes("tennis")).length,
+        basketball: games.filter(g=> g.sport.includes("basket")).length,
+        volley: games.filter(g=> g.sport.includes("volley")).length,
       };
       renderSportsRow(counts);
 
@@ -1490,5 +1430,4 @@
     setInterval(loadData, REFRESH_MS);
   </script>
 </body>
-</html>
-```0
+  </html>
