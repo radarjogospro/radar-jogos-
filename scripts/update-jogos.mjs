@@ -1,312 +1,193 @@
 import fs from "fs";
 
-const KEY = process.env.API_FOOTBALL_KEY || process.env.API_FOOTBALL || "";
-if (!KEY) {
-  console.error("Missing API key. Set API_FOOTBALL_KEY in repo secrets.");
-  process.exit(1);
-}
-
+const KEY = process.env.API_FOOTBALL_KEY || "";
 const OUT = "jogos.json";
 
-// Quantos jogos no JSON final
+// Ajuste se você quiser menos/mais jogos no JSON
 const MAX_GAMES = 2500;
 
-// Janela anti “jogo de ontem” (em horas)
-const KEEP_PAST_HOURS = 6;     // mantém jogos finalizados até 6h atrás
-const KEEP_FUTURE_HOURS = 24;  // mantém jogos até 24h na frente
-
-// (Opcional) tentar “probabilidades” via predictions
-const ENABLE_PREDICTIONS = true;
-const MAX_PREDICTIONS = 60; // abaixa um pouco pra não estourar limite
+// Janela anti "jogo de ontem" (em horas)
+const KEEP_PAST_HOURS = 6;   // mantém jogos encerrados há até X horas
+const KEEP_FUTURE_HOURS = 18; // mantém jogos que começam nas próximas X horas
 
 const BASE = "https://v3.football.api-sports.io";
-const TZ = "America/Sao_Paulo";
 
-function nowMs() { return Date.now(); }
+function pad(n){ return String(n).padStart(2,"0"); }
+function ymd(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function nowMs(){ return Date.now(); }
 
-function safeNum(x) {
-  const n = Number(x);
+function asMsFromFixture(fx){
+  // API-Football geralmente manda date ISO em fixture.date
+  const iso = fx?.fixture?.date;
+  const ms = iso ? Date.parse(iso) : NaN;
+  return Number.isFinite(ms) ? ms : null;
+}
+
+function safeNumber(v){
+  const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
 
-function parsePercentString(s) {
-  // "45%" => 0.45
-  if (!s) return null;
-  const m = String(s).trim().replace("%", "");
-  const n = Number(m);
-  if (!Number.isFinite(n)) return null;
-  return n / 100;
-}
+async function apiGet(path, params={}){
+  const url = new URL(`${BASE}${path}`);
+  for (const [k,v] of Object.entries(params)) if(v !== undefined && v !== null && v !== "") url.searchParams.set(k, String(v));
 
-function impliedOddsFromPercents(pHome, pDraw, pAway) {
-  const eps = 1e-9;
-  const oh = pHome > eps ? 1 / pHome : null;
-  const od = pDraw > eps ? 1 / pDraw : null;
-  const oa = pAway > eps ? 1 / pAway : null;
-  return {
-    o1: oh ? Math.round(oh * 100) / 100 : null,
-    ox: od ? Math.round(od * 100) / 100 : null,
-    o2: oa ? Math.round(oa * 100) / 100 : null,
-  };
-}
-
-function tzYmd(ms) {
-  // YYYY-MM-DD no fuso do Brasil (SP)
-  const d = new Date(ms);
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(d);
-
-  const y = parts.find(p => p.type === "year")?.value;
-  const m = parts.find(p => p.type === "month")?.value;
-  const da = parts.find(p => p.type === "day")?.value;
-  return `${y}-${m}-${da}`;
-}
-
-async function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-async function apiGet(path, tries = 3) {
-  const url = `${BASE}${path}`;
-  for (let i = 0; i < tries; i++) {
-    const res = await fetch(url, {
-      headers: { "x-apisports-key": KEY },
-    });
-
-    if (res.ok) return res.json();
-
-    // retry em 429/5xx
-    if (res.status === 429 || (res.status >= 500 && res.status <= 599)) {
-      const wait = 800 * Math.pow(2, i); // 800ms, 1600ms, 3200ms
-      await sleep(wait);
-      continue;
-    }
-
-    const txt = await res.text().catch(() => "");
-    throw new Error(`HTTP ${res.status} ${res.statusText} on ${path} :: ${txt.slice(0, 200)}`);
-  }
-
-  throw new Error(`HTTP failed after retries on ${path}`);
-}
-
-function isLiveFromStatusShort(short) {
-  // "INT" NÃO é ao vivo.
-  // Ao vivo real (inclui intervalo/HT):
-  const live = new Set(["1H", "2H", "ET", "HT", "P", "LIVE"]);
-  return live.has(short);
-}
-
-function isFinishedShort(short) {
-  // finalizados
-  const fin = new Set(["FT", "AET", "PEN"]);
-  return fin.has(short);
-}
-
-function normalizeFixture(fx, now) {
-  const fixture = fx.fixture || {};
-  const teams = fx.teams || {};
-  const league = fx.league || {};
-  const goals = fx.goals || {};
-  const score = fx.score || {};
-  const status = fixture.status || {};
-
-  const tsSec = safeNum(fixture.timestamp); // seconds UTC
-  const kickoffTs = tsSec ? tsSec * 1000 : null;
-
-  const short = status.short || "";
-  const isLive = isLiveFromStatusShort(short);
-
-  // elapsed: usa o da API; se vier null e for live, calcula por diferença
-  let elapsed = safeNum(status.elapsed);
-  if (isLive && (elapsed == null) && kickoffTs) {
-    const mins = Math.floor((now - kickoffTs) / 60000);
-    elapsed = Math.max(0, Math.min(130, mins));
-  }
-  if (!isLive) elapsed = null;
-
-  return {
-    id: safeNum(fixture.id),
-    home: teams.home?.name || "",
-    away: teams.away?.name || "",
-    league: league.name || "",
-    country: league.country || "",
-
-    date: fixture.date ? String(fixture.date).slice(0, 10) : null,
-    time: fixture.date ? String(fixture.date).slice(11, 16) : null,
-    kickoffTs,
-
-    status: short,
-    isLive,
-    elapsed,
-
-    scoreHome: safeNum(goals.home),
-    scoreAway: safeNum(goals.away),
-
-    htHome: safeNum(score?.halftime?.home),
-    htAway: safeNum(score?.halftime?.away),
-
-    p1: null, px: null, p2: null,
-    o1: null, ox: null, o2: null,
-  };
-}
-
-function withinWindow(game, now) {
-  if (!game.kickoffTs) return false;
-
-  const pastMs = KEEP_PAST_HOURS * 3600 * 1000;
-  const futureMs = KEEP_FUTURE_HOURS * 3600 * 1000;
-
-  if (game.isLive) return true;
-
-  const dt = game.kickoffTs - now;
-
-  // Já começou
-  if (dt < 0) {
-    // se finalizou, segura só por X horas
-    if (isFinishedShort(game.status)) {
-      return Math.abs(dt) <= pastMs;
-    }
-    // se está "NS" / "PST" etc, deixa o filtro seguir normal (não segura)
-    return Math.abs(dt) <= pastMs;
-  }
-
-  // Futuro
-  return dt <= futureMs;
-}
-
-async function enrichPredictions(games) {
-  if (!ENABLE_PREDICTIONS) return;
-
-  const now = nowMs();
-  const sorted = [...games].sort((a, b) => {
-    const la = a.isLive ? 0 : 1;
-    const lb = b.isLive ? 0 : 1;
-    if (la !== lb) return la - lb;
-    return Math.abs((a.kickoffTs ?? 0) - now) - Math.abs((b.kickoffTs ?? 0) - now);
+  const res = await fetch(url.toString(), {
+    headers: { "x-apisports-key": KEY },
+    redirect: "follow"
   });
 
-  const pick = sorted.slice(0, MAX_PREDICTIONS);
+  // Se a API estourou quota, normalmente vem 429/403.
+  if(!res.ok){
+    const txt = await res.text().catch(()=> "");
+    const err = new Error(`HTTP ${res.status} ${res.statusText} - ${txt.slice(0,200)}`);
+    err.name = "HTTP_ERROR";
+    err.status = res.status;
+    throw err;
+  }
 
-  for (const g of pick) {
-    if (!g.id) continue;
-    try {
-      const data = await apiGet(`/predictions?fixture=${g.id}`);
-      const resp = data?.response?.[0];
-      if (!resp) continue;
+  const json = await res.json();
 
-      const perc = resp.predictions?.percent || {};
-      const p1 = parsePercentString(perc.home);
-      const px = parsePercentString(perc.draw);
-      const p2 = parsePercentString(perc.away);
+  // API-Football às vezes responde 200 com "errors"/"message" quando a cota estoura.
+  const hasErrors = json && typeof json === "object" && json.errors && Object.keys(json.errors).length > 0;
+  if(hasErrors){
+    const err = new Error(`API body errors: ${JSON.stringify(json.errors).slice(0,200)}`);
+    err.name = "API_BODY_ERROR";
+    err.apiBody = json;
+    throw err;
+  }
+  if(json && typeof json === "object" && typeof json.message === "string" && json.message){
+    const err = new Error(`API message: ${json.message}`);
+    err.name = "API_BODY_MESSAGE";
+    err.apiBody = json;
+    throw err;
+  }
 
-      const sum = (p1 ?? 0) + (px ?? 0) + (p2 ?? 0);
-      if (sum > 0) {
-        const np1 = p1 != null ? p1 / sum : null;
-        const npx = px != null ? px / sum : null;
-        const np2 = p2 != null ? p2 / sum : null;
+  return json;
+}
 
-        g.p1 = np1;
-        g.px = npx;
-        g.p2 = np2;
+async function main(){
+  if(!KEY){
+    console.log("[WARN] API_FOOTBALL_KEY não configurada. Não vou sobrescrever jogos.json.");
+    process.exit(0);
+  }
 
-        const odds = impliedOddsFromPercents(np1 ?? 0, npx ?? 0, np2 ?? 0);
-        g.o1 = odds.o1;
-        g.ox = odds.ox;
-        g.o2 = odds.o2;
+  const now = new Date();
+  const today = ymd(now);
+
+  // pega hoje (e amanhã cedo, dependendo da janela)
+  const tz = "America/Sao_Paulo";
+
+  let fixtures = [];
+
+  try{
+    // Hoje
+    const a = await apiGet("/fixtures", { date: today, timezone: tz });
+    fixtures.push(...(a?.response || []));
+
+    // Amanhã (só pra não perder jogos na virada)
+    const tomorrow = new Date(now.getTime() + 24*60*60*1000);
+    const b = await apiGet("/fixtures", { date: ymd(tomorrow), timezone: tz });
+    fixtures.push(...(b?.response || []));
+  }catch(e){
+    console.warn("[WARN] Falha ao buscar fixtures (provável cota/limite/instabilidade):", e?.message || e);
+    // não zera o arquivo quando a API falha
+    process.exit(0);
+  }
+
+  // Normaliza e filtra por janela de tempo
+  const nowT = nowMs();
+  const minT = nowT - KEEP_PAST_HOURS * 3600 * 1000;
+  const maxT = nowT + KEEP_FUTURE_HOURS * 3600 * 1000;
+
+  const games = fixtures
+    .map(fx => {
+      const ts = asMsFromFixture(fx);
+      const home = fx?.teams?.home?.name || "";
+      const away = fx?.teams?.away?.name || "";
+      const league = fx?.league?.name || "";
+      const country = fx?.league?.country || "";
+
+      const status = fx?.fixture?.status?.short || "";
+      const elapsed = safeNumber(fx?.fixture?.status?.elapsed);
+
+      const goalsHome = safeNumber(fx?.goals?.home) ?? 0;
+      const goalsAway = safeNumber(fx?.goals?.away) ?? 0;
+
+      const htHome = safeNumber(fx?.score?.halftime?.home);
+      const htAway = safeNumber(fx?.score?.halftime?.away);
+
+      // Odds (se vierem no endpoint atual / seu script original já setava)
+      // Mantemos as chaves p1/px/p2/o1/ox/o2 pra não quebrar o layout
+      const p1 = fx?.prob?.p1 ?? null;
+      const px = fx?.prob?.px ?? null;
+      const p2 = fx?.prob?.p2 ?? null;
+
+      const o1 = fx?.odds?.o1 ?? null;
+      const ox = fx?.odds?.ox ?? null;
+      const o2 = fx?.odds?.o2 ?? null;
+
+      const iso = fx?.fixture?.date || null;
+      let dateStr = "";
+      let timeStr = "";
+      if(iso){
+        const d = new Date(iso);
+        dateStr = ymd(d);
+        timeStr = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
       }
-    } catch (e) {
-      // deixa quieto pra não quebrar workflow
-    }
-  }
-}
 
-function loadPreviousIfAny() {
-  try {
-    if (!fs.existsSync(OUT)) return null;
-    const raw = fs.readFileSync(OUT, "utf-8");
-    const json = JSON.parse(raw);
-    if (Array.isArray(json?.games) && json.games.length > 0) return json;
-    return null;
-  } catch {
-    return null;
-  }
-}
+      const isLive = ["1H","2H","HT","ET","P","LIVE"].includes(status) || status === "INT";
 
-async function main() {
-  const now = nowMs();
-
-  // Datas para janela (em dias) no fuso do Brasil
-  // busca de -1 dia até +1 dia pra cobrir virada/fuso
-  const ymd0 = tzYmd(now);
-  const ymdPrev = tzYmd(now - 24 * 3600 * 1000);
-  const ymdNext = tzYmd(now + 24 * 3600 * 1000);
-
-  // 1) Ao vivo (mais confiável)
-  let liveArr = [];
-  try {
-    const live = await apiGet(`/fixtures?live=all&timezone=${encodeURIComponent(TZ)}`);
-    liveArr = Array.isArray(live?.response) ? live.response : [];
-  } catch (e) {
-    liveArr = [];
-  }
-
-  // 2) Janela de datas (from/to)
-  const win = await apiGet(`/fixtures?from=${ymdPrev}&to=${ymdNext}&timezone=${encodeURIComponent(TZ)}`);
-  const winArr = Array.isArray(win?.response) ? win.response : [];
-
-  // Merge + dedupe
-  const map = new Map();
-  for (const fx of [...winArr, ...liveArr]) {
-    const g = normalizeFixture(fx, now);
-    if (!g.id) continue;
-    map.set(g.id, g);
-  }
-
-  let games = Array.from(map.values());
-
-  // Filtra janela
-  games = games.filter((g) => withinWindow(g, now));
-
-  // Ordena (ao vivo primeiro, depois por kickoff)
-  games.sort((a, b) => {
-    const la = a.isLive ? 0 : 1;
-    const lb = b.isLive ? 0 : 1;
-    if (la !== lb) return la - lb;
-    return (a.kickoffTs ?? 0) - (b.kickoffTs ?? 0);
-  });
-
-  if (games.length > MAX_GAMES) games = games.slice(0, MAX_GAMES);
-
-  // Se vier vazio, NÃO destrói o app: mantém o último JSON válido
-  if (games.length === 0) {
-    const prev = loadPreviousIfAny();
-    if (prev) {
-      prev.updatedAt = new Date().toLocaleString("pt-BR", { timeZone: TZ });
-      prev.cacheBust = String(Date.now());
-      fs.writeFileSync(OUT, JSON.stringify(prev, null, 2), "utf-8");
-      console.log(`No games from API. Kept previous ${prev.games.length} games in ${OUT}`);
-      return;
-    }
-  }
-
-  await enrichPredictions(games);
+      return {
+        id: fx?.fixture?.id ?? null,
+        home, away, league, country,
+        date: dateStr,
+        time: timeStr,
+        kickoffTs: ts,
+        status,
+        isLive,
+        elapsed: elapsed ?? 0,
+        scoreHome: goalsHome,
+        scoreAway: goalsAway,
+        htHome: htHome ?? null,
+        htAway: htAway ?? null,
+        p1, px, p2, o1, ox, o2
+      };
+    })
+    .filter(g => g.id && g.kickoffTs && g.kickoffTs >= minT && g.kickoffTs <= maxT)
+    .sort((a,b) => (a.kickoffTs - b.kickoffTs))
+    .slice(0, MAX_GAMES);
 
   const payload = {
-    updatedAt: new Date().toLocaleString("pt-BR", { timeZone: TZ }),
+    updatedAt: new Date().toLocaleString("pt-BR", { timeZone: tz }),
     cacheBust: String(Date.now()),
     source: "API-Football",
-    games,
+    games
   };
 
+  // Se não veio nenhum jogo, NÃO sobrescreve o arquivo existente (evita zerar por cota/instabilidade)
+  try{
+    if(Array.isArray(payload.games) && payload.games.length === 0 && fs.existsSync(OUT)){
+      const prev = JSON.parse(fs.readFileSync(OUT, "utf-8"));
+      if(prev && Array.isArray(prev.games) && prev.games.length > 0){
+        console.warn(`[WARN] payload.games veio vazio; mantendo o ${OUT} anterior com ${prev.games.length} jogos.`);
+        prev.updatedAt = payload.updatedAt;
+        prev.cacheBust = payload.cacheBust;
+        prev.source = payload.source;
+        fs.writeFileSync(OUT, JSON.stringify(prev, null, 2), "utf-8");
+        process.exit(0);
+      }
+    }
+  }catch(e){
+    console.warn("[WARN] Falha ao aplicar safeguard de arquivo anterior:", e?.message || e);
+  }
+
   fs.writeFileSync(OUT, JSON.stringify(payload, null, 2), "utf-8");
-  console.log(`Saved ${games.length} games to ${OUT}`);
+  console.log(`[OK] ${OUT} atualizado com ${games.length} jogos.`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+main().catch(err => {
+  console.error("[FATAL]", err);
+  // não “mata” o workflow por causa de instabilidade/cota
+  process.exit(0);
 });
