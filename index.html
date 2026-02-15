@@ -24,9 +24,6 @@
       --sheet:#f3f6f7;
       --sheetCard:#dfe8ea;
 
-      --radius:18px;
-      --radius2:22px;
-
       --fs-xxs:11px;
       --fs-xs:12px;
       --fs-sm:13px;
@@ -49,25 +46,16 @@
       overflow-x:hidden;
     }
 
-    .app{
-      min-height:100%;
-      padding-bottom: 86px;
-    }
+    .app{min-height:100%; padding-bottom:86px;}
 
     /* TOP BAR */
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
+      position:sticky; top:0; z-index:50;
       padding: 10px 12px 8px;
       background: linear-gradient(180deg, rgba(7,31,37,.92), rgba(7,31,37,.65));
       backdrop-filter: blur(10px);
     }
-    .topbar-inner{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .topbar-inner{display:flex; align-items:center; gap:10px;}
     .brand{display:flex; align-items:center; gap:10px; min-width:0; user-select:none; cursor:pointer;}
     .logo{
       width:40px;height:40px;border-radius:14px;
@@ -90,57 +78,38 @@
 
     .top-actions{margin-left:auto; display:flex; gap:10px; align-items:center;}
     .btn{
-      height:38px;
-      padding:0 14px;
-      border-radius:14px;
+      height:38px; padding:0 14px; border-radius:14px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.06);
       color:var(--t0);
       font-weight:800;
       font-size:var(--fs-sm);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      user-select:none;
-      cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      user-select:none; cursor:pointer;
       box-shadow: 0 12px 28px rgba(0,0,0,.25);
     }
-    .btn.white{
-      background: #f5f7f8;
-      color:#132a30;
-      border-color: rgba(0,0,0,.06);
-    }
-    .btn.pink{
-      background: linear-gradient(180deg, var(--pink), var(--pink2));
-      border-color: rgba(255,255,255,.10);
-    }
+    .btn.white{background:#f5f7f8; color:#132a30; border-color: rgba(0,0,0,.06);}
+    .btn.pink{background: linear-gradient(180deg, var(--pink), var(--pink2)); border-color: rgba(255,255,255,.10);}
 
     /* SPORTS ROW */
     .sports-row{
       margin-top:10px;
-      display:flex;
-      align-items:center;
-      gap:16px;
+      display:flex; align-items:center; gap:16px;
       padding: 2px 2px 8px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
+      overflow:auto; -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
     .sports-row::-webkit-scrollbar{display:none}
     .sport-item{
       flex:0 0 auto;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
       min-width:64px;
       color:rgba(233,244,246,.72);
       font-size:var(--fs-xs);
       position:relative;
       padding: 8px 8px 10px;
       border-radius:14px;
-      user-select:none;
-      cursor:pointer;
+      user-select:none; cursor:pointer;
     }
     .sport-item.active{color:var(--t0);}
     .sport-icon{
@@ -150,11 +119,8 @@
       border:1px solid var(--line);
     }
     .badge{
-      position:absolute;
-      top:2px; right:10px;
-      min-width:22px;
-      height:18px;
-      padding:0 6px;
+      position:absolute; top:2px; right:10px;
+      min-width:22px; height:18px; padding:0 6px;
       border-radius:999px;
       background: rgba(10,40,48,.85);
       border:1px solid rgba(255,255,255,.10);
@@ -169,40 +135,28 @@
     /* BANNERS */
     .banners{
       margin: 10px 12px 0;
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
+      display:flex; gap:10px;
+      overflow:auto; -webkit-overflow-scrolling: touch;
       scrollbar-width:none;
     }
     .banners::-webkit-scrollbar{display:none}
     .banner-pill{
       flex:0 0 auto;
-      height:40px;
-      padding:0 14px;
+      height:40px; padding:0 14px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
       border:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      gap:10px;
+      display:flex; align-items:center; gap:10px;
       box-shadow: 0 14px 34px rgba(0,0,0,.24);
       white-space:nowrap;
       font-size:var(--fs-sm);
       color:var(--t0);
-      cursor:pointer;
-      user-select:none;
+      cursor:pointer; user-select:none;
       text-decoration:none;
     }
-    .banner-ico{
-      width:18px;height:18px;
-      display:grid;place-items:center;
-      opacity:.95;
-    }
+    .banner-ico{width:18px;height:18px; display:grid;place-items:center; opacity:.95;}
     .tag-novo{
-      height:22px;
-      padding:0 10px;
-      border-radius:999px;
+      height:22px; padding:0 10px; border-radius:999px;
       background: linear-gradient(180deg, var(--pink), var(--pink2));
       font-weight:900;
       font-size:var(--fs-xxs);
@@ -213,10 +167,8 @@
     /* HERO */
     .hero{
       margin: 12px 12px 0;
-      display:flex;
-      gap:12px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
+      display:flex; gap:12px;
+      overflow:auto; -webkit-overflow-scrolling: touch;
       scrollbar-width:none;
     }
     .hero::-webkit-scrollbar{display:none}
@@ -228,7 +180,7 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
-      min-height:138px;
+      min-height:150px;
     }
     .hero-card::before{
       content:"";
@@ -250,7 +202,16 @@
     }
     .live-dot{width:10px;height:10px;border-radius:999px;background:var(--pink);box-shadow:0 0 0 4px rgba(255,47,125,.16);}
     .hero-title{font-size: var(--fs-xl);font-weight:900;line-height:1.1;}
-    .hero-sub{font-size: var(--fs-sm);color: var(--t1);display:flex;gap:10px;align-items:center;}
+    .hero-sub{font-size: var(--fs-sm);color: var(--t1);display:flex;gap:10px;align-items:center; flex-wrap:wrap;}
+    .score-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      height:30px;padding:0 12px;border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--t0);
+      font-weight:950;
+      white-space:nowrap;
+    }
     .odds-strip{
       margin-top:auto;
       display:flex;
@@ -280,29 +241,23 @@
 
     .popular-pills{
       margin: 0 12px;
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
+      display:flex; gap:10px;
+      overflow:auto; -webkit-overflow-scrolling:touch;
       scrollbar-width:none;
     }
     .popular-pills::-webkit-scrollbar{display:none}
     .pill{
       flex:0 0 auto;
-      height:42px;
-      padding:0 14px;
+      height:42px; padding:0 14px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
       border:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      gap:10px;
+      display:flex; align-items:center; gap:10px;
       font-size: var(--fs-sm);
       font-weight:900;
       color: var(--t0);
       box-shadow: 0 14px 30px rgba(0,0,0,.20);
-      user-select:none;
-      cursor:pointer;
+      user-select:none; cursor:pointer;
       white-space:nowrap;
     }
     .pill.active{
@@ -341,14 +296,11 @@
       display:grid;place-items:center;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
-      cursor:pointer;
-      user-select:none;
+      cursor:pointer; user-select:none;
     }
     .match{
       padding: 12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+      display:flex; flex-direction:column; gap:10px;
       background: rgba(255,255,255,.03);
       border-top: 1px solid rgba(255,255,255,.06);
     }
@@ -530,7 +482,6 @@
     .pro-fab .navico{width:24px;height:24px;}
     .pro-fab span{display:none;}
 
-    /* SVG default color */
     svg{display:block}
     .ico-stroke{
       stroke: currentColor;
@@ -541,7 +492,7 @@
     }
     .ico-fill{fill: currentColor}
 
-    /* MODAL (API URL) */
+    /* MODAL */
     .modal{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -561,11 +512,7 @@
       box-shadow: 0 22px 70px rgba(0,0,0,.50);
       padding: 14px 14px 12px;
     }
-    .modal-title{
-      font-weight:950;
-      font-size: var(--fs-xl);
-      margin: 0 0 8px;
-    }
+    .modal-title{font-weight:950;font-size: var(--fs-xl);margin: 0 0 8px;}
     .modal-sub{
       margin: 0 0 10px;
       color: rgba(233,244,246,.70);
@@ -585,16 +532,7 @@
       font-size: var(--fs-sm);
       outline:none;
     }
-    .modal-actions{
-      display:flex;
-      gap:10px;
-      margin-top: 10px;
-      justify-content:flex-end;
-    }
-
-    @media (min-width:560px){
-      .hero-card{flex-basis:420px}
-    }
+    .modal-actions{display:flex; gap:10px; margin-top:10px; justify-content:flex-end;}
   </style>
 </head>
 
@@ -629,7 +567,6 @@
 
           <a class="banner-pill" id="bannerIgHome" href="https://instagram.com/" target="_blank" rel="noopener">
             <span class="banner-ico" aria-hidden="true">
-              <!-- Instagram logo (SVG) -->
               <svg viewBox="0 0 24 24" width="18" height="18">
                 <path class="ico-fill" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9z"/>
                 <path class="ico-fill" d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
@@ -718,7 +655,6 @@
         <div style="text-align:center;padding:18px 12px;color:rgba(233,244,246,.70);font-weight:900;">
           PRO — login/pagamento depois.
         </div>
-
         <div style="padding:0 12px 12px;">
           <div class="league" style="background:rgba(255,255,255,.06)">
             <div class="league-head">
@@ -730,8 +666,8 @@
             </div>
             <div class="match" style="border-top:none">
               <div style="color:rgba(233,244,246,.75);font-weight:850;font-size:13px;line-height:1.35">
-                Para “puxar jogos” de uma API real, coloque a URL no menu de configuração (toque no ⚙️).<br/>
-                Se não colocar, ele usa <b>jogos.json</b> local.
+                Para puxar jogos de uma API real, coloque a URL no ⚙️.<br/>
+                Se ficar vazio, usa <b>jogos.json</b>.
               </div>
             </div>
           </div>
@@ -740,7 +676,6 @@
     </main>
   </div>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom">
     <div class="bottom-inner">
       <div class="navbtn active" data-page="home">
@@ -799,13 +734,12 @@
     </div>
   </nav>
 
-  <!-- MODAL: API URL -->
   <div class="modal" id="apiModal" role="dialog" aria-modal="true">
     <div class="modal-card">
       <h3 class="modal-title">Configurar API de jogos</h3>
       <p class="modal-sub">
-        Cole aqui uma URL que retorne JSON (com uma lista em <b>games</b> ou um array direto).<br/>
-        Se ficar vazio, usa <b>jogos.json</b>.
+        Cole aqui uma URL que retorne JSON (com <b>games</b> ou array direto).<br/>
+        Vazio = usa <b>jogos.json</b>.
       </p>
       <input class="input" id="apiInput" placeholder="Ex: https://seu-endpoint.com/jogos" />
       <div class="modal-actions">
@@ -817,20 +751,9 @@
   </div>
 
   <script>
-    /* =========================
-       CONFIG / DATA
-    ========================== */
     const LS_API_KEY = "RADAR_API_URL";
     const DEFAULT_LOCAL_URL = "jogos.json";
-    const REFRESH_MS = 30_000; // atualiza a cada 30s (mais “minuto a minuto” sem travar)
-
-    const ICONS = {
-      all: { icon: "📡", label: "Tudo" },
-      football: { icon: "⚽", label: "Futebol" },
-      tennis: { icon: "🎾", label: "Tênis" },
-      basketball: { icon: "🏀", label: "Basquete" },
-      volley: { icon: "🏐", label: "Vôlei" },
-    };
+    const REFRESH_MS = 30_000;
 
     const EUROPE = new Set([
       "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
@@ -841,14 +764,22 @@
       "UK","United Kingdom"
     ]);
 
+    const ICONS = {
+      all: { icon: "📡", label: "Tudo" },
+      football: { icon: "⚽", label: "Futebol" },
+      tennis: { icon: "🎾", label: "Tênis" },
+      basketball: { icon: "🏀", label: "Basquete" },
+      volley: { icon: "🏐", label: "Vôlei" },
+    };
+
     const state = {
       page:"home",
       sport:"all",
       hours:1,
       data:null,
       collapsed:new Set(),
-      pill:null,          // filtro rápido (populares)
-      sort:"popular",     // popular | time
+      pill:null,
+      sort:"popular",
       apiUrl: (localStorage.getItem(LS_API_KEY) || "").trim()
     };
 
@@ -860,9 +791,7 @@
       pro: document.getElementById("page-pro"),
     };
 
-    /* =========================
-       NAV / UI WIRING
-    ========================== */
+    /* NAV */
     document.querySelectorAll(".navbtn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const p = btn.dataset.page;
@@ -883,22 +812,18 @@
       renderAll();
     }
 
-    // PRO banners -> abre a página PRO
     function wireProBanner(id){
       const el = document.getElementById(id);
       if(!el) return;
-      el.addEventListener("click", ()=>{
-        setPage("pro");
-      });
+      el.addEventListener("click", ()=> setPage("pro"));
     }
     wireProBanner("bannerProHome");
     wireProBanner("bannerProLive");
 
-    // Botões topo (placeholder)
     document.getElementById("btnRegister").addEventListener("click", ()=>alert("Cadastro (placeholder)."));
     document.getElementById("btnLogin").addEventListener("click", ()=>alert("Login (placeholder)."));
 
-    // Popular pills (filtros rápidos)
+    /* Popular pills */
     const pillsWrap = document.getElementById("popularPills");
     pillsWrap.querySelectorAll(".pill").forEach(p=>{
       p.addEventListener("click", ()=>{
@@ -909,18 +834,14 @@
           x.classList.toggle("active", x.dataset.pill === state.pill);
         });
 
-        // alguns atalhos úteis
-        if(state.pill === "nba"){
-          state.sport = "basketball";
-        } else if(state.pill === "br"){
-          state.sport = "football";
-        }
+        if(state.pill === "nba"){ state.sport = "basketball"; }
+        else if(state.pill === "br"){ state.sport = "football"; }
 
         renderAll();
       });
     });
 
-    // Sort label (troca popular <-> hora)
+    /* Sort */
     const sortLabel = document.getElementById("sortLabel");
     sortLabel.addEventListener("click", ()=>{
       state.sort = (state.sort === "popular") ? "time" : "popular";
@@ -928,7 +849,7 @@
       renderAll();
     });
 
-    // Time chips
+    /* Time chips */
     document.querySelectorAll(".tchip").forEach(ch=>{
       ch.addEventListener("click", ()=>{
         document.querySelectorAll(".tchip").forEach(x=>x.classList.remove("active"));
@@ -938,7 +859,7 @@
       });
     });
 
-    // Settings / filters buttons
+    /* Settings / filters buttons */
     document.getElementById("btnSettings").addEventListener("click", openApiModal);
     document.getElementById("openApiModal").addEventListener("click", openApiModal);
 
@@ -951,22 +872,16 @@
       renderAll();
     });
 
-    // Long-press on brand to open modal (mobile-friendly)
+    /* Long press brand */
     const brandTap = document.getElementById("brandTap");
     let pressTimer = null;
-    brandTap.addEventListener("touchstart", ()=>{
-      pressTimer = setTimeout(openApiModal, 520);
-    }, {passive:true});
+    brandTap.addEventListener("touchstart", ()=>{ pressTimer = setTimeout(openApiModal, 520); }, {passive:true});
     brandTap.addEventListener("touchend", ()=>clearTimeout(pressTimer), {passive:true});
-    brandTap.addEventListener("mousedown", ()=>{
-      pressTimer = setTimeout(openApiModal, 520);
-    });
+    brandTap.addEventListener("mousedown", ()=>{ pressTimer = setTimeout(openApiModal, 520); });
     brandTap.addEventListener("mouseup", ()=>clearTimeout(pressTimer));
     brandTap.addEventListener("mouseleave", ()=>clearTimeout(pressTimer));
 
-    /* =========================
-       API MODAL
-    ========================== */
+    /* MODAL */
     const apiModal = document.getElementById("apiModal");
     const apiInput = document.getElementById("apiInput");
     const apiCancel = document.getElementById("apiCancel");
@@ -978,13 +893,9 @@
       apiModal.classList.add("open");
       setTimeout(()=>apiInput.focus(), 50);
     }
-    function closeApiModal(){
-      apiModal.classList.remove("open");
-    }
+    function closeApiModal(){ apiModal.classList.remove("open"); }
 
-    apiModal.addEventListener("click", (e)=>{
-      if(e.target === apiModal) closeApiModal();
-    });
+    apiModal.addEventListener("click", (e)=>{ if(e.target === apiModal) closeApiModal(); });
     apiCancel.addEventListener("click", closeApiModal);
 
     apiClear.addEventListener("click", ()=>{
@@ -1003,9 +914,7 @@
       loadData(true);
     });
 
-    /* =========================
-       DATA LOADING (puxar jogos)
-    ========================== */
+    /* DATA LOAD */
     function buildDataUrl(){
       const base = state.apiUrl || DEFAULT_LOCAL_URL;
       const sep = base.includes("?") ? "&" : "?";
@@ -1019,20 +928,14 @@
         const res = await fetch(url, {cache:"no-store", signal: ctrl.signal});
         if(!res.ok) throw new Error("HTTP " + res.status);
         return await res.json();
-      }finally{
-        clearTimeout(t);
-      }
+      }finally{ clearTimeout(t); }
     }
 
-    async function loadData(force=false){
+    async function loadData(){
       try{
         const url = buildDataUrl();
         const json = await fetchJsonWithTimeout(url, 9000);
 
-        // aceita formatos:
-        // 1) { games: [...] }
-        // 2) [ ... ]
-        // 3) { data: [...] } ou { events: [...] }
         const games = Array.isArray(json) ? json
           : (Array.isArray(json.games) ? json.games
           : (Array.isArray(json.data) ? json.data
@@ -1040,15 +943,12 @@
 
         state.data = { games };
       }catch(e){
-        // fallback: se API falhar, tenta jogos.json (se não estiver nele)
         if(state.apiUrl){
           try{
             const fallback = await fetchJsonWithTimeout(DEFAULT_LOCAL_URL + "?ts=" + Date.now(), 9000);
             const games = Array.isArray(fallback) ? fallback : (fallback.games || fallback.data || fallback.events || []);
             state.data = { games: Array.isArray(games) ? games : [] };
-          }catch(_){
-            state.data = { games: [] };
-          }
+          }catch(_){ state.data = { games: [] }; }
         }else{
           state.data = { games: [] };
         }
@@ -1056,9 +956,38 @@
       renderAll();
     }
 
-    /* =========================
-       NORMALIZATION / FILTERS
-    ========================== */
+    /* ======== FIX PRINCIPAL: PARSE DE DATA/HORA ======== */
+    function parseStartTsAny(g){
+      const candidates = [
+        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
+        g.commence_time, g.kickoff, g.start, g.timeStart, g.beginTime
+      ].filter(v=>v!=null && v!=="");
+
+      for(const v of candidates){
+        // number-like
+        if(typeof v === "number"){
+          // sec or ms
+          if(v > 1e12) return Math.floor(v/1000);
+          if(v > 1e9) return Math.floor(v);
+        }
+        if(typeof v === "string"){
+          const s = v.trim();
+
+          // numeric string
+          if(/^\d{10,13}$/.test(s)){
+            const n = Number(s);
+            if(n > 1e12) return Math.floor(n/1000);
+            return Math.floor(n);
+          }
+
+          // ISO / date string
+          const ms = Date.parse(s);
+          if(Number.isFinite(ms)) return Math.floor(ms/1000);
+        }
+      }
+      return null;
+    }
+
     function normalizeGames(raw){
       if(!Array.isArray(raw)) return [];
       return raw.map(g=>{
@@ -1067,11 +996,14 @@
         const country = g.country || g.area || g.region || "";
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
-        const status = (g.status || g.state || (g.live ? "LIVE" : "NS")).toUpperCase();
-        const minute = (g.minute != null ? String(g.minute) : (g.time || ""));
-        const startTs = g.startTs || g.kickoffTs || g.timestamp || g.start_time || null;
-        const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? null)));
-        const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? null)));
+        const statusRaw = (g.status || g.state || (g.live ? "LIVE" : "NS"));
+        const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
+        const minute = (g.minute != null ? String(g.minute) : (g.time || g.clock || ""));
+        const startTs = parseStartTsAny(g);
+
+        const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
+        const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
+
         const odds = g.odds || g.market1x2 || g.oneXtwo || null;
         const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
 
@@ -1088,16 +1020,35 @@
       });
     }
 
+    /* ======== FIX PRINCIPAL: STATUS LIVE ======== */
     function isLive(g){
-      return ["LIVE","1H","2H","HT","ET","PEN","INPLAY"].includes(g.status) || (g.minute && String(g.minute).includes("'"));
+      const s = (g.status || "").toUpperCase();
+      const liveSet = new Set([
+        "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
+        "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
+      ]);
+      if(liveSet.has(s)) return true;
+      const m = String(g.minute || "").trim();
+      if(m.includes("'")) return true;
+      // se tem placar e tem "AO_VIVO" implícito
+      if((g.scoreHome!=null || g.scoreAway!=null) && (s.includes("LIVE") || s.includes("PLAY"))) return true;
+      return false;
     }
 
     function inNextHours(g, hours){
-      if(!g.startTs) return true;
+      if(!g.startTs) return true; // não some da lista
       const now = Date.now();
       const ts = Number(g.startTs)*1000;
       if(!Number.isFinite(ts)) return true;
       return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
+    }
+
+    function startsWithinHours(g, hours){
+      if(!g.startTs) return false;
+      const now = Date.now();
+      const ts = Number(g.startTs)*1000;
+      if(!Number.isFinite(ts)) return false;
+      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
     }
 
     function groupByLeague(games){
@@ -1120,12 +1071,18 @@
       return m;
     }
 
+    function formatKickoff(g){
+      if(!g.startTs) return "";
+      const d = new Date(Number(g.startTs)*1000);
+      return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    }
+
     function shortName(s){
       if(!s) return "";
       return s.length > 20 ? s.slice(0,18) + "…" : s;
     }
 
-    function safeTimeSort(a, b){
+    function safeTimeSort(a,b){
       const ta = Number(a.startTs || 0);
       const tb = Number(b.startTs || 0);
       if(!ta && !tb) return 0;
@@ -1140,8 +1097,8 @@
       if(state.pill === "eu"){
         return games.filter(g=>{
           const c = (g.country || "").trim();
-          if(!c) return false;
-          return EUROPE.has(c) || /europe|uefa|champions|europa|premier|la liga|serie a|bundesliga|ligue 1/i.test(g.league || "");
+          if(c && EUROPE.has(c)) return true;
+          return /europe|uefa|champions|europa|premier|la liga|serie a|bundesliga|ligue 1/i.test(g.league || "");
         });
       }
       if(state.pill === "br"){
@@ -1151,14 +1108,12 @@
         return games.filter(g=>/nba/i.test(g.league || "") || g.sport.includes("basket"));
       }
       if(state.pill === "top"){
-        // liga “principais” (heurística)
         return games.filter(g=>{
           const L = (g.league || "").toLowerCase();
-          return /(premier|la liga|serie a|bundesliga|ligue 1|champions|europa|nba|mlb|nhl|libertadores|sul-americana|copa do brasil|brasileir)/i.test(L);
+          return /(premier|la liga|serie a|bundesliga|ligue 1|champions|europa|nba|libertadores|sul-americana|copa do brasil|brasileir)/i.test(L);
         });
       }
       if(state.pill === "odds"){
-        // apenas jogos que vieram com odds (qualquer uma)
         return games.filter(g=> g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null));
       }
       if(state.pill === "esports"){
@@ -1167,11 +1122,8 @@
       return games;
     }
 
-    /* =========================
-       RENDER
-    ========================== */
+    /* RENDER */
     const sportsRow = document.getElementById("sportsRow");
-
     function renderSportsRow(counts){
       sportsRow.innerHTML = "";
       const items = [
@@ -1198,16 +1150,19 @@
       });
     }
 
-    function renderHero(el, games){
+    /* HERO agora mostra placar ao vivo e, se não tiver live, mostra “quentes” */
+    function renderHero(el, liveGames, hotGames){
       el.innerHTML = "";
-      const picks = games.slice(0, 6);
+
+      const picks = (liveGames.length > 0 ? liveGames.slice(0, 6) : hotGames.slice(0, 6));
+
       if(picks.length === 0){
         const card = document.createElement("div");
         card.className = "hero-card";
         card.innerHTML = `
           <div class="hero-inner">
-            <div class="live-chip"><span class="live-dot"></span>AO VIVO</div>
-            <div class="hero-title">Sem jogos agora</div>
+            <div class="live-chip"><span class="live-dot"></span>DESTAQUES</div>
+            <div class="hero-title">Sem destaques agora</div>
             <div class="hero-sub"><span>Atualize mais tarde.</span></div>
             <div class="odds-strip">
               <div class="odd"><span>1</span>—</div>
@@ -1219,17 +1174,27 @@
         el.appendChild(card);
         return;
       }
+
       picks.forEach(g=>{
+        const live = isLive(g);
+        const scoreTxt = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome} - ${g.scoreAway}` : "—";
+        const clock = live ? (formatMinute(g) || "AO VIVO") : (formatKickoff(g) ? ("Começa " + formatKickoff(g)) : "Em breve");
+
         const card = document.createElement("div");
         card.className = "hero-card";
         card.innerHTML = `
           <div class="hero-inner">
-            <div class="live-chip"><span class="live-dot"></span>AO VIVO</div>
+            <div class="live-chip">
+              <span class="live-dot"></span>${live ? "AO VIVO" : "QUENTE"}
+            </div>
+
             <div class="hero-title">${shortName(g.home)}<br/>${shortName(g.away)}</div>
+
             <div class="hero-sub">
               <span>${g.country || "World"} • ${g.league}</span>
-              <span>${formatMinute(g) || ""}</span>
+              <span class="score-pill">${scoreTxt} &nbsp;•&nbsp; ${clock}</span>
             </div>
+
             <div class="odds-strip">
               <div class="odd"><span>1</span>${g.odds.home ?? "—"}</div>
               <div class="odd"><span>X</span>${g.odds.draw ?? "—"}</div>
@@ -1264,7 +1229,7 @@
         `;
         const body = wrap.querySelector(".league-body");
 
-        items.slice(0, 6).forEach(g=>{
+        items.slice(0, 10).forEach(g=>{
           const sh = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome} - ${g.scoreAway}` : "—";
           const min = formatMinute(g) || "—";
           const m = document.createElement("div");
@@ -1319,10 +1284,10 @@
         `;
         const body = block.querySelector(".sheet-league-body");
 
-        items.slice(0, 10).forEach(g=>{
+        items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? "dom. " + new Date(Number(g.startTs)*1000).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}) : "";
+          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
@@ -1336,7 +1301,7 @@
                 </div>
               </div>
               <div class="sheet-meta">
-                <div>${timeTxt || ""}</div>
+                <div>${timeTxt}</div>
                 <div style="display:flex;gap:10px;align-items:center;">
                   <span style="font-size:18px;">▶️</span>
                   <span style="font-size:18px;">⚡</span>
@@ -1358,9 +1323,10 @@
 
     function renderAll(){
       const raw = state.data?.games || [];
-      let games = normalizeGames(raw);
+      const allGames = normalizeGames(raw);
 
-      // filtro por esporte
+      let games = allGames.slice();
+
       games = games.filter(g=>{
         if(state.sport === "all") return true;
         if(state.sport === "football") return (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football");
@@ -1370,32 +1336,40 @@
         return true;
       });
 
-      // filtro rápido (pills)
       games = applyPillFilter(games);
 
       const liveGames = games.filter(isLive);
-      let nextGames = games.filter(g=>!isLive(g)).filter(g=>inNextHours(g, state.hours));
 
-      // sort
+      // “hot games” = começam em até 3h (pra hero/banners parecer “quente”)
+      const hotGames = games
+        .filter(g=>!isLive(g))
+        .filter(g=>startsWithinHours(g, 3))
+        .sort(safeTimeSort);
+
+      // próximos jogos na aba Jogos
+      let nextGames = games
+        .filter(g=>!isLive(g))
+        .filter(g=>inNextHours(g, state.hours));
+
       if(state.sort === "time"){
         nextGames = nextGames.slice().sort(safeTimeSort);
       }
 
-      const countsBase = normalizeGames(raw);
       const counts = {
-        all: countsBase.length,
-        football: countsBase.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
-        tennis: countsBase.filter(g=> g.sport.includes("tennis")).length,
-        basketball: countsBase.filter(g=> g.sport.includes("basket")).length,
-        volley: countsBase.filter(g=> g.sport.includes("volley")).length,
+        all: allGames.length,
+        football: allGames.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
+        tennis: allGames.filter(g=> g.sport.includes("tennis")).length,
+        basketball: allGames.filter(g=> g.sport.includes("basket")).length,
+        volley: allGames.filter(g=> g.sport.includes("volley")).length,
       };
       renderSportsRow(counts);
 
       document.getElementById("liveCountHome").textContent = liveGames.length;
       document.getElementById("liveCount").textContent = liveGames.length;
 
-      renderHero(document.getElementById("heroHome"), liveGames);
-      renderHero(document.getElementById("heroLive"), liveGames);
+      // HERO: agora usa live ou hot
+      renderHero(document.getElementById("heroHome"), liveGames, hotGames);
+      renderHero(document.getElementById("heroLive"), liveGames, hotGames);
 
       renderLiveList(document.getElementById("liveListHome"), liveGames);
       renderLiveList(document.getElementById("liveList"), liveGames);
@@ -1403,11 +1377,8 @@
       renderGamesSheet(document.getElementById("gamesList"), nextGames);
     }
 
-    /* =========================
-       INIT
-    ========================== */
     loadData();
-    setInterval(()=>loadData(false), REFRESH_MS);
+    setInterval(loadData, REFRESH_MS);
   </script>
 </body>
-  </html>
+</html>
