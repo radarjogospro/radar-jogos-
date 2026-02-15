@@ -755,6 +755,9 @@
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
+    // ✅ Anti-“jogo de ontem”: tolerância p/ jogo encerrado ficar visível (em minutos)
+    const KEEP_FINISHED_MINUTES = 25; // se acabou há pouco, pode aparecer; senão some
+
     const EUROPE = new Set([
       "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
       "Czech Republic","Denmark","England","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland",
@@ -771,15 +774,6 @@
       basketball: { icon: "🏀", label: "Basquete" },
       volley: { icon: "🏐", label: "Vôlei" },
     };
-
-    const LIVE_SET = new Set([
-      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
-      "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
-    ]);
-
-    const FINISHED_SET = new Set([
-      "FT","AET","PEN_FT","FINISHED","FULL_TIME","ENDED","FINAL","CANCELLED","CANCELED","POSTPONED","SUSPENDED"
-    ]);
 
     const state = {
       page:"home",
@@ -965,10 +959,11 @@
       renderAll();
     }
 
-    /* ======== PARSE DE DATA/HORA ======== */
+    /* ======== PARSE DE DATA/HORA (ROBUSTO) ======== */
     function parseStartTsAny(g){
+      // 1) timestamps diretos
       const candidates = [
-        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
+        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.datetime,
         g.commence_time, g.kickoff, g.start, g.timeStart, g.beginTime
       ].filter(v=>v!=null && v!=="");
 
@@ -988,76 +983,91 @@
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
       }
+
+      // 2) date + time (se existir)
+      const d = (g.date || g.match_date || g.day || "").toString().trim();
+      const t = (g.time || g.kickoffTime || g.hour || "").toString().trim();
+      if(d && /^\d{4}-\d{2}-\d{2}$/.test(d) && t){
+        // assume hora local do usuário (é o mais previsível pro seu app)
+        const iso = `${d}T${t.length===5? t : (t + ":00")}`;
+        const ms = Date.parse(iso);
+        if(Number.isFinite(ms)) return Math.floor(ms/1000);
+      }
+
       return null;
     }
 
-    function extractOdds(g){
-      const odds = g.odds || g.market1x2 || g.oneXtwo || g["1x2"] || g.bookmakers || null;
-      if(!odds) return {home:null, draw:null, away:null};
+    function toNum(v){
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
 
-      if(typeof odds === "object" && !Array.isArray(odds)){
+    // ✅ odds vindo em formatos diferentes
+    function extractOdds(g){
+      // formato 1: já vem do seu normalize anterior
+      if(g && g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null)){
         return {
-          home: odds.home ?? odds["1"] ?? odds.h ?? null,
-          draw: odds.draw ?? odds["x"] ?? odds.d ?? null,
-          away: odds.away ?? odds["2"] ?? odds.a ?? null,
+          home: toNum(g.odds.home),
+          draw: toNum(g.odds.draw),
+          away: toNum(g.odds.away),
         };
       }
 
-      if(Array.isArray(odds)){
-        const row = odds[0];
-        if(row && typeof row === "object"){
-          return {
-            home: row.home ?? row["1"] ?? row.h ?? null,
-            draw: row.draw ?? row["x"] ?? row.d ?? null,
-            away: row.away ?? row["2"] ?? row.a ?? null,
-          };
+      // formato 2: campos diretos
+      const direct = {
+        home: toNum(g.oddsHome ?? g.homeOdds ?? g.oddHome ?? g.odds1 ?? g.odd1 ?? g["1"]),
+        draw: toNum(g.oddsDraw ?? g.drawOdds ?? g.oddDraw ?? g.oddsX ?? g.oddX ?? g["x"] ?? g["X"]),
+        away: toNum(g.oddsAway ?? g.awayOdds ?? g.oddAway ?? g.odds2 ?? g.odd2 ?? g["2"]),
+      };
+      if(direct.home!=null || direct.draw!=null || direct.away!=null) return direct;
+
+      // formato 3: objeto market1x2 / oneXtwo
+      const m = g.market1x2 || g.oneXtwo || g["1x2"] || null;
+      if(m && typeof m === "object"){
+        const home = toNum(m.home ?? m["1"] ?? m.h ?? m.home_odds ?? m.odd1);
+        const draw = toNum(m.draw ?? m["x"] ?? m["X"] ?? m.d ?? m.oddX);
+        const away = toNum(m.away ?? m["2"] ?? m.a ?? m.away_odds ?? m.odd2);
+        if(home!=null || draw!=null || away!=null) return {home, draw, away};
+      }
+
+      // formato 4: bookmaker/bets (muitas APIs fazem isso)
+      // tenta achar "Match Winner" ou "1X2"
+      const bks = g.bookmakers || g.bookmaker || g.markets || null;
+      const arr = Array.isArray(bks) ? bks : (Array.isArray(bks?.bookmakers) ? bks.bookmakers : null);
+      if(arr){
+        for(const bk of arr){
+          const bets = bk.bets || bk.markets || [];
+          for(const bet of bets){
+            const name = (bet.name || bet.label || "").toString().toLowerCase();
+            if(name.includes("match winner") || name.includes("1x2") || name.includes("resultado")){
+              const vals = bet.values || bet.options || bet.odds || [];
+              const got = {home:null, draw:null, away:null};
+              for(const v of vals){
+                const lab = (v.value || v.label || v.name || "").toString().toLowerCase();
+                const odd = toNum(v.odd ?? v.odds ?? v.price ?? v.valueOdd);
+                if(odd==null) continue;
+                if(lab === "1" || lab.includes("home") || lab.includes("casa")) got.home = odd;
+                if(lab === "x" || lab.includes("draw") || lab.includes("empate")) got.draw = odd;
+                if(lab === "2" || lab.includes("away") || lab.includes("fora")) got.away = odd;
+              }
+              if(got.home!=null || got.draw!=null || got.away!=null) return got;
+            }
+          }
         }
       }
 
+      // formato 5: probabilidades em % (converte p/ odd decimal: 100/p)
+      const prob = g.probabilities || g.probability || null;
+      if(prob && typeof prob === "object"){
+        const ph = toNum(prob.home ?? prob["1"] ?? prob.h);
+        const pd = toNum(prob.draw ?? prob["x"] ?? prob.d);
+        const pa = toNum(prob.away ?? prob["2"] ?? prob.a);
+        const toOdd = (p)=> (p && p>0) ? +(100/p).toFixed(2) : null;
+        const out = {home: toOdd(ph), draw: toOdd(pd), away: toOdd(pa)};
+        if(out.home!=null || out.draw!=null || out.away!=null) return out;
+      }
+
       return {home:null, draw:null, away:null};
-    }
-
-    function extractProbs(g){
-      const p = g.probabilities || g.probs || g.prob || g.chance || g.winProb || null;
-
-      if(p && typeof p === "object" && !Array.isArray(p)){
-        const home = p.home ?? p["1"] ?? p.h ?? p.homeWin ?? p.team1 ?? p.local ?? null;
-        const draw = p.draw ?? p["x"] ?? p.d ?? p.tie ?? p.empate ?? null;
-        const away = p.away ?? p["2"] ?? p.a ?? p.awayWin ?? p.team2 ?? p.visitor ?? null;
-        return { home: toProb(home), draw: toProb(draw), away: toProb(away) };
-      }
-
-      if(Array.isArray(p) && p.length >= 2){
-        return { home: toProb(p[0]), draw: toProb(p[1]), away: toProb(p[2] ?? null) };
-      }
-
-      return {
-        home: toProb(g.probHome ?? g.p1 ?? g.homeProb ?? null),
-        draw: toProb(g.probDraw ?? g.px ?? g.drawProb ?? null),
-        away: toProb(g.probAway ?? g.p2 ?? g.awayProb ?? null),
-      };
-    }
-
-    function toProb(v){
-      if(v==null || v==="") return null;
-      if(typeof v === "number"){
-        return v > 1 ? (v/100) : v;
-      }
-      const s = String(v).trim().replace(",",".");
-      if(!s) return null;
-      if(s.endsWith("%")){
-        const n = Number(s.replace("%",""));
-        return Number.isFinite(n) ? (n/100) : null;
-      }
-      const n = Number(s);
-      if(!Number.isFinite(n)) return null;
-      return n > 1 ? (n/100) : n;
-    }
-
-    function showOddOrProb(odd, prob){
-      if(odd != null && odd !== "") return odd;
-      if(prob != null && Number.isFinite(prob)) return Math.round(prob*100) + "%";
-      return "—";
     }
 
     function normalizeGames(raw){
@@ -1068,77 +1078,92 @@
         const country = g.country || g.area || g.region || "";
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
-        const statusRaw = (g.status || g.state || (g.live ? "LIVE" : "NS"));
+
+        // ✅ status mais robusto (considera isLive / elapsed)
+        const statusRaw = (g.status || g.state || (g.isLive ? "LIVE" : (g.live ? "LIVE" : "NS")));
         const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
 
-        const minute = (g.minute != null ? String(g.minute) : (g.time || g.clock || ""));
+        // ✅ minuto: elapsed > minute > clock > time
+        const minute = (g.elapsed != null ? String(g.elapsed) : (g.minute != null ? String(g.minute) : (g.clock || g.time || "")));
+
         const startTs = parseStartTsAny(g);
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
         const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
 
+        const id = g.id || g.fixture_id || g.fixtureId || `${league}-${home}-${away}-${startTs || ""}`;
+
+        // odds: tenta em tudo
         const odds = extractOdds(g);
-        const prob = extractProbs(g);
-        const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
 
         return {
           id, sport, league, country, home, away,
           status, minute, startTs,
           scoreHome, scoreAway,
-          odds,
-          prob
+          odds
         };
       });
     }
 
-    function parseMinuteNumber(v){
-      if(v==null) return null;
-      const s = String(v).trim();
-      if(!s) return null;
-
-      const m1 = s.match(/^(\d{1,3})\s*['\u2019]$/);
-      if(m1) return Number(m1[1]);
-
-      if(/^\d{1,3}$/.test(s)) return Number(s);
-
-      const m2 = s.match(/^(\d{1,3})\s*min/i);
-      if(m2) return Number(m2[1]);
-
-      return null;
-    }
-
-    function minuteLabelFromStartTs(g){
-      if(!g.startTs) return "";
-      const now = Date.now();
-      const start = Number(g.startTs)*1000;
-      if(!Number.isFinite(start) || now < start) return "";
-      const mins = Math.floor((now - start)/60000);
-      if(mins < 0 || mins > 180) return "";
-      return String(mins).padStart(2,"0") + "'";
-    }
+    /* ======== LIVE / FINISHED (ROBUSTO) ======== */
+    const LIVE_SET = new Set([
+      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
+      "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
+    ]);
+    const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
     function isLive(g){
+      // 1) status
       const s = (g.status || "").toUpperCase();
-      if(FINISHED_SET.has(s) || /FT|FULL_TIME|FINISHED|ENDED|CANCEL|POSTP|SUSP/i.test(s)) return false;
-
       if(LIVE_SET.has(s)) return true;
-      if(/LIVE|INPLAY|IN_PLAY|PLAYING|RUNNING/i.test(s)) return true;
 
-      const mm = parseMinuteNumber(g.minute);
-      if(mm != null && mm > 0 && mm < 150) return true;
+      // 2) minuto / elapsed
+      const m = String(g.minute || "").trim();
+      if(m.includes("'")) return true;
+      const n = Number(m);
+      if(Number.isFinite(n) && n > 0 && n < 140) return true;
 
-      if(g.startTs){
-        const now = Date.now();
-        const start = Number(g.startTs) * 1000;
-        if(Number.isFinite(start)){
-          const within = (now >= start) && (now <= start + 3*3600*1000);
-          if(within && (g.scoreHome!=null || g.scoreAway!=null)) return true;
-        }
-      }
+      // 3) se a API te manda isLive (já entra como status LIVE no normalize, mas reforça)
+      if(g.isLive === true) return true;
+
       return false;
     }
 
+    function isFinished(g){
+      const s = (g.status || "").toUpperCase();
+      if(FINISHED_SET.has(s)) return true;
+      if(s.includes("FT")) return true;
+      return false;
+    }
+
+    function finishedTooOld(g){
+      if(!isFinished(g)) return false;
+      if(!g.startTs) return true; // sem hora? melhor esconder
+      const now = Date.now();
+      const start = Number(g.startTs) * 1000;
+      if(!Number.isFinite(start)) return true;
+
+      // “fim estimado” = kickoff + 2h
+      const endEstimated = start + 2*3600*1000;
+      const diffMin = (now - endEstimated) / 60000;
+      return diffMin > KEEP_FINISHED_MINUTES;
+    }
+
+    function inNextHours(g, hours){
+      // não mostra jogo encerrado antigo
+      if(finishedTooOld(g)) return false;
+
+      if(!g.startTs) return true; // não some da lista se não tem data
+      const now = Date.now();
+      const ts = Number(g.startTs)*1000;
+      if(!Number.isFinite(ts)) return true;
+
+      // ✅ janela: do passado recente (até -25min depois do fim estimado é cortado acima)
+      return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
+    }
+
     function startsWithinHours(g, hours){
+      if(finishedTooOld(g)) return false;
       if(!g.startTs) return false;
       const now = Date.now();
       const ts = Number(g.startTs)*1000;
@@ -1157,20 +1182,13 @@
     }
 
     function formatMinute(g){
-      const n = parseMinuteNumber(g.minute);
-      if(n != null){
-        return String(n).padStart(2,"0") + "'";
-      }
-
-      const raw = String(g.minute || "").trim();
-      if(raw && /^\d{1,2}:\d{2}$/.test(raw)) return raw;
-
-      if(isLive(g)){
-        const calc = minuteLabelFromStartTs(g);
-        if(calc) return calc;
-      }
-
-      return "";
+      const m = String(g.minute || "").trim();
+      if(!m) return "";
+      if(m.includes(":")) return m;
+      if(m.endsWith("'")) return m.replace("'", "") + ":00";
+      const n = Number(m);
+      if(Number.isFinite(n)) return String(n).padStart(2,"0") + ":00";
+      return m;
     }
 
     function formatKickoff(g){
@@ -1207,7 +1225,7 @@
         return games.filter(g=>/brazil|brasil/i.test(g.country || "") || /brasile/i.test(g.league || ""));
       }
       if(state.pill === "nba"){
-        return games.filter(g=>/nba/i.test(g.league || "") || g.sport.includes("basket"));
+        return games.filter(g=>/nba/i.test(g.league || "") || (g.sport||"").includes("basket"));
       }
       if(state.pill === "top"){
         return games.filter(g=>{
@@ -1216,7 +1234,7 @@
         });
       }
       if(state.pill === "odds"){
-        return games.filter(g=> g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null || g.prob.home!=null || g.prob.draw!=null || g.prob.away!=null));
+        return games.filter(g=> (g.odds?.home!=null || g.odds?.draw!=null || g.odds?.away!=null));
       }
       if(state.pill === "esports"){
         return games.filter(g=>/esport|e-sport|cs:go|valorant|lol|league of legends|dota/i.test((g.league||"") + " " + (g.sport||"")));
@@ -1297,9 +1315,9 @@
             </div>
 
             <div class="odds-strip">
-              <div class="odd"><span>1</span>${showOddOrProb(g.odds.home, g.prob.home)}</div>
-              <div class="odd"><span>X</span>${showOddOrProb(g.odds.draw, g.prob.draw)}</div>
-              <div class="odd"><span>2</span>${showOddOrProb(g.odds.away, g.prob.away)}</div>
+              <div class="odd"><span>1</span>${g.odds.home ?? "—"}</div>
+              <div class="odd"><span>X</span>${g.odds.draw ?? "—"}</div>
+              <div class="odd"><span>2</span>${g.odds.away ?? "—"}</div>
             </div>
           </div>
         `;
@@ -1347,9 +1365,9 @@
               </div>
             </div>
             <div class="odds-strip">
-              <div class="odd"><span>1</span>${showOddOrProb(g.odds.home, g.prob.home)}</div>
-              <div class="odd"><span>X</span>${showOddOrProb(g.odds.draw, g.prob.draw)}</div>
-              <div class="odd"><span>2</span>${showOddOrProb(g.odds.away, g.prob.away)}</div>
+              <div class="odd"><span>1</span>${g.odds.home ?? "—"}</div>
+              <div class="odd"><span>X</span>${g.odds.draw ?? "—"}</div>
+              <div class="odd"><span>2</span>${g.odds.away ?? "—"}</div>
             </div>
           `;
           body.appendChild(m);
@@ -1388,7 +1406,7 @@
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? (formatKickoff(g)) : "horário indefinido";
+          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
@@ -1410,9 +1428,9 @@
               </div>
             </div>
             <div class="sheet-odds">
-              <div class="sheet-odd"><span>1</span>${showOddOrProb(g.odds.home, g.prob.home)}</div>
-              <div class="sheet-odd"><span>X</span>${showOddOrProb(g.odds.draw, g.prob.draw)}</div>
-              <div class="sheet-odd"><span>2</span>${showOddOrProb(g.odds.away, g.prob.away)}</div>
+              <div class="sheet-odd"><span>1</span>${g.odds.home ?? "—"}</div>
+              <div class="sheet-odd"><span>X</span>${g.odds.draw ?? "—"}</div>
+              <div class="sheet-odd"><span>2</span>${g.odds.away ?? "—"}</div>
             </div>
           `;
           body.appendChild(c);
@@ -1427,6 +1445,9 @@
       const allGames = normalizeGames(raw);
 
       let games = allGames.slice();
+
+      // ✅ corta “encerrado antigo” logo no início (isso resolve “jogo de ontem”)
+      games = games.filter(g=> !finishedTooOld(g));
 
       games = games.filter(g=>{
         if(state.sport === "all") return true;
@@ -1448,18 +1469,18 @@
 
       let nextGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>startsWithinHours(g, state.hours));
+        .filter(g=>inNextHours(g, state.hours));
 
       if(state.sort === "time"){
         nextGames = nextGames.slice().sort(safeTimeSort);
       }
 
       const counts = {
-        all: allGames.length,
-        football: allGames.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
-        tennis: allGames.filter(g=> g.sport.includes("tennis")).length,
-        basketball: allGames.filter(g=> g.sport.includes("basket")).length,
-        volley: allGames.filter(g=> g.sport.includes("volley")).length,
+        all: allGames.filter(g=>!finishedTooOld(g)).length,
+        football: allGames.filter(g=>!finishedTooOld(g)).filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
+        tennis: allGames.filter(g=>!finishedTooOld(g)).filter(g=> g.sport.includes("tennis")).length,
+        basketball: allGames.filter(g=>!finishedTooOld(g)).filter(g=> g.sport.includes("basket")).length,
+        volley: allGames.filter(g=>!finishedTooOld(g)).filter(g=> g.sport.includes("volley")).length,
       };
       renderSportsRow(counts);
 
@@ -1479,4 +1500,4 @@
     setInterval(loadData, REFRESH_MS);
   </script>
 </body>
-</html>
+        </html>
