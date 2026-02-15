@@ -565,6 +565,7 @@
             Entre pro PRO <span class="tag-novo">NOVO</span>
           </a>
 
+          <!-- Instagram LOGO (já está aqui) -->
           <a class="banner-pill" id="bannerIgHome" href="https://instagram.com/" target="_blank" rel="noopener">
             <span class="banner-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="18" height="18">
@@ -603,6 +604,7 @@
             Entre pro PRO <span class="tag-novo">NOVO</span>
           </a>
 
+          <!-- Instagram LOGO (já está aqui) -->
           <a class="banner-pill" id="bannerIgLive" href="https://instagram.com/" target="_blank" rel="noopener">
             <span class="banner-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="18" height="18">
@@ -956,7 +958,7 @@
       renderAll();
     }
 
-    /* ======== FIX PRINCIPAL: PARSE DE DATA/HORA ======== */
+    /* ======== PARSE DE DATA/HORA ======== */
     function parseStartTsAny(g){
       const candidates = [
         g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
@@ -964,23 +966,17 @@
       ].filter(v=>v!=null && v!=="");
 
       for(const v of candidates){
-        // number-like
         if(typeof v === "number"){
-          // sec or ms
           if(v > 1e12) return Math.floor(v/1000);
           if(v > 1e9) return Math.floor(v);
         }
         if(typeof v === "string"){
           const s = v.trim();
-
-          // numeric string
           if(/^\d{10,13}$/.test(s)){
             const n = Number(s);
             if(n > 1e12) return Math.floor(n/1000);
             return Math.floor(n);
           }
-
-          // ISO / date string
           const ms = Date.parse(s);
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
@@ -1020,7 +1016,7 @@
       });
     }
 
-    /* ======== FIX PRINCIPAL: STATUS LIVE ======== */
+    /* ======== STATUS LIVE ======== */
     function isLive(g){
       const s = (g.status || "").toUpperCase();
       const liveSet = new Set([
@@ -1030,25 +1026,23 @@
       if(liveSet.has(s)) return true;
       const m = String(g.minute || "").trim();
       if(m.includes("'")) return true;
-      // se tem placar e tem "AO_VIVO" implícito
       if((g.scoreHome!=null || g.scoreAway!=null) && (s.includes("LIVE") || s.includes("PLAY"))) return true;
       return false;
     }
 
+    /* ✅ FIX DO FILTRO (como você pediu):
+       1h = só jogos que COMEÇAM dentro de 1h (agora -> +1h)
+       3h = só jogos que COMEÇAM dentro de 3h, etc.
+       E jogo sem horário NÃO entra no filtro. */
     function inNextHours(g, hours){
-      if(!g.startTs) return true; // não some da lista
-      const now = Date.now();
-      const ts = Number(g.startTs)*1000;
-      if(!Number.isFinite(ts)) return true;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
-    }
-
-    function startsWithinHours(g, hours){
       if(!g.startTs) return false;
+
       const now = Date.now();
-      const ts = Number(g.startTs)*1000;
+      const ts = Number(g.startTs) * 1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
+
+      const diff = ts - now;
+      return diff >= 0 && diff <= hours * 3600 * 1000;
     }
 
     function groupByLeague(games){
@@ -1150,7 +1144,7 @@
       });
     }
 
-    /* HERO agora mostra placar ao vivo e, se não tiver live, mostra “quentes” */
+    /* HERO: live primeiro; se não tiver, “quentes” (próximos em até 3h) */
     function renderHero(el, liveGames, hotGames){
       el.innerHTML = "";
 
@@ -1287,7 +1281,7 @@
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
+          const timeTxt = g.startTs ? formatKickoff(g) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
@@ -1340,13 +1334,13 @@
 
       const liveGames = games.filter(isLive);
 
-      // “hot games” = começam em até 3h (pra hero/banners parecer “quente”)
+      // ✅ hot games: começam em até 3h (AGORA -> +3h)
       const hotGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>startsWithinHours(g, 3))
+        .filter(g=>inNextHours(g, 3))
         .sort(safeTimeSort);
 
-      // próximos jogos na aba Jogos
+      // ✅ próximos jogos na aba Jogos: começam entre AGORA e +state.hours
       let nextGames = games
         .filter(g=>!isLive(g))
         .filter(g=>inNextHours(g, state.hours));
@@ -1367,7 +1361,6 @@
       document.getElementById("liveCountHome").textContent = liveGames.length;
       document.getElementById("liveCount").textContent = liveGames.length;
 
-      // HERO: agora usa live ou hot
       renderHero(document.getElementById("heroHome"), liveGames, hotGames);
       renderHero(document.getElementById("heroLive"), liveGames, hotGames);
 
