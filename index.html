@@ -191,6 +191,8 @@
       white-space:nowrap;
       font-size:var(--fs-sm);
       color:var(--t0);
+      user-select:none;
+      cursor:pointer;
     }
     .tag-novo{
       height:22px;
@@ -561,8 +563,8 @@
     <main>
       <section class="page active" id="page-home">
         <div class="banners" id="bannersHome">
-          <div class="banner-pill">📱 Ganhe R$ 20 com nosso APP <span class="tag-novo">NOVO</span></div>
-          <div class="banner-pill">🎉 Ganhe R$ 25</div>
+          <div class="banner-pill" id="bannerProHome">✨ Entre pro PRO <span class="tag-novo">NOVO</span></div>
+          <div class="banner-pill" id="bannerIgHome">📷 Instagram</div>
         </div>
 
         <div class="hero" id="heroHome"></div>
@@ -571,7 +573,7 @@
         <div class="popular-pills">
           <div class="pill">🔥 Odds Melhoradas</div>
           <div class="pill">⚽ Ligas principais</div>
-          <div class="pill">🎾 ATP/WTA</div>
+          <div class="pill">🌍 Europa</div>
           <div class="pill">🇧🇷 Futebol do Brasil</div>
           <div class="pill">🏀 NBA</div>
           <div class="pill">🎮 E-sports</div>
@@ -586,8 +588,8 @@
 
       <section class="page" id="page-live">
         <div class="banners" id="bannersLive">
-          <div class="banner-pill">📱 Ganhe R$ 20 com nosso APP <span class="tag-novo">NOVO</span></div>
-          <div class="banner-pill">🎉 Ganhe R$ 25</div>
+          <div class="banner-pill" id="bannerProLive">✨ Entre pro PRO <span class="tag-novo">NOVO</span></div>
+          <div class="banner-pill" id="bannerIgLive">📷 Instagram</div>
         </div>
 
         <div class="hero" id="heroLive"></div>
@@ -1041,6 +1043,15 @@
 
     document.getElementById("btnRegister").addEventListener("click", ()=>alert("Cadastro (placeholder)."));
     document.getElementById("btnLogin").addEventListener("click", ()=>alert("Login (placeholder)."));
+
+    // Clique banners (placeholder pro futuro)
+    const igClick = () => alert("Instagram (placeholder).");
+    const proClick = () => alert("Entre pro PRO (placeholder).");
+
+    document.getElementById("bannerIgHome")?.addEventListener("click", igClick);
+    document.getElementById("bannerIgLive")?.addEventListener("click", igClick);
+    document.getElementById("bannerProHome")?.addEventListener("click", proClick);
+    document.getElementById("bannerProLive")?.addEventListener("click", proClick);
 
     loadData();
     setInterval(loadData, 60_000);
