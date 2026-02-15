@@ -755,6 +755,10 @@
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
+    /* ===== NOVO: cache local de odds (pra não ficar vazio quando a API vier sem odds) ===== */
+    const LS_ODDS_CACHE = "RADAR_ODDS_CACHE_V1";
+    const ODDS_CACHE_MAX_AGE_MS = 36 * 60 * 60 * 1000; // 36h
+
     const EUROPE = new Set([
       "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
       "Czech Republic","Denmark","England","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland",
@@ -790,6 +794,40 @@
       bets: document.getElementById("page-bets"),
       pro: document.getElementById("page-pro"),
     };
+
+    /* ===== NOVO: odds cache helpers ===== */
+    function loadOddsCache(){
+      try{
+        const raw = localStorage.getItem(LS_ODDS_CACHE);
+        const obj = raw ? JSON.parse(raw) : {};
+        if(!obj || typeof obj !== "object") return {};
+        return obj;
+      }catch(_){ return {}; }
+    }
+    function saveOddsCache(cache){
+      try{
+        localStorage.setItem(LS_ODDS_CACHE, JSON.stringify(cache));
+      }catch(_){}
+    }
+    function buildOddsKey(g){
+      // chave estável (liga + times + data/hora)
+      const league = (g.league || "").toLowerCase().trim();
+      const home = (g.home || "").toLowerCase().trim();
+      const away = (g.away || "").toLowerCase().trim();
+      const ts = (g.startTs || "");
+      return `${league}|${home}|${away}|${ts}`;
+    }
+    function hasAnyOdds(o){
+      return !!(o && (o.home != null || o.draw != null || o.away != null));
+    }
+    function sanitizeOdd(v){
+      if(v == null) return null;
+      const n = Number(v);
+      if(!Number.isFinite(n)) return null;
+      if(n <= 1) return null; // decimal odds coerentes
+      // limitar casas pra ficar bonito
+      return Math.round(n * 100) / 100;
+    }
 
     /* NAV */
     document.querySelectorAll(".navbtn").forEach(btn=>{
@@ -956,7 +994,7 @@
       renderAll();
     }
 
-    /* ======== PARSE DE DATA/HORA ======== */
+    /* ======== FIX PRINCIPAL: PARSE DE DATA/HORA ======== */
     function parseStartTsAny(g){
       const candidates = [
         g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
@@ -970,13 +1008,11 @@
         }
         if(typeof v === "string"){
           const s = v.trim();
-
           if(/^\d{10,13}$/.test(s)){
             const n = Number(s);
             if(n > 1e12) return Math.floor(n/1000);
             return Math.floor(n);
           }
-
           const ms = Date.parse(s);
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
@@ -984,87 +1020,134 @@
       return null;
     }
 
+    /* ===== NOVO: detectar jogo finalizado pra remover “travados de ontem” ===== */
+    function isFinished(g){
+      const s = String(g.status || "").toUpperCase();
+      const finishedSet = new Set([
+        "FT","AET","PEN_FT","FULL_TIME","FINISHED","ENDED","END","FINAL","CANCELLED","CANCELED","POSTPONED","ABANDONED"
+      ]);
+      if(finishedSet.has(s)) return true;
+      // alguns feeds mandam elapsed 90 e status estranho
+      const el = Number(g.elapsed || g.minute || g.time || null);
+      if(Number.isFinite(el) && el >= 120 && !isLive(g)) return true;
+      return false;
+    }
+
     function normalizeGames(raw){
+      const oddsCache = loadOddsCache();
+      const nowMs = Date.now();
+
       if(!Array.isArray(raw)) return [];
-      return raw.map(g=>{
+      const normalized = raw.map(g=>{
         const sport = (g.sport || g.sportKey || g.category || "football").toLowerCase();
         const league = g.league || g.competition || g.leagueName || "Liga";
         const country = g.country || g.area || g.region || "";
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
-
-        const statusRaw = (g.status || g.state || g.match_status || (g.live ? "LIVE" : "NS"));
-        const status = String(statusRaw || "").toUpperCase().trim().replace(/\s+/g,"_");
-
-        // >>> FIX: minute NÃO deve pegar g.time ("21:00"), porque isso é horário e vira "ao vivo falso".
-        const elapsed = (g.elapsed ?? g.minute ?? g.minutes ?? null);
-        const minute = (elapsed != null ? String(elapsed) : (g.clock || g.matchTime || ""));
-
+        const statusRaw = (g.status || g.state || (g.live ? "LIVE" : "NS"));
+        const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
+        const minute = (g.minute != null ? String(g.minute) : (g.time || g.clock || ""));
         const startTs = parseStartTsAny(g);
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
         const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
 
-        const odds = g.odds || g.market1x2 || g.oneXtwo || null;
+        const oddsRaw =
+          g.odds || g.market1x2 || g.oneXtwo || g["1x2"] || g.bookmakers?.[0]?.markets?.[0]?.outcomes || null;
+
+        let oh=null, od=null, oa=null;
+
+        // Se vier como objeto
+        if(oddsRaw && !Array.isArray(oddsRaw) && typeof oddsRaw === "object"){
+          oh = sanitizeOdd(oddsRaw.home ?? oddsRaw["1"] ?? oddsRaw.h ?? oddsRaw.H ?? null);
+          od = sanitizeOdd(oddsRaw.draw ?? oddsRaw["x"] ?? oddsRaw.d ?? oddsRaw.D ?? null);
+          oa = sanitizeOdd(oddsRaw.away ?? oddsRaw["2"] ?? oddsRaw.a ?? oddsRaw.A ?? null);
+        }
+
+        // Se vier como array de outcomes (padrão odds-api)
+        if(Array.isArray(oddsRaw)){
+          // tenta mapear por name/description
+          const get = (needle)=>oddsRaw.find(o=>{
+            const n = String(o?.name ?? o?.description ?? "").toLowerCase();
+            return n.includes(needle);
+          });
+          const homeO = get(String(home).toLowerCase()) || get("home") || get("1");
+          const drawO = get("draw") || get("tie") || get("x");
+          const awayO = get(String(away).toLowerCase()) || get("away") || get("2");
+
+          oh = sanitizeOdd(homeO?.price ?? homeO?.odd ?? homeO?.odds ?? null);
+          od = sanitizeOdd(drawO?.price ?? drawO?.odd ?? drawO?.odds ?? null);
+          oa = sanitizeOdd(awayO?.price ?? awayO?.odd ?? awayO?.odds ?? null);
+        }
+
         const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
 
-        const oh = odds ? (odds.home ?? odds["1"] ?? odds.h ?? null) : null;
-        const od = odds ? (odds.draw ?? odds["x"] ?? odds.d ?? null) : null;
-        const oa = odds ? (odds.away ?? odds["2"] ?? odds.a ?? null) : null;
-
-        const isLiveFlag = (g.isLive === true || g.live === true);
-
-        return {
+        const obj = {
           id, sport, league, country, home, away,
-          status, minute, elapsed,
-          startTs,
+          status, minute, startTs,
           scoreHome, scoreAway,
-          isLiveFlag,
+          elapsed: (g.elapsed ?? g.minutes ?? null),
           odds: { home: oh, draw: od, away: oa }
         };
+
+        // ===== NOVO: se odds vierem vazias, tenta puxar do cache =====
+        const key = buildOddsKey(obj);
+        const cached = oddsCache[key];
+
+        // limpa cache velho
+        if(cached && cached.ts && (nowMs - cached.ts) > ODDS_CACHE_MAX_AGE_MS){
+          delete oddsCache[key];
+        }else if(!hasAnyOdds(obj.odds) && cached && cached.o){
+          obj.odds = {
+            home: sanitizeOdd(cached.o.home),
+            draw: sanitizeOdd(cached.o.draw),
+            away: sanitizeOdd(cached.o.away)
+          };
+        }
+
+        // ===== NOVO: se odds vierem preenchidas, salva no cache =====
+        if(hasAnyOdds(obj.odds)){
+          oddsCache[key] = { ts: nowMs, o: obj.odds };
+        }
+
+        return obj;
       });
+
+      // salva cache uma vez por normalize
+      saveOddsCache(oddsCache);
+      return normalized;
     }
 
-    /* ======== LIVE: MAIS RÍGIDO (FT NUNCA É AO VIVO) ======== */
-    const FINISHED_SET = new Set([
-      "FT","AET","PEN","FINISHED","ENDED","FULL_TIME","AFTER_PENALTIES","AFTER_EXTRA_TIME"
-    ]);
-
-    const LIVE_SET = new Set([
-      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET",
-      "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
-    ]);
-
+    /* ======== FIX PRINCIPAL: STATUS LIVE ======== */
     function isLive(g){
-      const s = (g.status || "").toUpperCase().trim();
-
-      // prioridade: terminou => nunca live
-      if(FINISHED_SET.has(s)) return false;
-
-      // se o provider manda flag live
-      if(g.isLiveFlag === true) return true;
-
-      if(LIVE_SET.has(s)) return true;
-
-      // minuto/elapsed “real” (não horário)
+      const s = (g.status || "").toUpperCase();
+      const liveSet = new Set([
+        "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
+        "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
+      ]);
+      if(liveSet.has(s)) return true;
       const m = String(g.minute || "").trim();
-      const n = Number(m);
-
-      // "45'" etc
       if(m.includes("'")) return true;
-
-      // número de minuto plausível
-      if(Number.isFinite(n) && n > 0 && n < 130) return true;
-
+      if((g.scoreHome!=null || g.scoreAway!=null) && (s.includes("LIVE") || s.includes("PLAY"))) return true;
       return false;
     }
 
+    /* ====== AJUSTE: agora “próximos jogos” usa somente startsWithinHours (sem puxar jogos antigos) ====== */
     function startsWithinHours(g, hours){
       if(!g.startTs) return false;
       const now = Date.now();
-      const ts = Number(g.startTs) * 1000;
+      const ts = Number(g.startTs)*1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours * 3600 * 1000 && (ts - now) >= 0;
+      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
+    }
+
+    /* Mantém para hero (quentes) */
+    function startsWithinHoursLoose(g, hours){
+      if(!g.startTs) return false;
+      const now = Date.now();
+      const ts = Number(g.startTs)*1000;
+      if(!Number.isFinite(ts)) return false;
+      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
     }
 
     function groupByLeague(games){
@@ -1080,7 +1163,7 @@
     function formatMinute(g){
       const m = String(g.minute || "").trim();
       if(!m) return "";
-      if(m.includes(":")) return m; // se algum provider mandar 00:45
+      if(m.includes(":")) return m;
       if(m.endsWith("'")) return m.replace("'", "") + ":00";
       const n = Number(m);
       if(Number.isFinite(n)) return String(n).padStart(2,"0") + ":00";
@@ -1338,7 +1421,20 @@
 
     function renderAll(){
       const raw = state.data?.games || [];
-      const allGames = normalizeGames(raw);
+      const allGames0 = normalizeGames(raw);
+
+      // ===== NOVO: remove “travados de ontem” (finalizados e muito antigos) =====
+      const now = Date.now();
+      const allGames = allGames0.filter(g=>{
+        // remove finalizados
+        if(isFinished(g)) return false;
+        // remove jogos com startTs muito antigo e não-live
+        if(!isLive(g) && g.startTs){
+          const ts = Number(g.startTs) * 1000;
+          if(Number.isFinite(ts) && (now - ts) > 8*60*60*1000) return false; // >8h atrás
+        }
+        return true;
+      });
 
       let games = allGames.slice();
 
@@ -1357,10 +1453,10 @@
 
       const hotGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>startsWithinHours(g, 3))
+        .filter(g=>startsWithinHoursLoose(g, 3))
         .sort(safeTimeSort);
 
-      // >>> FIX: “Jogos” deve respeitar o raio (1h/3h/6h/12h) e ser FUTURO.
+      // ===== FIX: próximos jogos agora é "somente começa dentro do horário selecionado" =====
       let nextGames = games
         .filter(g=>!isLive(g))
         .filter(g=>startsWithinHours(g, state.hours));
@@ -1395,3 +1491,4 @@
   </script>
 </body>
 </html>
+```0
