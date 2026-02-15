@@ -75,7 +75,6 @@
     }
     .status{display:flex; align-items:center; gap:6px; font-size:var(--fs-xs); color:var(--t1);}
     .dot{width:10px;height:10px;border-radius:999px;background:#20d070;box-shadow:0 0 0 4px rgba(32,208,112,.16);}
-    .dot.offline{background:#ff9b2f;box-shadow:0 0 0 4px rgba(255,155,47,.16);}
 
     .top-actions{margin-left:auto; display:flex; gap:10px; align-items:center;}
     .btn{
@@ -545,7 +544,7 @@
           <div class="logo">RD</div>
           <div class="brand-text">
             <div class="brand-title">Radar PRO</div>
-            <div class="status" id="netStatus"><span class="dot" id="netDot"></span><span id="netText">Online</span></div>
+            <div class="status"><span class="dot"></span>Online</div>
           </div>
         </div>
 
@@ -753,12 +752,8 @@
 
   <script>
     const LS_API_KEY = "RADAR_API_URL";
+    const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
-
-    // ✅ Pega a base certinha do GitHub Pages automaticamente:
-    // Ex: https://radarjogospro.github.io/radar-jogos-/index.html
-    // --> jogos.json vira https://radarjogospro.github.io/radar-jogos-/jogos.json
-    const DEFAULT_LOCAL_URL = new URL("./jogos.json", window.location.href).toString();
 
     const EUROPE = new Set([
       "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
@@ -785,8 +780,7 @@
       collapsed:new Set(),
       pill:null,
       sort:"popular",
-      apiUrl: (localStorage.getItem(LS_API_KEY) || "").trim(),
-      lastOk: 0
+      apiUrl: (localStorage.getItem(LS_API_KEY) || "").trim()
     };
 
     const pages = {
@@ -920,24 +914,11 @@
       loadData(true);
     });
 
-    function setNet(ok){
-      const dot = document.getElementById("netDot");
-      const txt = document.getElementById("netText");
-      if(ok){
-        dot.classList.remove("offline");
-        txt.textContent = "Online";
-      }else{
-        dot.classList.add("offline");
-        txt.textContent = "Conexão";
-      }
-    }
-
     /* DATA LOAD */
     function buildDataUrl(){
-      const base = (state.apiUrl || DEFAULT_LOCAL_URL).trim();
-      const url = new URL(base, window.location.href);
-      url.searchParams.set("ts", String(Date.now())); // ✅ anti-cache
-      return url.toString();
+      const base = state.apiUrl || DEFAULT_LOCAL_URL;
+      const sep = base.includes("?") ? "&" : "?";
+      return base + sep + "ts=" + Date.now();
     }
 
     async function fetchJsonWithTimeout(url, timeoutMs=9000){
@@ -950,7 +931,7 @@
       }finally{ clearTimeout(t); }
     }
 
-    async function loadData(force=false){
+    async function loadData(){
       try{
         const url = buildDataUrl();
         const json = await fetchJsonWithTimeout(url, 9000);
@@ -961,21 +942,15 @@
           : (Array.isArray(json.events) ? json.events : [])));
 
         state.data = { games };
-        state.lastOk = Date.now();
-        setNet(true);
       }catch(e){
-        setNet(false);
-        // fallback só quando o user colocou API externa (pra não ficar “piscando”)
         if(state.apiUrl){
           try{
-            const fallback = await fetchJsonWithTimeout(new URL("./jogos.json?ts=" + Date.now(), window.location.href).toString(), 9000);
+            const fallback = await fetchJsonWithTimeout(DEFAULT_LOCAL_URL + "?ts=" + Date.now(), 9000);
             const games = Array.isArray(fallback) ? fallback : (fallback.games || fallback.data || fallback.events || []);
             state.data = { games: Array.isArray(games) ? games : [] };
-          }catch(_){
-            state.data = state.data || { games: [] };
-          }
+          }catch(_){ state.data = { games: [] }; }
         }else{
-          state.data = state.data || { games: [] };
+          state.data = { games: [] };
         }
       }
       renderAll();
@@ -995,72 +970,18 @@
         }
         if(typeof v === "string"){
           const s = v.trim();
+
           if(/^\d{10,13}$/.test(s)){
             const n = Number(s);
             if(n > 1e12) return Math.floor(n/1000);
             return Math.floor(n);
           }
+
           const ms = Date.parse(s);
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
       }
       return null;
-    }
-
-    function pickOddsAny(g){
-      // tenta achar odds em vários formatos possíveis
-      const o =
-        g.odds ||
-        g.market1x2 ||
-        g.oneXtwo ||
-        g["1x2"] ||
-        g.moneyline ||
-        (g.bookmakers && g.bookmakers[0] && (g.bookmakers[0].odds || g.bookmakers[0].markets?.[0]?.outcomes)) ||
-        null;
-
-      // Se vier como array de outcomes
-      if(Array.isArray(o)){
-        const out = {};
-        for(const it of o){
-          const name = String(it.name || it.label || "").toLowerCase();
-          const price = it.price ?? it.odd ?? it.value ?? null;
-          if(price==null) continue;
-          if(name.includes("home") || name.includes("casa") || name === "1") out.home = price;
-          else if(name.includes("draw") || name.includes("empate") || name === "x") out.draw = price;
-          else if(name.includes("away") || name.includes("fora") || name === "2") out.away = price;
-        }
-        return out;
-      }
-
-      // Se vier como objeto com chaves variadas
-      if(o && typeof o === "object"){
-        const home = o.home ?? o["1"] ?? o.h ?? o.team1 ?? o.local ?? null;
-        const draw = o.draw ?? o["x"] ?? o.d ?? o.tie ?? null;
-        const away = o.away ?? o["2"] ?? o.a ?? o.team2 ?? o.visitor ?? null;
-        if(home!=null || draw!=null || away!=null) return {home, draw, away};
-      }
-
-      // Se vier probabilidade (%)
-      const p = g.probabilities || g.probability || g.prob || null;
-      if(p && typeof p === "object"){
-        const ph = p.home ?? p["1"] ?? null;
-        const pd = p.draw ?? p["x"] ?? null;
-        const pa = p.away ?? p["2"] ?? null;
-        const toOdd = (x)=> {
-          const n = Number(x);
-          if(!Number.isFinite(n) || n<=0) return null;
-          const frac = n > 1 ? (n/100) : n; // aceita 60 ou 0.60
-          if(frac<=0) return null;
-          return (1/frac).toFixed(2);
-        };
-        return {
-          home: ph!=null ? toOdd(ph) : null,
-          draw: pd!=null ? toOdd(pd) : null,
-          away: pa!=null ? toOdd(pa) : null
-        };
-      }
-
-      return {home:null, draw:null, away:null};
     }
 
     function normalizeGames(raw){
@@ -1072,74 +993,78 @@
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
 
-        const statusRaw = (g.status || g.state || (g.live ? "LIVE" : "NS"));
-        const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
+        const statusRaw = (g.status || g.state || g.match_status || (g.live ? "LIVE" : "NS"));
+        const status = String(statusRaw || "").toUpperCase().trim().replace(/\s+/g,"_");
 
-        const minute = (g.minute != null ? String(g.minute) : (g.time || g.clock || g.elapsed || ""));
+        // >>> FIX: minute NÃO deve pegar g.time ("21:00"), porque isso é horário e vira "ao vivo falso".
+        const elapsed = (g.elapsed ?? g.minute ?? g.minutes ?? null);
+        const minute = (elapsed != null ? String(elapsed) : (g.clock || g.matchTime || ""));
+
         const startTs = parseStartTsAny(g);
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
         const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
 
-        const oddsObj = pickOddsAny(g);
+        const odds = g.odds || g.market1x2 || g.oneXtwo || null;
         const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
+
+        const oh = odds ? (odds.home ?? odds["1"] ?? odds.h ?? null) : null;
+        const od = odds ? (odds.draw ?? odds["x"] ?? odds.d ?? null) : null;
+        const oa = odds ? (odds.away ?? odds["2"] ?? odds.a ?? null) : null;
+
+        const isLiveFlag = (g.isLive === true || g.live === true);
 
         return {
           id, sport, league, country, home, away,
-          status, minute, startTs,
+          status, minute, elapsed,
+          startTs,
           scoreHome, scoreAway,
-          odds: {
-            home: oddsObj?.home ?? null,
-            draw: oddsObj?.draw ?? null,
-            away: oddsObj?.away ?? null
-          }
+          isLiveFlag,
+          odds: { home: oh, draw: od, away: oa }
         };
       });
     }
 
-    function isLive(g){
-      const s = (g.status || "").toUpperCase();
-      const liveSet = new Set([
-        "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
-        "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
-      ]);
-      if(liveSet.has(s)) return true;
+    /* ======== LIVE: MAIS RÍGIDO (FT NUNCA É AO VIVO) ======== */
+    const FINISHED_SET = new Set([
+      "FT","AET","PEN","FINISHED","ENDED","FULL_TIME","AFTER_PENALTIES","AFTER_EXTRA_TIME"
+    ]);
 
+    const LIVE_SET = new Set([
+      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET",
+      "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
+    ]);
+
+    function isLive(g){
+      const s = (g.status || "").toUpperCase().trim();
+
+      // prioridade: terminou => nunca live
+      if(FINISHED_SET.has(s)) return false;
+
+      // se o provider manda flag live
+      if(g.isLiveFlag === true) return true;
+
+      if(LIVE_SET.has(s)) return true;
+
+      // minuto/elapsed “real” (não horário)
       const m = String(g.minute || "").trim();
+      const n = Number(m);
+
+      // "45'" etc
       if(m.includes("'")) return true;
 
-      if((g.scoreHome!=null || g.scoreAway!=null) && (s.includes("LIVE") || s.includes("PLAY"))) return true;
+      // número de minuto plausível
+      if(Number.isFinite(n) && n > 0 && n < 130) return true;
+
       return false;
-    }
-
-    // ✅ Remove “FT velho” (jogo de ontem) pra não poluir o app
-    function isOldFinished(g){
-      const s = (g.status || "").toUpperCase();
-      const finishedSet = new Set(["FT","AET","PEN","FINISHED","FULL_TIME","ENDED","FINAL"]);
-      if(!finishedSet.has(s)) return false;
-
-      const now = Date.now();
-      const ts = g.startTs ? Number(g.startTs)*1000 : null;
-      if(!ts || !Number.isFinite(ts)) return true;
-
-      // se terminou e já passou bastante tempo, some
-      return (now - ts) > (8 * 3600 * 1000); // 8h
-    }
-
-    function inNextHours(g, hours){
-      if(!g.startTs) return true;
-      const now = Date.now();
-      const ts = Number(g.startTs)*1000;
-      if(!Number.isFinite(ts)) return true;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
     }
 
     function startsWithinHours(g, hours){
       if(!g.startTs) return false;
       const now = Date.now();
-      const ts = Number(g.startTs)*1000;
+      const ts = Number(g.startTs) * 1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
+      return (ts - now) <= hours * 3600 * 1000 && (ts - now) >= 0;
     }
 
     function groupByLeague(games){
@@ -1155,7 +1080,7 @@
     function formatMinute(g){
       const m = String(g.minute || "").trim();
       if(!m) return "";
-      if(m.includes(":")) return m;
+      if(m.includes(":")) return m; // se algum provider mandar 00:45
       if(m.endsWith("'")) return m.replace("'", "") + ":00";
       const n = Number(m);
       if(Number.isFinite(n)) return String(n).padStart(2,"0") + ":00";
@@ -1415,8 +1340,7 @@
       const raw = state.data?.games || [];
       const allGames = normalizeGames(raw);
 
-      // ✅ some com FT antigo
-      let games = allGames.filter(g=>!isOldFinished(g));
+      let games = allGames.slice();
 
       games = games.filter(g=>{
         if(state.sport === "all") return true;
@@ -1436,9 +1360,10 @@
         .filter(g=>startsWithinHours(g, 3))
         .sort(safeTimeSort);
 
+      // >>> FIX: “Jogos” deve respeitar o raio (1h/3h/6h/12h) e ser FUTURO.
       let nextGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>inNextHours(g, state.hours));
+        .filter(g=>startsWithinHours(g, state.hours));
 
       if(state.sort === "time"){
         nextGames = nextGames.slice().sort(safeTimeSort);
@@ -1465,8 +1390,8 @@
       renderGamesSheet(document.getElementById("gamesList"), nextGames);
     }
 
-    loadData(true);
-    setInterval(()=>loadData(false), REFRESH_MS);
+    loadData();
+    setInterval(loadData, REFRESH_MS);
   </script>
 </body>
-</html>
+            </html>
