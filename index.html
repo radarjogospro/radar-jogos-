@@ -3,39 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#081d23" />
+  <meta name="theme-color" content="#071a20" />
   <title>Radar PRO</title>
   <style>
     :root{
       --bg0:#06181d;
       --bg1:#071c22;
-      --bg2:#0a252c;
-      --card:#0b2a32cc;
-      --card2:#0c2f38cc;
-      --stroke:#163d45;
-      --stroke2:#1d4b55;
+      --card:rgba(10,38,46,.55);
+      --stroke:rgba(255,255,255,.07);
       --text:#e9f3f6;
       --muted:#9fb7bf;
       --muted2:#7ea1ab;
       --accent:#22c0c8;
-      --accent2:#18aab2;
       --hot:#e83b70;
-      --pill:#0a2830;
-      --white:#ffffff;
-      --shadow: 0 18px 40px rgba(0,0,0,.35);
+      --shadow: 0 14px 28px rgba(0,0,0,.28);
       --r:18px;
       --r2:22px;
 
-      /* Tamanhos (mais próximos do print Novibet) */
-      --fs-xxs: 11px;
-      --fs-xs: 12px;
-      --fs-sm: 13px;
-      --fs-md: 14px;
-      --fs-lg: 16px;
-      --fs-xl: 20px;
+      /* >>> MAIS COMPACTO (estilo casa) <<< */
+      --pad: 12px;
 
-      --tap: 42px;
-      --pad: 14px;
+      --fs-xxs: 10px;
+      --fs-xs: 11px;
+      --fs-sm: 12px;
+      --fs-md: 13px;
+      --fs-lg: 15px;
+      --fs-xl: 18px;
 
       --safeTop: env(safe-area-inset-top, 0px);
       --safeBot: env(safe-area-inset-bottom, 0px);
@@ -47,405 +40,224 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       background:
-        radial-gradient(1200px 700px at 20% 5%, #0c3a43 0%, transparent 55%),
-        radial-gradient(900px 600px at 85% 0%, #123744 0%, transparent 60%),
+        radial-gradient(1100px 650px at 22% 5%, #0c3a43 0%, transparent 55%),
+        radial-gradient(850px 600px at 85% 0%, #123744 0%, transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
       color:var(--text);
       overflow:hidden;
     }
 
-    /* App shell */
-    .app{
-      height:100%;
-      display:flex;
-      flex-direction:column;
-    }
+    .app{height:100%;display:flex;flex-direction:column}
 
-    /* Top bar fixed */
+    /* TOP */
     .top{
-      position:sticky;
-      top:0;
-      z-index:50;
-      padding: calc(var(--safeTop) + 10px) var(--pad) 10px;
-      background:
-        linear-gradient(180deg, rgba(6,24,29,.92) 0%, rgba(6,24,29,.70) 70%, rgba(6,24,29,0) 100%);
+      position:sticky;top:0;z-index:50;
+      padding: calc(var(--safeTop) + 8px) var(--pad) 8px;
+      background: linear-gradient(180deg, rgba(6,24,29,.92) 0%, rgba(6,24,29,.68) 70%, rgba(6,24,29,0) 100%);
       backdrop-filter: blur(12px);
     }
-
     .topCard{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 10px;
-      border-radius: 22px;
-      background: rgba(10,38,46,.55);
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow: 0 14px 30px rgba(0,0,0,.25);
+      display:flex;align-items:center;gap:8px;
+      padding:8px 8px;
+      border-radius: 20px;
+      background: var(--card);
+      border:1px solid var(--stroke);
+      box-shadow: 0 12px 22px rgba(0,0,0,.20);
     }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 0;
-      flex:1;
-    }
-
+    .brand{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
     .logo{
-      width:40px; height:40px;
-      border-radius:14px;
+      width:34px;height:34px;border-radius:12px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
-      display:grid; place-items:center;
-      font-weight:800;
-      letter-spacing:.5px;
-      color:#dff7fb;
-      flex: 0 0 auto;
+      display:grid;place-items:center;
+      font-weight:900;letter-spacing:.4px;color:#dff7fb;
+      flex:0 0 auto;
+      font-size: 12px;
     }
-
-    .brandTxt{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-
+    .brandTxt{min-width:0;display:flex;flex-direction:column;gap:1px}
     .brandName{
-      font-weight:800;
-      font-size: 15px;
-      line-height: 1.05;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:900;font-size: 13px;line-height:1.05;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
+    .onlineRow{display:flex;align-items:center;gap:6px;font-size: var(--fs-xs);color:var(--muted);white-space:nowrap}
+    .dot{width:7px;height:7px;border-radius:99px;background:#1fe07a;box-shadow:0 0 0 4px rgba(31,224,122,.12)}
 
-    .onlineRow{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size: var(--fs-xs);
-      color: var(--muted);
-      white-space:nowrap;
-    }
-
-    .dot{
-      width:8px; height:8px;
-      border-radius:99px;
-      background:#1fe07a;
-      box-shadow:0 0 0 4px rgba(31,224,122,.12);
-      flex:0 0 auto;
-    }
-
-    .topActions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex:0 0 auto;
-    }
-
+    .topActions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
     .iconBtn{
-      width:40px;height:40px;
-      border-radius:14px;
+      width:34px;height:34px;border-radius:12px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.07);
-      display:grid; place-items:center;
-      color: var(--text);
-      font-size: 18px;
+      display:grid;place-items:center;
+      color:var(--text);font-size:16px;
     }
-
     .cta{
-      height:40px;
-      padding:0 14px;
-      border-radius: 16px;
+      height:34px;padding:0 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.08);
-      color: var(--text);
-      font-weight:800;
-      font-size: var(--fs-sm);
-      letter-spacing:.2px;
-      display:flex; align-items:center; justify-content:center;
-      white-space:nowrap;
+      color:var(--text);font-weight:900;font-size: var(--fs-sm);
+      display:flex;align-items:center;justify-content:center;white-space:nowrap;
     }
-
     .cta.primary{
       background: linear-gradient(90deg, #e83b70, #c02d93);
       border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 22px rgba(232,59,112,.18);
+      box-shadow: 0 10px 18px rgba(232,59,112,.16);
     }
 
-    /* Sports row (Novibet-style small icons) */
+    /* Sports row (menor) */
     .sportsRow{
-      margin-top: 10px;
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width:none;
+      margin-top: 8px;
+      display:flex;gap:8px;overflow:auto;padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;scrollbar-width:none;
     }
     .sportsRow::-webkit-scrollbar{display:none}
-
     .sportPill{
-      position:relative;
-      flex:0 0 auto;
-      width: 102px;
-      height: 66px;
-      border-radius: 18px;
+      position:relative;flex:0 0 auto;
+      width: 96px;height: 60px;border-radius: 16px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.07);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:10px;
-      box-shadow: 0 10px 18px rgba(0,0,0,.18);
-      cursor:pointer;
-      user-select:none;
+      display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;
+      box-shadow: 0 10px 16px rgba(0,0,0,.16);
+      cursor:pointer;user-select:none;
     }
     .sportPill.active{
-      outline: 2px solid rgba(34,192,200,.35);
+      outline: 2px solid rgba(34,192,200,.33);
       background: rgba(34,192,200,.08);
     }
     .sportIcon{
-      width:34px;height:34px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.15);
+      width:30px;height:30px;border-radius:12px;
+      background: rgba(0,0,0,.16);
       border:1px solid rgba(255,255,255,.07);
-      display:grid; place-items:center;
-      font-size: 18px;
+      display:grid;place-items:center;
+      font-size: 16px;
     }
-    .sportName{
-      font-weight:800;
-      font-size: var(--fs-sm);
-      letter-spacing:.1px;
-    }
+    .sportName{font-weight:900;font-size: var(--fs-sm)}
     .sportCount{
-      position:absolute;
-      top:6px; left:6px;
-      min-width: 24px;
-      height: 18px;
-      padding:0 6px;
-      border-radius: 999px;
+      position:absolute;top:5px;left:5px;
+      min-width:22px;height:16px;padding:0 6px;border-radius:999px;
       background: rgba(0,0,0,.32);
-      border: 1px solid rgba(255,255,255,.10);
-      display:flex; align-items:center; justify-content:center;
-      font-size: 11px;
-      color: var(--text);
-      font-weight:800;
+      border:1px solid rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:center;
+      font-size: 10px;font-weight:900;
     }
 
-    /* Scroll content */
+    /* CONTENT */
     .content{
-      flex:1;
-      overflow:auto;
-      padding: 0 var(--pad) calc(86px + var(--safeBot));
+      flex:1;overflow:auto;
+      padding: 0 var(--pad) calc(78px + var(--safeBot));
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Banner strip (only in Inicio & Ao vivo) */
+    /* Banners (mais finos) */
     .bannerStrip{
-      margin-top: 10px;
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      padding-bottom: 4px;
+      margin-top: 8px;
+      display:flex;gap:8px;overflow:auto;padding-bottom: 4px;
       scrollbar-width:none;
     }
     .bannerStrip::-webkit-scrollbar{display:none}
-
     .miniBanner{
       flex:0 0 auto;
-      height: 44px;
-      min-width: 210px;
-      border-radius: 18px;
-      padding: 0 12px;
-      display:flex;
-      align-items:center;
-      gap:10px;
+      height: 38px;
+      min-width: 190px;
+      border-radius: 16px;
+      padding: 0 10px;
+      display:flex;align-items:center;gap:8px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
     }
     .miniBadge{
-      height: 24px;
-      padding: 0 10px;
-      border-radius: 999px;
-      display:flex; align-items:center; justify-content:center;
-      font-weight:900;
-      font-size: 11px;
+      height: 20px;padding:0 9px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;font-size: 10px;
       background: rgba(232,59,112,.15);
-      border: 1px solid rgba(232,59,112,.35);
+      border:1px solid rgba(232,59,112,.35);
       color:#ffb7c9;
       flex:0 0 auto;
     }
     .miniTitle{
-      font-weight:800;
-      font-size: var(--fs-sm);
-      color: var(--text);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:900;font-size: var(--fs-sm);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
 
-    /* Hero card */
+    /* Hero menor */
     .hero{
-      margin-top: 10px;
-      border-radius: 24px;
+      margin-top: 8px;border-radius: 22px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
       box-shadow: var(--shadow);
       overflow:hidden;
-      position:relative;
     }
     .heroInner{
-      padding: 14px;
-      display:flex;
-      gap:14px;
-      align-items:stretch;
+      padding: 12px;
       background:
-        radial-gradient(520px 260px at 30% 20%, rgba(34,192,200,.20) 0%, transparent 70%),
-        radial-gradient(480px 240px at 90% 10%, rgba(232,59,112,.18) 0%, transparent 60%),
+        radial-gradient(520px 260px at 30% 20%, rgba(34,192,200,.18) 0%, transparent 70%),
+        radial-gradient(480px 240px at 90% 10%, rgba(232,59,112,.16) 0%, transparent 60%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.10));
     }
-    .heroLeft{
-      flex:1;
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
     .livePill{
-      align-self:flex-start;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
+      display:inline-flex;align-items:center;gap:7px;
+      padding: 7px 9px;border-radius:999px;
       background: rgba(232,59,112,.14);
-      border: 1px solid rgba(232,59,112,.30);
-      font-weight:900;
-      font-size: 11px;
+      border:1px solid rgba(232,59,112,.30);
+      font-weight:900;font-size: 10px;
       letter-spacing:.2px;
+      margin-bottom: 8px;
     }
-    .liveDot{
-      width:10px;height:10px;border-radius:99px;
-      background:#ff3b6f;
-      box-shadow:0 0 0 6px rgba(255,59,111,.12);
-    }
+    .liveDot{width:9px;height:9px;border-radius:99px;background:#ff3b6f;box-shadow:0 0 0 5px rgba(255,59,111,.12)}
     .heroTeams{
-      font-weight:900;
-      font-size: 18px;
-      line-height:1.12;
-      letter-spacing:.1px;
+      font-weight:900;font-size: 16px;line-height:1.12;
+      margin-bottom: 6px;
     }
-    .heroMeta{
-      color: var(--muted);
-      font-size: var(--fs-xs);
-      font-weight:700;
-    }
+    .heroMeta{color:var(--muted);font-size: var(--fs-xs);font-weight:800;margin-bottom: 8px}
     .heroOdds{
-      margin-top: 6px;
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0;
-      border-radius: 16px;
-      overflow:hidden;
+      display:grid;grid-template-columns:1fr 1fr 1fr;
+      border-radius: 14px;overflow:hidden;
       border:1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.18);
     }
     .oddCell{
-      padding: 10px 8px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding: 9px 9px;
+      display:flex;align-items:center;justify-content:space-between;
       border-right:1px solid rgba(255,255,255,.06);
-      font-weight:900;
-      font-size: var(--fs-sm);
+      font-weight:900;font-size: var(--fs-sm);
     }
     .oddCell:last-child{border-right:none}
-    .oddK{color: var(--muted2); font-weight:900;}
-    .oddV{color: var(--accent);}
+    .oddK{color:var(--muted2)}
+    .oddV{color:var(--accent)}
 
-    /* Section titles */
-    .section{
-      margin-top: 16px;
-    }
-    .sectionHead{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom: 10px;
-    }
-    .h2{
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing:.2px;
-    }
-    .h2.small{
-      font-size: 20px;
-    }
-    .count{
-      color: var(--muted);
-      font-weight: 800;
-      font-size: var(--fs-sm);
-    }
+    /* Section head menor */
+    .section{margin-top: 14px}
+    .sectionHead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom: 8px}
+    .h2{font-size: 18px;font-weight: 900;letter-spacing:.1px}
+    .count{color:var(--muted);font-weight:900;font-size: var(--fs-sm)}
 
-    /* Popular chips */
-    .chips{
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      padding-bottom: 2px;
-      scrollbar-width:none;
-    }
+    /* Popular chips (menores) */
+    .chips{display:flex;gap:8px;overflow:auto;padding-bottom:2px;scrollbar-width:none}
     .chips::-webkit-scrollbar{display:none}
     .chip{
-      flex:0 0 auto;
-      height: 44px;
-      padding: 0 14px;
-      border-radius: 20px;
-      display:flex;
-      align-items:center;
-      gap:10px;
+      flex:0 0 auto;height: 40px;padding:0 12px;border-radius: 18px;
+      display:flex;align-items:center;gap:8px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.07);
-      font-weight:900;
-      font-size: var(--fs-sm);
-      color: var(--text);
-      user-select:none;
-      cursor:pointer;
+      font-weight:900;font-size: var(--fs-sm);
+      user-select:none;cursor:pointer;
     }
 
-    /* Jogos tab filter bar (1/3/6/12) */
+    /* Hours bar (jogos) menor */
     .hoursBar{
-      margin-top: 12px;
-      padding: 10px 10px;
-      border-radius: 22px;
+      margin-top: 10px;padding: 8px 8px;border-radius: 20px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
-      display:flex;
-      align-items:center;
-      gap:10px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width:none;
+      display:flex;align-items:center;gap:8px;overflow:auto;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
     }
     .hoursBar::-webkit-scrollbar{display:none}
-
     .hourBtn{
-      flex:0 0 auto;
-      height: 40px;
-      padding: 0 14px;
-      border-radius: 18px;
+      flex:0 0 auto;height: 34px;padding:0 12px;border-radius: 16px;
       background: rgba(0,0,0,.20);
       border:1px solid rgba(255,255,255,.08);
-      font-weight:900;
-      font-size: var(--fs-sm);
-      color: var(--text);
-      display:flex; align-items:center; gap:10px;
-      user-select:none;
-      cursor:pointer;
-      white-space:nowrap;
+      font-weight:900;font-size: var(--fs-sm);
+      display:flex;align-items:center;gap:8px;white-space:nowrap;
+      user-select:none;cursor:pointer;
     }
     .hourBtn.active{
       background: rgba(34,192,200,.14);
@@ -454,261 +266,152 @@
     }
 
     .sortRow{
-      margin-top: 10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      color: var(--muted);
-      font-weight:800;
-      font-size: var(--fs-sm);
-    }
-    .sortLeft{
-      display:flex; align-items:center; gap:10px;
+      margin-top: 8px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+      color:var(--muted);font-weight:900;font-size: var(--fs-sm);
     }
     .sortPill{
-      height: 40px;
-      padding: 0 12px;
-      border-radius: 18px;
+      height: 34px;padding:0 10px;border-radius:16px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.07);
-      display:flex; align-items:center; gap:8px;
-      color: var(--text);
-      cursor:pointer;
-      user-select:none;
-      white-space:nowrap;
+      display:flex;align-items:center;gap:7px;
+      color:var(--text);cursor:pointer;user-select:none;white-space:nowrap;
     }
-    .sortIcons{
-      display:flex; gap:10px;
-    }
+    .sortIcons{display:flex;gap:8px}
 
-    /* League accordion */
+    /* League & match cards menores */
     .league{
-      margin-top: 12px;
-      border-radius: 22px;
+      margin-top: 10px;border-radius: 20px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
       overflow:hidden;
     }
     .leagueHead{
-      padding: 12px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
-      user-select:none;
+      padding: 10px 10px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      cursor:pointer;user-select:none;
     }
     .leagueTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight: 900;
-      font-size: var(--fs-md);
+      display:flex;align-items:center;gap:8px;
+      font-weight:900;font-size: var(--fs-md);
       min-width:0;
     }
     .flag{
-      width:26px;height:18px;border-radius:6px;
+      width:24px;height:17px;border-radius:6px;
       background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.10);
       display:grid;place-items:center;
-      font-size: 14px;
-      flex:0 0 auto;
+      font-size: 13px;flex:0 0 auto;
     }
     .chev{
-      width:40px;height:40px;
-      border-radius: 16px;
+      width:34px;height:34px;border-radius: 14px;
       background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.08);
-      display:grid; place-items:center;
-      color: var(--text);
+      display:grid;place-items:center;
       flex:0 0 auto;
     }
-    .leagueBody{
-      padding: 0 10px 10px;
-      display:grid;
-      gap:10px;
-    }
+    .leagueBody{padding: 0 8px 8px;display:grid;gap:8px}
 
-    /* Match card */
     .match{
-      border-radius: 18px;
+      border-radius: 16px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.07);
-      padding: 12px;
+      padding: 10px;
       display:grid;
       grid-template-columns: 1fr auto;
       gap:10px;
       align-items:start;
     }
-    .matchLeft{
-      min-width:0;
-    }
     .teams{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      font-weight:900;
-      font-size: 15px;
-      line-height:1.12;
+      display:flex;flex-direction:column;gap:6px;
+      font-weight:900;font-size: 13px;line-height:1.12;
     }
-    .teamRow{
-      display:flex; align-items:center; gap:10px;
-      min-width:0;
-    }
+    .teamRow{display:flex;align-items:center;gap:8px;min-width:0}
     .ballIcon{
-      width:26px;height:26px;
-      border-radius: 10px;
+      width:24px;height:24px;border-radius: 10px;
       background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.10);
-      display:grid; place-items:center;
-      font-size: 14px;
-      flex:0 0 auto;
+      display:grid;place-items:center;
+      font-size: 13px;flex:0 0 auto;
     }
-    .tName{
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .tName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
     .metaRow{
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: var(--fs-xs);
-      font-weight:800;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
+      margin-top: 7px;color:var(--muted);
+      font-size: var(--fs-xs);font-weight:900;
+      display:flex;align-items:center;gap:8px;flex-wrap:wrap;
     }
-
-    .matchRight{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
-    }
+    .matchRight{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
     .liveTag{
-      height: 30px;
-      padding: 0 10px;
-      border-radius: 999px;
-      display:flex; align-items:center; gap:8px;
-      font-weight:900;
-      font-size: 11px;
-      letter-spacing:.2px;
+      height: 26px;padding:0 9px;border-radius:999px;
+      display:flex;align-items:center;gap:7px;
+      font-weight:900;font-size: 10px;letter-spacing:.2px;
       background: rgba(232,59,112,.14);
       border:1px solid rgba(232,59,112,.30);
       color:#ffd0dc;
       white-space:nowrap;
     }
     .timeBox{
-      height: 34px;
-      padding: 0 10px;
-      border-radius: 14px;
+      height: 30px;padding:0 9px;border-radius: 12px;
       background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.08);
-      display:flex; align-items:center; gap:10px;
-      color: var(--text);
-      font-weight:900;
-      font-size: var(--fs-sm);
+      display:flex;align-items:center;gap:8px;
+      font-weight:900;font-size: var(--fs-sm);
       white-space:nowrap;
     }
 
     .oddsRow{
-      margin-top: 10px;
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      border-radius: 14px;
-      overflow:hidden;
+      margin-top: 9px;
+      display:grid;grid-template-columns:1fr 1fr 1fr;
+      border-radius: 12px;overflow:hidden;
       border:1px solid rgba(255,255,255,.07);
       background: rgba(0,0,0,.16);
     }
-    .oddsRow .oddCell{
-      padding: 10px 10px;
-      font-size: var(--fs-sm);
-    }
-
-    .favBtn{
-      margin-top: 10px;
-      display:flex;
-      gap:10px;
-    }
+    .oddsRow .oddCell{padding: 9px 9px;font-size: var(--fs-sm)}
+    .favBtn{margin-top: 9px;display:flex;gap:8px}
     .btn{
-      height: 44px;
-      flex:1;
-      border-radius: 18px;
+      height: 40px;flex:1;border-radius: 16px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.07);
-      color: var(--text);
-      font-weight:900;
-      font-size: var(--fs-sm);
-      display:flex; align-items:center; justify-content:center;
-      gap:10px;
-      cursor:pointer;
-      user-select:none;
+      font-weight:900;font-size: var(--fs-sm);
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      cursor:pointer;user-select:none;
     }
 
-    /* Bottom nav */
+    /* Bottom nav mais compacto */
     .bottom{
-      position:fixed;
-      left:0; right:0; bottom:0;
-      z-index:60;
-      padding: 10px var(--pad) calc(10px + var(--safeBot));
-      background:
-        linear-gradient(180deg, rgba(6,24,29,0) 0%, rgba(6,24,29,.70) 22%, rgba(6,24,29,.92) 100%);
+      position:fixed;left:0;right:0;bottom:0;z-index:60;
+      padding: 8px var(--pad) calc(8px + var(--safeBot));
+      background: linear-gradient(180deg, rgba(6,24,29,0) 0%, rgba(6,24,29,.68) 22%, rgba(6,24,29,.92) 100%);
       backdrop-filter: blur(12px);
     }
-
     .nav{
-      display:grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap:10px;
-      padding: 10px;
-      border-radius: 22px;
+      display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
+      padding: 8px;border-radius: 20px;
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
-      box-shadow: 0 16px 34px rgba(0,0,0,.28);
+      box-shadow: 0 14px 26px rgba(0,0,0,.26);
     }
-
     .navBtn{
-      height: 54px;
-      border-radius: 18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      font-weight:900;
-      font-size: var(--fs-sm);
-      color: var(--muted);
-      cursor:pointer;
-      user-select:none;
+      height: 48px;border-radius: 16px;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      font-weight:900;font-size: var(--fs-sm);
+      color:var(--muted);
       background: rgba(0,0,0,.12);
       border:1px solid rgba(255,255,255,.06);
-      white-space:nowrap;
+      user-select:none;cursor:pointer;white-space:nowrap;
     }
     .navBtn.active{
-      color: var(--text);
+      color:var(--text);
       background: rgba(34,192,200,.12);
       border-color: rgba(34,192,200,.25);
     }
-    .navI{
-      font-size: 16px;
-      opacity: .95;
-    }
+    .navI{font-size: 15px;opacity:.95}
 
-    /* Helpers */
     .hide{display:none !important}
-    .divider{
-      height:1px;
-      background: rgba(255,255,255,.06);
-      margin: 12px 0;
-    }
 
-    /* Small phones tweak */
     @media (max-width: 360px){
-      .sportPill{width: 96px}
-      .navBtn{font-size: 12px}
-      .heroTeams{font-size: 17px}
+      .sportPill{width: 92px}
+      .cta{padding:0 10px}
     }
   </style>
 </head>
@@ -716,7 +419,6 @@
 <body>
 <div class="app">
 
-  <!-- TOP -->
   <header class="top">
     <div class="topCard">
       <div class="brand">
@@ -734,51 +436,34 @@
       </div>
     </div>
 
-    <!-- Sports quick -->
-    <div class="sportsRow" id="sportsRow">
-      <!-- injected -->
-    </div>
+    <div class="sportsRow" id="sportsRow"></div>
   </header>
 
-  <!-- CONTENT -->
   <main class="content" id="content">
 
     <!-- INÍCIO -->
     <section id="viewHome">
       <div class="bannerStrip" id="homeBanners">
-        <div class="miniBanner">
-          <div class="miniBadge">NOVO</div>
-          <div class="miniTitle">Radar PRO • tendências</div>
-        </div>
-        <div class="miniBanner">
-          <div class="miniBadge">APP</div>
-          <div class="miniTitle">Ganhe R$ 20 com nosso app</div>
-        </div>
-        <div class="miniBanner">
-          <div class="miniBadge">BÔNUS</div>
-          <div class="miniTitle">Ganhe R$ 25</div>
-        </div>
+        <div class="miniBanner"><div class="miniBadge">NOVO</div><div class="miniTitle">Radar PRO • tendências</div></div>
+        <div class="miniBanner"><div class="miniBadge">APP</div><div class="miniTitle">Ganhe R$ 20 com nosso app</div></div>
+        <div class="miniBanner"><div class="miniBadge">BÔNUS</div><div class="miniTitle">Ganhe R$ 25</div></div>
       </div>
 
       <div class="hero" id="homeHero">
         <div class="heroInner">
-          <div class="heroLeft">
-            <div class="livePill"><span class="liveDot"></span>AO VIVO</div>
-            <div class="heroTeams" id="heroTeams">Carregando…</div>
-            <div class="heroMeta" id="heroMeta">—</div>
-            <div class="heroOdds" id="heroOdds">
-              <div class="oddCell"><span class="oddK">1</span><span class="oddV">—</span></div>
-              <div class="oddCell"><span class="oddK">X</span><span class="oddV">—</span></div>
-              <div class="oddCell"><span class="oddK">2</span><span class="oddV">—</span></div>
-            </div>
+          <div class="livePill"><span class="liveDot"></span>AO VIVO</div>
+          <div class="heroTeams" id="heroTeams">Carregando…</div>
+          <div class="heroMeta" id="heroMeta">—</div>
+          <div class="heroOdds" id="heroOdds">
+            <div class="oddCell"><span class="oddK">1</span><span class="oddV">—</span></div>
+            <div class="oddCell"><span class="oddK">X</span><span class="oddV">—</span></div>
+            <div class="oddCell"><span class="oddK">2</span><span class="oddV">—</span></div>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <div class="sectionHead">
-          <div class="h2 small">Populares</div>
-        </div>
+        <div class="sectionHead"><div class="h2">Populares</div></div>
         <div class="chips" id="popularChips">
           <div class="chip">🔥 Odds Melhoradas</div>
           <div class="chip">⚽ Ligas principais</div>
@@ -801,14 +486,8 @@
     <!-- AO VIVO -->
     <section id="viewLive" class="hide">
       <div class="bannerStrip" id="liveBanners">
-        <div class="miniBanner">
-          <div class="miniBadge">AO VIVO</div>
-          <div class="miniTitle">Atualização em tempo real</div>
-        </div>
-        <div class="miniBanner">
-          <div class="miniBadge">PRO</div>
-          <div class="miniTitle">Alertas & favoritos</div>
-        </div>
+        <div class="miniBanner"><div class="miniBadge">AO VIVO</div><div class="miniTitle">Atualização em tempo real</div></div>
+        <div class="miniBanner"><div class="miniBadge">PRO</div><div class="miniTitle">Alertas & favoritos</div></div>
       </div>
 
       <div class="section">
@@ -820,11 +499,8 @@
       </div>
     </section>
 
-    <!-- JOGOS -->
+    <!-- JOGOS (sem banners) -->
     <section id="viewGames" class="hide">
-      <!-- Aqui NÃO tem banners (como você pediu) -->
-
-      <!-- filtros por horas (1,3,6,12) -->
       <div class="hoursBar" id="hoursBar">
         <div class="hourBtn active" data-h="1">🕐 1 hora</div>
         <div class="hourBtn" data-h="3">🕒 3 horas</div>
@@ -833,29 +509,22 @@
       </div>
 
       <div class="sortRow">
-        <div class="sortLeft">
-          <div class="sortPill" id="btnSort">
-            ⇅ <span id="sortLabel">Popular primeiro</span> ▾
-          </div>
-        </div>
+        <div class="sortPill" id="btnSort">⇅ <span id="sortLabel">Popular primeiro</span> ▾</div>
         <div class="sortIcons">
           <button class="iconBtn" id="btnSettings" title="Configurações">⚙️</button>
           <button class="iconBtn" id="btnFilter" title="Filtros">☰</button>
         </div>
       </div>
 
-      <div class="section" style="margin-top:12px">
+      <div class="section" style="margin-top:10px">
         <div id="gamesLeagues"></div>
       </div>
     </section>
 
-    <!-- APOSTAS (só layout) -->
+    <!-- APOSTAS (layout) -->
     <section id="viewBets" class="hide">
       <div class="section">
-        <div class="sectionHead">
-          <div class="h2">Apostas</div>
-          <div class="count">layout</div>
-        </div>
+        <div class="sectionHead"><div class="h2">Apostas</div><div class="count">layout</div></div>
         <div class="league">
           <div class="leagueHead">
             <div class="leagueTitle"><span class="flag">🎟️</span> Em breve</div>
@@ -863,16 +532,14 @@
           </div>
           <div class="leagueBody">
             <div class="match">
-              <div class="matchLeft">
+              <div>
                 <div class="teams">
                   <div class="teamRow"><span class="ballIcon">⚽</span><span class="tName">Bilhete pronto</span></div>
                   <div class="teamRow"><span class="ballIcon">⭐</span><span class="tName">Multipla / simples</span></div>
                 </div>
-                <div class="metaRow">Esta aba é só para manter a sequência igual ao print.</div>
+                <div class="metaRow">Apenas para manter sequência do menu.</div>
               </div>
-              <div class="matchRight">
-                <div class="timeBox">—</div>
-              </div>
+              <div class="matchRight"><div class="timeBox">—</div></div>
             </div>
           </div>
         </div>
@@ -882,11 +549,7 @@
     <!-- PRO (layout) -->
     <section id="viewPro" class="hide">
       <div class="section">
-        <div class="sectionHead">
-          <div class="h2">PRO</div>
-          <div class="count">planos</div>
-        </div>
-
+        <div class="sectionHead"><div class="h2">PRO</div><div class="count">planos</div></div>
         <div class="league">
           <div class="leagueHead">
             <div class="leagueTitle"><span class="flag">💎</span> Plano PRO</div>
@@ -894,30 +557,26 @@
           </div>
           <div class="leagueBody">
             <div class="match">
-              <div class="matchLeft">
+              <div>
                 <div class="teams">
                   <div class="teamRow"><span class="ballIcon">🔔</span><span class="tName">Alertas ao vivo</span></div>
                   <div class="teamRow"><span class="ballIcon">⭐</span><span class="tName">Favoritos + histórico</span></div>
                 </div>
-                <div class="metaRow">Tela modelo (login/conta fica para próxima etapa).</div>
+                <div class="metaRow">Checkout/login: próxima etapa.</div>
                 <div class="favBtn">
                   <div class="btn" id="btnProSim">Quero PRO</div>
                   <div class="btn" id="btnProInfo">Saiba mais</div>
                 </div>
               </div>
-              <div class="matchRight">
-                <div class="timeBox">R$ —</div>
-              </div>
+              <div class="matchRight"><div class="timeBox">R$ —</div></div>
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
   </main>
 
-  <!-- BOTTOM NAV -->
   <footer class="bottom">
     <div class="nav">
       <div class="navBtn active" data-view="home"><span class="navI">🏠</span>Início</div>
@@ -931,90 +590,51 @@
 </div>
 
 <script>
-/* =========================
-   Radar PRO — v2.4.2 layout
-   Puxa jogos do jogos.json
-   ========================= */
-
 const $ = (s, p=document) => p.querySelector(s);
 const $$ = (s, p=document) => Array.from(p.querySelectorAll(s));
 
 const STATE = {
   view: "home",
-  sport: "all",           // all|football|basket|volley|tennis|other
-  sort: "popular",        // popular|time
-  hours: 1,               // 1|3|6|12 (Jogos)
+  sport: "all",
+  sort: "popular",
+  hours: 1,
   favorites: new Set(loadLS("rd_favs", [])),
   data: { updatedAt: "", source: "", games: [] },
 };
 
-function saveLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
-function loadLS(key, fallback){
-  try{ const v = JSON.parse(localStorage.getItem(key)); return (v ?? fallback); }
-  catch(e){ return fallback; }
-}
+function saveLS(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+function loadLS(k,f){ try{ const v=JSON.parse(localStorage.getItem(k)); return (v ?? f);}catch(e){return f;} }
 
-function isoNow(){ return Date.now(); }
+function cacheBust(url){ return url + (url.includes("?")?"&":"?") + "t=" + Date.now(); }
+function safeNum(v){ const n=Number(v); return Number.isFinite(n)?n:null; }
 
-function cacheBust(url){
-  const sep = url.includes("?") ? "&" : "?";
-  return url + sep + "t=" + Date.now();
-}
-
-function safeNum(v){
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
-}
-
-/* ---------- Data model (aceita várias formas) ---------- */
 function normalizeGame(g){
-  // tenta mapear campos vindos de API-Football ou do seu json
   const id = g.id ?? g.fixture?.id ?? g.gameId ?? (g.home?.name + "_" + g.away?.name + "_" + (g.timestamp ?? g.date ?? ""));
   const sport = (g.sport ?? g.type ?? "football").toLowerCase();
-
   const league = g.league?.name ?? g.competition ?? g.leagueName ?? "Liga";
   const country = g.league?.country ?? g.country ?? g.area ?? "";
   const flag = emojiFlag(country);
-
   const home = g.home?.name ?? g.teams?.home?.name ?? g.homeTeam?.name ?? g.homeName ?? "Casa";
   const away = g.away?.name ?? g.teams?.away?.name ?? g.awayTeam?.name ?? g.awayName ?? "Fora";
-
   const status = (g.status?.short ?? g.fixture?.status?.short ?? g.status ?? "").toString();
   const isLive = (g.live === true) || ["1H","2H","HT","ET","P","LIVE","IN_PLAY"].includes(status.toUpperCase());
-
-  const minute =
-    safeNum(g.minute) ??
-    safeNum(g.fixture?.status?.elapsed) ??
-    safeNum(g.elapsed) ??
-    null;
+  const minute = safeNum(g.minute) ?? safeNum(g.fixture?.status?.elapsed) ?? safeNum(g.elapsed) ?? null;
 
   const startTs =
     safeNum(g.timestamp) ??
     (g.fixture?.timestamp ? safeNum(g.fixture.timestamp) : null) ??
-    (g.date ? Date.parse(g.date) / 1000 : null) ??
-    null;
+    (g.date ? Date.parse(g.date) / 1000 : null) ?? null;
 
   const dateObj = startTs ? new Date(startTs*1000) : null;
 
-  const scoreHome =
-    safeNum(g.score?.home) ??
-    safeNum(g.goals?.home) ??
-    safeNum(g.homeScore) ??
-    null;
+  const scoreHome = safeNum(g.score?.home) ?? safeNum(g.goals?.home) ?? safeNum(g.homeScore) ?? null;
+  const scoreAway = safeNum(g.score?.away) ?? safeNum(g.goals?.away) ?? safeNum(g.awayScore) ?? null;
 
-  const scoreAway =
-    safeNum(g.score?.away) ??
-    safeNum(g.goals?.away) ??
-    safeNum(g.awayScore) ??
-    null;
-
-  // odds
   const o1 = g.odds?.["1"] ?? g.odds?.home ?? g.odds1 ?? null;
   const ox = g.odds?.["X"] ?? g.odds?.draw ?? g.oddsX ?? null;
   const o2 = g.odds?.["2"] ?? g.odds?.away ?? g.odds2 ?? null;
 
-  // fallback: se tiver array "odds" com 1/X/2
-  let odd1 = o1, oddX = ox, odd2 = o2;
+  let odd1=o1, oddX=ox, odd2=o2;
   if(Array.isArray(g.odds) && g.odds.length){
     const find = (k)=> g.odds.find(x => (x.key??x.label??"").toString().toUpperCase()===k);
     odd1 = odd1 ?? (find("1")?.value ?? find("HOME")?.value);
@@ -1022,26 +642,15 @@ function normalizeGame(g){
     odd2 = odd2 ?? (find("2")?.value ?? find("AWAY")?.value);
   }
 
-  // "popularidade" simples: jogos ao vivo + odds "estranhas" (muito altas) sobem
-  const pop =
-    (isLive ? 50 : 0) +
-    (minute ? Math.min(40, minute/2) : 0) +
-    (Number(odd1)||0) + (Number(oddX)||0) + (Number(odd2)||0);
+  const pop = (isLive?50:0) + (minute?Math.min(40, minute/2):0) + (Number(odd1)||0) + (Number(oddX)||0) + (Number(odd2)||0);
 
   return {
-    id: String(id),
-    sport,
-    league,
-    country,
-    flag,
-    home,
-    away,
-    isLive,
-    minute,
-    scoreHome,
-    scoreAway,
-    startTs,
-    dateObj,
+    id:String(id),
+    sport, league, country, flag,
+    home, away,
+    isLive, minute,
+    scoreHome, scoreAway,
+    startTs, dateObj,
     odd1: odd1 ? Number(odd1) : null,
     oddX: oddX ? Number(oddX) : null,
     odd2: odd2 ? Number(odd2) : null,
@@ -1050,28 +659,18 @@ function normalizeGame(g){
 }
 
 function emojiFlag(country){
-  // bem simples (para não usar logos reais)
-  const c = (country||"").toLowerCase();
-  if(c.includes("brazil") || c.includes("brasil")) return "🇧🇷";
-  if(c.includes("spain") || c.includes("espanha")) return "🇪🇸";
-  if(c.includes("italy") || c.includes("itália") || c.includes("italia")) return "🇮🇹";
-  if(c.includes("germany") || c.includes("alemanha")) return "🇩🇪";
-  if(c.includes("england") || c.includes("inglaterra")) return "🏴";
-  if(c.includes("france") || c.includes("frança") || c.includes("franca")) return "🇫🇷";
+  const c=(country||"").toLowerCase();
+  if(c.includes("brazil")||c.includes("brasil")) return "🇧🇷";
+  if(c.includes("spain")||c.includes("espanha")) return "🇪🇸";
+  if(c.includes("italy")||c.includes("itália")||c.includes("italia")) return "🇮🇹";
+  if(c.includes("germany")||c.includes("alemanha")) return "🇩🇪";
+  if(c.includes("england")||c.includes("inglaterra")) return "🏴";
+  if(c.includes("france")||c.includes("frança")||c.includes("franca")) return "🇫🇷";
   if(c.includes("argentina")) return "🇦🇷";
-  if(c.includes("usa") || c.includes("united states")) return "🇺🇸";
-  if(c.includes("mexico") || c.includes("méxico") || c.includes("mexico")) return "🇲🇽";
+  if(c.includes("usa")||c.includes("united states")) return "🇺🇸";
+  if(c.includes("mexico")||c.includes("méxico")||c.includes("mexico")) return "🇲🇽";
   if(c.includes("world")) return "🌍";
   return "🌐";
-}
-
-function sportIcon(s){
-  s = (s||"").toLowerCase();
-  if(s.includes("football") || s.includes("soccer") || s.includes("fut")) return "⚽";
-  if(s.includes("basket")) return "🏀";
-  if(s.includes("volley")) return "🏐";
-  if(s.includes("tennis")) return "🎾";
-  return "📡";
 }
 
 function sportLabel(key){
@@ -1084,37 +683,34 @@ function sportLabel(key){
 }
 
 function matchSportKey(g){
-  const s = (g.sport||"").toLowerCase();
-  if(s.includes("football") || s.includes("soccer") || s.includes("fut")) return "football";
+  const s=(g.sport||"").toLowerCase();
+  if(s.includes("football")||s.includes("soccer")||s.includes("fut")) return "football";
   if(s.includes("basket")) return "basket";
   if(s.includes("volley")) return "volley";
   if(s.includes("tennis")) return "tennis";
   return "other";
 }
 
-/* ---------- Render base ---------- */
 function setView(view){
-  STATE.view = view;
-
+  STATE.view=view;
   $("#viewHome").classList.toggle("hide", view!=="home");
   $("#viewLive").classList.toggle("hide", view!=="live");
   $("#viewGames").classList.toggle("hide", view!=="games");
   $("#viewBets").classList.toggle("hide", view!=="bets");
   $("#viewPro").classList.toggle("hide", view!=="pro");
-
-  $$(".navBtn").forEach(b => b.classList.toggle("active", b.dataset.view===view));
-  render(); // re-render sections
+  $$(".navBtn").forEach(b=>b.classList.toggle("active", b.dataset.view===view));
+  render();
 }
 
 function setSport(key){
-  STATE.sport = key;
-  $$(".sportPill").forEach(p => p.classList.toggle("active", p.dataset.sport===key));
+  STATE.sport=key;
+  $$(".sportPill").forEach(p=>p.classList.toggle("active", p.dataset.sport===key));
   render();
 }
 
 function setHours(h){
-  STATE.hours = h;
-  $$(".hourBtn").forEach(b => b.classList.toggle("active", Number(b.dataset.h)===h));
+  STATE.hours=h;
+  $$(".hourBtn").forEach(b=>b.classList.toggle("active", Number(b.dataset.h)===h));
   render();
 }
 
@@ -1126,48 +722,84 @@ function toggleSort(){
 
 function fmtOdd(v){
   if(v==null || !Number.isFinite(v)) return "—";
-  // manter 2 casas tipo print
   return Number(v).toFixed(2);
 }
-
-function fmtTime(dateObj){
-  if(!dateObj) return "—";
-  const hh = String(dateObj.getHours()).padStart(2,"0");
-  const mm = String(dateObj.getMinutes()).padStart(2,"0");
+function fmtTime(d){
+  if(!d) return "—";
+  const hh=String(d.getHours()).padStart(2,"0");
+  const mm=String(d.getMinutes()).padStart(2,"0");
   return `${hh}:${mm}`;
 }
 
-function withinHours(game, h){
+function withinHours(game,h){
   if(!game.dateObj) return true;
-  const now = Date.now();
-  const dt = game.dateObj.getTime() - now;
-  // só futuros (próximos)
-  if(dt < 0) return false;
-  const hours = dt / (1000*60*60);
-  return hours <= h;
+  const now=Date.now();
+  const dt=game.dateObj.getTime()-now;
+  if(dt<0) return false;
+  return (dt/(1000*60*60)) <= h;
 }
 
 function groupByLeague(games){
-  const map = new Map();
+  const map=new Map();
   for(const g of games){
     const key = `${g.flag} ${g.country} • ${g.league}`.trim();
-    if(!map.has(key)) map.set(key, { key, flag: g.flag, title: `${g.country ? g.country+" • " : ""}${g.league}`, games: [] });
+    if(!map.has(key)) map.set(key, { key, flag:g.flag, title:`${g.country?g.country+" • ":""}${g.league}`, games:[] });
     map.get(key).games.push(g);
   }
   return Array.from(map.values());
 }
 
-/* ---------- Cards ---------- */
+function renderSportsRow(allGames){
+  const keys=["all","football","basket","volley","tennis"];
+  const counts={
+    all: allGames.length,
+    football: allGames.filter(g=>matchSportKey(g)==="football").length,
+    basket: allGames.filter(g=>matchSportKey(g)==="basket").length,
+    volley: allGames.filter(g=>matchSportKey(g)==="volley").length,
+    tennis: allGames.filter(g=>matchSportKey(g)==="tennis").length,
+  };
+
+  $("#sportsRow").innerHTML = keys.map(k=>{
+    const {icon,name}=sportLabel(k);
+    const c=counts[k]??0;
+    return `
+      <div class="sportPill ${STATE.sport===k?"active":""}" data-sport="${k}">
+        <div class="sportCount">${c}</div>
+        <div class="sportIcon">${icon}</div>
+        <div class="sportName">${name}</div>
+      </div>`;
+  }).join("");
+
+  $$(".sportPill").forEach(p=>p.addEventListener("click", ()=>setSport(p.dataset.sport)));
+}
+
+function sortGames(games){
+  if(STATE.sort==="time") return games.sort((a,b)=>(a.startTs||0)-(b.startTs||0));
+  return games.sort((a,b)=>(b.pop||0)-(a.pop||0));
+}
+
+function escapeHtml(s){
+  return String(s ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+  }[m]));
+}
+
+function hash(str){
+  let h=0; str=String(str);
+  for(let i=0;i<str.length;i++){ h=((h<<5)-h)+str.charCodeAt(i); h|=0; }
+  return Math.abs(h).toString(36);
+}
+
 function renderMatch(g){
   const scoreTxt = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome}–${g.scoreAway}` : "";
   const minuteTxt = (g.minute!=null) ? `${g.minute}'` : "";
   const timeRight = g.isLive ? `${scoreTxt} ${minuteTxt}`.trim() : fmtTime(g.dateObj);
 
-  const liveBadge = g.isLive ? `<div class="liveTag"><span class="liveDot" style="width:8px;height:8px;box-shadow:none"></span>AO VIVO</div>` : "";
+  const liveBadge = g.isLive ? `<div class="liveTag"><span class="liveDot" style="width:7px;height:7px;box-shadow:none"></span>AO VIVO</div>` : "";
 
   return `
     <div class="match" data-id="${escapeHtml(g.id)}">
-      <div class="matchLeft">
+      <div>
         <div class="teams">
           <div class="teamRow"><span class="ballIcon">⚽</span><span class="tName">${escapeHtml(g.home)}</span></div>
           <div class="teamRow"><span class="ballIcon">⚽</span><span class="tName">${escapeHtml(g.away)}</span></div>
@@ -1200,86 +832,78 @@ function renderMatch(g){
 }
 
 function renderLeagueBlock(group, open=true){
-  const id = "lg_" + hash(group.key);
+  const id="lg_"+hash(group.key);
   return `
-    <div class="league" data-league="${escapeHtml(group.key)}">
+    <div class="league">
       <div class="leagueHead" data-toggle="${id}">
-        <div class="leagueTitle"><span class="flag">${escapeHtml(group.flag || "🌐")}</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(group.title)}</span></div>
-        <div class="chev" id="${id}_chev">${open ? "▴" : "▾"}</div>
+        <div class="leagueTitle">
+          <span class="flag">${escapeHtml(group.flag || "🌐")}</span>
+          <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(group.title)}</span>
+        </div>
+        <div class="chev" id="${id}_chev">${open?"▴":"▾"}</div>
       </div>
-      <div class="leagueBody ${open ? "" : "hide"}" id="${id}">
+      <div class="leagueBody ${open?"":"hide"}" id="${id}">
         ${group.games.map(renderMatch).join("")}
       </div>
     </div>
   `;
 }
 
-/* ---------- Main render ---------- */
-function filterGames(base){
-  let games = base.map(normalizeGame);
-
-  // sport filter
-  if(STATE.sport !== "all"){
-    games = games.filter(g => matchSportKey(g) === STATE.sport);
-  }
-
-  return games;
-}
-
-function sortGames(games){
-  if(STATE.sort === "time"){
-    return games.sort((a,b) => (a.startTs||0) - (b.startTs||0));
-  }
-  return games.sort((a,b) => (b.pop||0) - (a.pop||0));
-}
-
-function renderSportsRow(allGames){
-  const keys = ["all","football","basket","volley","tennis"];
-  const counts = {
-    all: allGames.length,
-    football: allGames.filter(g => matchSportKey(g)==="football").length,
-    basket: allGames.filter(g => matchSportKey(g)==="basket").length,
-    volley: allGames.filter(g => matchSportKey(g)==="volley").length,
-    tennis: allGames.filter(g => matchSportKey(g)==="tennis").length,
-  };
-
-  const html = keys.map(k=>{
-    const {icon,name} = sportLabel(k);
-    const c = counts[k] ?? 0;
-    return `
-      <div class="sportPill ${STATE.sport===k ? "active":""}" data-sport="${k}">
-        <div class="sportCount">${c}</div>
-        <div class="sportIcon">${icon}</div>
-        <div class="sportName">${name}</div>
-      </div>
-    `;
-  }).join("");
-
-  $("#sportsRow").innerHTML = html;
-
-  $$(".sportPill").forEach(p=>{
-    p.addEventListener("click", ()=> setSport(p.dataset.sport));
+function wireLeagueToggles(){
+  $$("[data-toggle]").forEach(h=>{
+    h.addEventListener("click", ()=>{
+      const id=h.dataset.toggle;
+      const body=$("#"+id);
+      const chev=$("#"+id+"_chev");
+      const hidden=body.classList.toggle("hide");
+      chev.textContent = hidden ? "▾" : "▴";
+    });
   });
 }
 
+function wireCardActions(){
+  $$(".btnFav").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      const card=e.target.closest(".match");
+      const id=card?.dataset?.id;
+      if(!id) return;
+      if(STATE.favorites.has(id)) STATE.favorites.delete(id);
+      else STATE.favorites.add(id);
+      saveLS("rd_favs", Array.from(STATE.favorites));
+      render();
+    });
+  });
+
+  $$(".btnDetails").forEach(btn=>{
+    btn.addEventListener("click", ()=> alert("Detalhes (próxima etapa)."));
+  });
+}
+
+function filterGames(base){
+  let games = base.map(normalizeGame);
+  if(STATE.sport!=="all"){
+    games = games.filter(g=>matchSportKey(g)===STATE.sport);
+  }
+  return games;
+}
+
 function renderHome(allGames){
-  // Hero = primeiro ao vivo, senão primeiro futuro
   const live = allGames.filter(g=>g.isLive);
   const hero = live[0] ?? allGames.find(g=>!g.isLive) ?? null;
 
   if(hero){
-    $("#heroTeams").textContent = `${hero.home}\n${hero.away}`.replace("\n"," ");
+    $("#heroTeams").textContent = `${hero.home} x ${hero.away}`;
     $("#heroMeta").textContent = hero.isLive
       ? `${hero.country || "World"} • ${hero.league} • ${(hero.minute!=null? hero.minute+"’":"Ao vivo")}`
       : `${hero.country || "World"} • ${hero.league} • ${fmtTime(hero.dateObj)}`;
 
-    const odds = $("#heroOdds").children;
+    const odds=$("#heroOdds").children;
     odds[0].querySelector(".oddV").textContent = fmtOdd(hero.odd1);
     odds[1].querySelector(".oddV").textContent = fmtOdd(hero.oddX);
     odds[2].querySelector(".oddV").textContent = fmtOdd(hero.odd2);
-  } else {
-    $("#heroTeams").textContent = "Sem jogos no momento";
-    $("#heroMeta").textContent = "—";
+  }else{
+    $("#heroTeams").textContent="Sem jogos no momento";
+    $("#heroMeta").textContent="—";
   }
 
   const liveGames = sortGames(allGames.filter(g=>g.isLive));
@@ -1302,51 +926,16 @@ function renderLive(allGames){
 }
 
 function renderGames(allGames){
-  // próximos por horas
   let nextGames = allGames.filter(g=>!g.isLive).filter(g=>withinHours(g, STATE.hours));
   nextGames = sortGames(nextGames);
-
   const groups = groupByLeague(nextGames);
+
   $("#gamesLeagues").innerHTML = groups.length
     ? groups.map(g=>renderLeagueBlock(g, false)).join("")
     : `<div class="league"><div class="leagueHead"><div class="leagueTitle"><span class="flag">🗓️</span>Sem jogos nas próximas ${STATE.hours}h</div><div class="chev">›</div></div></div>`;
 }
 
-function wireLeagueToggles(){
-  $$("[data-toggle]").forEach(h=>{
-    h.addEventListener("click", ()=>{
-      const id = h.dataset.toggle;
-      const body = $("#"+id);
-      const chev = $("#"+id+"_chev");
-      const isHidden = body.classList.toggle("hide");
-      chev.textContent = isHidden ? "▾" : "▴";
-    });
-  });
-}
-
-function wireCardActions(){
-  $$(".btnFav").forEach(btn=>{
-    btn.addEventListener("click", (e)=>{
-      const card = e.target.closest(".match");
-      const id = card?.dataset?.id;
-      if(!id) return;
-      if(STATE.favorites.has(id)) STATE.favorites.delete(id);
-      else STATE.favorites.add(id);
-      saveLS("rd_favs", Array.from(STATE.favorites));
-      render(); // refresh labels
-    });
-  });
-
-  $$(".btnDetails").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      alert("Detalhes (próxima etapa): aqui entra a tela de detalhes do jogo.");
-    });
-  });
-}
-
-/* ---------- Render entry ---------- */
 function render(){
-  // usa os dados já carregados
   const allGames = filterGames(STATE.data.games || []);
   renderSportsRow(allGames);
 
@@ -1358,59 +947,35 @@ function render(){
   wireCardActions();
 }
 
-/* ---------- Fetch jogos.json ---------- */
 async function loadGames(){
   try{
-    const res = await fetch(cacheBust("./jogos.json"), { cache: "no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
+    const res = await fetch(cacheBust("./jogos.json"), { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP "+res.status);
     const json = await res.json();
-
-    // Esperado: { updatedAt, source, games: [] }
     const games = Array.isArray(json.games) ? json.games : (Array.isArray(json) ? json : []);
     STATE.data = { updatedAt: json.updatedAt || "", source: json.source || "", games };
-
   }catch(err){
     console.warn("Falha ao carregar jogos.json:", err);
-    // mantém STATE.data
   }finally{
     render();
   }
 }
 
-/* ---------- Utils ---------- */
-function escapeHtml(s){
-  return String(s ?? "").replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
-  }[m]));
-}
-function hash(str){
-  let h=0; str=String(str);
-  for(let i=0;i<str.length;i++){ h = ((h<<5)-h)+str.charCodeAt(i); h|=0; }
-  return Math.abs(h).toString(36);
-}
-
-/* ---------- Wiring ---------- */
-$$(".navBtn").forEach(b=>{
-  b.addEventListener("click", ()=> setView(b.dataset.view));
-});
-
+/* Wiring */
+$$(".navBtn").forEach(b=>b.addEventListener("click", ()=>setView(b.dataset.view)));
 $("#btnSort").addEventListener("click", toggleSort);
+$$(".hourBtn").forEach(b=>b.addEventListener("click", ()=>setHours(Number(b.dataset.h))));
 
-$$(".hourBtn").forEach(b=>{
-  b.addEventListener("click", ()=> setHours(Number(b.dataset.h)));
-});
+$("#btnSignup").addEventListener("click", ()=>alert("Cadastro (próxima etapa)."));
+$("#btnLogin").addEventListener("click", ()=>alert("Login (próxima etapa)."));
+$("#btnGift").addEventListener("click", ()=>alert("Bônus/novidades (próxima etapa)."));
+$("#btnSettings").addEventListener("click", ()=>alert("Configurações (próxima etapa)."));
+$("#btnFilter").addEventListener("click", ()=>alert("Filtros avançados (próxima etapa)."));
+$("#btnProSim").addEventListener("click", ()=>alert("Checkout PRO (próxima etapa)."));
+$("#btnProInfo").addEventListener("click", ()=>alert("Detalhes do plano (próxima etapa)."));
 
-$("#btnSignup").addEventListener("click", ()=> alert("Cadastro (próxima etapa): criar conta e login."));
-$("#btnLogin").addEventListener("click", ()=> alert("Login (próxima etapa)."));
-$("#btnGift").addEventListener("click", ()=> alert("Bônus/novidades (próxima etapa)."));
-$("#btnSettings").addEventListener("click", ()=> alert("Configurações (próxima etapa)."));
-$("#btnFilter").addEventListener("click", ()=> alert("Filtros avançados (próxima etapa)."));
-$("#btnProSim").addEventListener("click", ()=> alert("Checkout PRO (próxima etapa)."));
-$("#btnProInfo").addEventListener("click", ()=> alert("Detalhes do plano (próxima etapa)."));
-
-/* Atualiza automático (não aparece no topo, só mantém dados vivos) */
 loadGames();
-setInterval(loadGames, 60 * 1000);
+setInterval(loadGames, 60*1000);
 </script>
 </body>
-                </html>
+</html>
