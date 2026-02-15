@@ -27,7 +27,6 @@
       --radius:18px;
       --radius2:22px;
 
-      /* Tipos menores (mais “Novibet”) */
       --fs-xxs:11px;
       --fs-xs:12px;
       --fs-sm:13px;
@@ -52,7 +51,7 @@
 
     .app{
       min-height:100%;
-      padding-bottom: 86px; /* bottom bar menor */
+      padding-bottom: 86px;
     }
 
     /* TOP BAR */
@@ -69,7 +68,7 @@
       align-items:center;
       gap:10px;
     }
-    .brand{display:flex; align-items:center; gap:10px; min-width:0;}
+    .brand{display:flex; align-items:center; gap:10px; min-width:0; user-select:none; cursor:pointer;}
     .logo{
       width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
@@ -191,8 +190,14 @@
       white-space:nowrap;
       font-size:var(--fs-sm);
       color:var(--t0);
-      user-select:none;
       cursor:pointer;
+      user-select:none;
+      text-decoration:none;
+    }
+    .banner-ico{
+      width:18px;height:18px;
+      display:grid;place-items:center;
+      opacity:.95;
     }
     .tag-novo{
       height:22px;
@@ -298,6 +303,12 @@
       box-shadow: 0 14px 30px rgba(0,0,0,.20);
       user-select:none;
       cursor:pointer;
+      white-space:nowrap;
+    }
+    .pill.active{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.14);
+      color: #e9f4f6;
     }
 
     /* LIVE LIST */
@@ -371,6 +382,7 @@
       border:1px solid rgba(255,255,255,.08);
       font-weight:950;
       color: var(--t0);
+      white-space:nowrap;
     }
 
     /* GAMES SHEET */
@@ -394,6 +406,7 @@
       color:#163138;display:flex;align-items:center;gap:10px;
       font-weight:950;font-size: var(--fs-md);
       user-select:none;cursor:pointer;
+      white-space:nowrap;
     }
     .tchip.active{background:#dff2f2;border-color: rgba(38,208,216,.35);}
     .sheet-row{
@@ -447,7 +460,7 @@
     .page{display:none}
     .page.active{display:block}
 
-    /* ====== BOTTOM NAV (NOVIBET-LIKE) ====== */
+    /* ====== BOTTOM NAV ====== */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -457,7 +470,7 @@
     }
     .bottom-inner{
       pointer-events:auto;
-      height:64px;                 /* menor */
+      height:64px;
       border-radius: 22px;
       background: rgba(10,40,48,.78);
       border:1px solid rgba(255,255,255,.10);
@@ -475,27 +488,24 @@
       height:48px;
       border-radius: 18px;
       display:flex;
-      flex-direction:column;       /* ícone em cima, texto embaixo */
+      flex-direction:column;
       align-items:center;
       justify-content:center;
       gap:4px;
       color: rgba(233,244,246,.72);
       font-weight:900;
-      font-size: 11.5px;           /* igual print */
+      font-size: 11.5px;
       user-select:none;
       cursor:pointer;
       min-width:0;
       background: transparent;
       border: 1px solid transparent;
     }
-
-    /* Item ativo com “pill” atrás, igual app */
     .navbtn.active{
       color: #e9f4f6;
       background: rgba(255,255,255,.10);
       border-color: rgba(255,255,255,.12);
     }
-
     .navico{
       width:22px;height:22px;
       display:grid;place-items:center;
@@ -505,7 +515,6 @@
       filter: drop-shadow(0 6px 14px rgba(0,0,0,.30));
     }
 
-    /* Botão PRO circular na direita (mais “app”) */
     .pro-fab{
       width:52px;height:52px;
       border-radius: 999px;
@@ -519,9 +528,7 @@
       border-color: rgba(255,255,255,.18);
     }
     .pro-fab .navico{width:24px;height:24px;}
-    .pro-fab span{
-      display:none; /* PRO só ícone, igual “bolinha” */
-    }
+    .pro-fab span{display:none;}
 
     /* SVG default color */
     svg{display:block}
@@ -531,6 +538,58 @@
       stroke-width: 2.2;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+    .ico-fill{fill: currentColor}
+
+    /* MODAL (API URL) */
+    .modal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      z-index:100;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 16px;
+    }
+    .modal.open{display:flex}
+    .modal-card{
+      width:min(520px, 100%);
+      border-radius: 22px;
+      background: rgba(10,40,48,.92);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 22px 70px rgba(0,0,0,.50);
+      padding: 14px 14px 12px;
+    }
+    .modal-title{
+      font-weight:950;
+      font-size: var(--fs-xl);
+      margin: 0 0 8px;
+    }
+    .modal-sub{
+      margin: 0 0 10px;
+      color: rgba(233,244,246,.70);
+      font-weight:800;
+      font-size: var(--fs-sm);
+      line-height:1.35;
+    }
+    .input{
+      width:100%;
+      height:44px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--t0);
+      padding: 0 12px;
+      font-weight:800;
+      font-size: var(--fs-sm);
+      outline:none;
+    }
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      margin-top: 10px;
+      justify-content:flex-end;
     }
 
     @media (min-width:560px){
@@ -543,7 +602,7 @@
   <div class="app">
     <header class="topbar">
       <div class="topbar-inner">
-        <div class="brand">
+        <div class="brand" id="brandTap" title="Toque e segure para configurar a API">
           <div class="logo">RD</div>
           <div class="brand-text">
             <div class="brand-title">Radar PRO</div>
@@ -563,20 +622,34 @@
     <main>
       <section class="page active" id="page-home">
         <div class="banners" id="bannersHome">
-          <div class="banner-pill" id="bannerProHome">✨ Entre pro PRO <span class="tag-novo">NOVO</span></div>
-          <div class="banner-pill" id="bannerIgHome">📷 Instagram</div>
+          <a class="banner-pill" id="bannerProHome" href="javascript:void(0)">
+            <span class="banner-ico">💎</span>
+            Entre pro PRO <span class="tag-novo">NOVO</span>
+          </a>
+
+          <a class="banner-pill" id="bannerIgHome" href="https://instagram.com/" target="_blank" rel="noopener">
+            <span class="banner-ico" aria-hidden="true">
+              <!-- Instagram logo (SVG) -->
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <path class="ico-fill" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9z"/>
+                <path class="ico-fill" d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                <circle class="ico-fill" cx="17.4" cy="6.6" r="1.1"/>
+              </svg>
+            </span>
+            Instagram
+          </a>
         </div>
 
         <div class="hero" id="heroHome"></div>
 
         <div class="section-title">Populares</div>
-        <div class="popular-pills">
-          <div class="pill">🔥 Odds Melhoradas</div>
-          <div class="pill">⚽ Ligas principais</div>
-          <div class="pill">🌍 Europa</div>
-          <div class="pill">🇧🇷 Futebol do Brasil</div>
-          <div class="pill">🏀 NBA</div>
-          <div class="pill">🎮 E-sports</div>
+        <div class="popular-pills" id="popularPills">
+          <div class="pill" data-pill="odds">🔥 Odds Melhoradas</div>
+          <div class="pill" data-pill="top">⚽ Ligas principais</div>
+          <div class="pill" data-pill="eu">🌍 Europa</div>
+          <div class="pill" data-pill="br">🇧🇷 Futebol do Brasil</div>
+          <div class="pill" data-pill="nba">🏀 NBA</div>
+          <div class="pill" data-pill="esports">🎮 E-sports</div>
         </div>
 
         <div class="section-head">
@@ -588,8 +661,21 @@
 
       <section class="page" id="page-live">
         <div class="banners" id="bannersLive">
-          <div class="banner-pill" id="bannerProLive">✨ Entre pro PRO <span class="tag-novo">NOVO</span></div>
-          <div class="banner-pill" id="bannerIgLive">📷 Instagram</div>
+          <a class="banner-pill" id="bannerProLive" href="javascript:void(0)">
+            <span class="banner-ico">💎</span>
+            Entre pro PRO <span class="tag-novo">NOVO</span>
+          </a>
+
+          <a class="banner-pill" id="bannerIgLive" href="https://instagram.com/" target="_blank" rel="noopener">
+            <span class="banner-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18">
+                <path class="ico-fill" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9z"/>
+                <path class="ico-fill" d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                <circle class="ico-fill" cx="17.4" cy="6.6" r="1.1"/>
+              </svg>
+            </span>
+            Instagram
+          </a>
         </div>
 
         <div class="hero" id="heroLive"></div>
@@ -611,10 +697,10 @@
           </div>
 
           <div class="sheet-row">
-            <div class="sort">⇅ Popular primeiro ▾</div>
+            <div class="sort" id="sortLabel">⇅ Popular primeiro ▾</div>
             <div class="sheet-icons">
-              <div class="sico">⚙️</div>
-              <div class="sico">🎚️</div>
+              <div class="sico" id="btnSettings" title="Configurar API">⚙️</div>
+              <div class="sico" id="btnFilters" title="Limpar filtros">🎚️</div>
             </div>
           </div>
 
@@ -632,11 +718,29 @@
         <div style="text-align:center;padding:18px 12px;color:rgba(233,244,246,.70);font-weight:900;">
           PRO — login/pagamento depois.
         </div>
+
+        <div style="padding:0 12px 12px;">
+          <div class="league" style="background:rgba(255,255,255,.06)">
+            <div class="league-head">
+              <div class="left">
+                <div class="flag">⚙️</div>
+                <div>Configurações</div>
+              </div>
+              <div class="collapse" id="openApiModal">✎</div>
+            </div>
+            <div class="match" style="border-top:none">
+              <div style="color:rgba(233,244,246,.75);font-weight:850;font-size:13px;line-height:1.35">
+                Para “puxar jogos” de uma API real, coloque a URL no menu de configuração (toque no ⚙️).<br/>
+                Se não colocar, ele usa <b>jogos.json</b> local.
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
 
-  <!-- BOTTOM NAV (NOVIBET-LIKE) -->
+  <!-- BOTTOM NAV -->
   <nav class="bottom">
     <div class="bottom-inner">
       <div class="navbtn active" data-page="home">
@@ -695,8 +799,30 @@
     </div>
   </nav>
 
+  <!-- MODAL: API URL -->
+  <div class="modal" id="apiModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h3 class="modal-title">Configurar API de jogos</h3>
+      <p class="modal-sub">
+        Cole aqui uma URL que retorne JSON (com uma lista em <b>games</b> ou um array direto).<br/>
+        Se ficar vazio, usa <b>jogos.json</b>.
+      </p>
+      <input class="input" id="apiInput" placeholder="Ex: https://seu-endpoint.com/jogos" />
+      <div class="modal-actions">
+        <button class="btn" id="apiCancel">Cancelar</button>
+        <button class="btn white" id="apiClear">Usar jogos.json</button>
+        <button class="btn pink" id="apiSave">Salvar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const DATA_URL = "jogos.json?ts=" + Date.now();
+    /* =========================
+       CONFIG / DATA
+    ========================== */
+    const LS_API_KEY = "RADAR_API_URL";
+    const DEFAULT_LOCAL_URL = "jogos.json";
+    const REFRESH_MS = 30_000; // atualiza a cada 30s (mais “minuto a minuto” sem travar)
 
     const ICONS = {
       all: { icon: "📡", label: "Tudo" },
@@ -706,7 +832,25 @@
       volley: { icon: "🏐", label: "Vôlei" },
     };
 
-    const state = { page:"home", sport:"all", hours:1, data:null, collapsed:new Set() };
+    const EUROPE = new Set([
+      "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
+      "Czech Republic","Denmark","England","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland",
+      "Ireland","Italy","Kazakhstan","Kosovo","Latvia","Liechtenstein","Lithuania","Luxembourg","Malta","Moldova","Monaco",
+      "Montenegro","Netherlands","North Macedonia","Northern Ireland","Norway","Poland","Portugal","Romania","Russia",
+      "San Marino","Scotland","Serbia","Slovakia","Slovenia","Spain","Sweden","Switzerland","Turkey","Ukraine","Wales",
+      "UK","United Kingdom"
+    ]);
+
+    const state = {
+      page:"home",
+      sport:"all",
+      hours:1,
+      data:null,
+      collapsed:new Set(),
+      pill:null,          // filtro rápido (populares)
+      sort:"popular",     // popular | time
+      apiUrl: (localStorage.getItem(LS_API_KEY) || "").trim()
+    };
 
     const pages = {
       home: document.getElementById("page-home"),
@@ -716,7 +860,9 @@
       pro: document.getElementById("page-pro"),
     };
 
-    // Bottom nav
+    /* =========================
+       NAV / UI WIRING
+    ========================== */
     document.querySelectorAll(".navbtn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const p = btn.dataset.page;
@@ -732,39 +878,57 @@
       document.querySelectorAll(".navbtn").forEach(b=>{
         b.classList.toggle("active", b.dataset.page===p);
       });
+
       window.scrollTo({top:0, behavior:"instant"});
       renderAll();
     }
 
-    // Sports row
-    const sportsRow = document.getElementById("sportsRow");
-    function renderSportsRow(counts){
-      sportsRow.innerHTML = "";
-      const items = [
-        ["all", ICONS.all],
-        ["football", ICONS.football],
-        ["tennis", ICONS.tennis],
-        ["basketball", ICONS.basketball],
-        ["volley", ICONS.volley],
-      ];
-      items.forEach(([key, meta])=>{
-        const el = document.createElement("div");
-        el.className = "sport-item" + (state.sport===key ? " active" : "");
-        el.innerHTML = `
-          <div class="sport-icon">${meta.icon}</div>
-          <div class="badge">${(counts && counts[key] != null) ? counts[key] : 0}</div>
-          <div>${meta.label}</div>
-          <div class="underline"></div>
-        `;
-        el.addEventListener("click", ()=>{
-          state.sport = key;
-          renderAll();
-        });
-        sportsRow.appendChild(el);
+    // PRO banners -> abre a página PRO
+    function wireProBanner(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.addEventListener("click", ()=>{
+        setPage("pro");
       });
     }
+    wireProBanner("bannerProHome");
+    wireProBanner("bannerProLive");
 
-    // time chips
+    // Botões topo (placeholder)
+    document.getElementById("btnRegister").addEventListener("click", ()=>alert("Cadastro (placeholder)."));
+    document.getElementById("btnLogin").addEventListener("click", ()=>alert("Login (placeholder)."));
+
+    // Popular pills (filtros rápidos)
+    const pillsWrap = document.getElementById("popularPills");
+    pillsWrap.querySelectorAll(".pill").forEach(p=>{
+      p.addEventListener("click", ()=>{
+        const key = p.dataset.pill || null;
+        state.pill = (state.pill === key) ? null : key;
+
+        pillsWrap.querySelectorAll(".pill").forEach(x=>{
+          x.classList.toggle("active", x.dataset.pill === state.pill);
+        });
+
+        // alguns atalhos úteis
+        if(state.pill === "nba"){
+          state.sport = "basketball";
+        } else if(state.pill === "br"){
+          state.sport = "football";
+        }
+
+        renderAll();
+      });
+    });
+
+    // Sort label (troca popular <-> hora)
+    const sortLabel = document.getElementById("sortLabel");
+    sortLabel.addEventListener("click", ()=>{
+      state.sort = (state.sort === "popular") ? "time" : "popular";
+      sortLabel.textContent = state.sort === "popular" ? "⇅ Popular primeiro ▾" : "⏱️ Horário ▾";
+      renderAll();
+    });
+
+    // Time chips
     document.querySelectorAll(".tchip").forEach(ch=>{
       ch.addEventListener("click", ()=>{
         document.querySelectorAll(".tchip").forEach(x=>x.classList.remove("active"));
@@ -774,37 +938,152 @@
       });
     });
 
-    // data
-    async function loadData(){
+    // Settings / filters buttons
+    document.getElementById("btnSettings").addEventListener("click", openApiModal);
+    document.getElementById("openApiModal").addEventListener("click", openApiModal);
+
+    document.getElementById("btnFilters").addEventListener("click", ()=>{
+      state.pill = null;
+      pillsWrap.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+      state.sport = "all";
+      state.sort = "popular";
+      sortLabel.textContent = "⇅ Popular primeiro ▾";
+      renderAll();
+    });
+
+    // Long-press on brand to open modal (mobile-friendly)
+    const brandTap = document.getElementById("brandTap");
+    let pressTimer = null;
+    brandTap.addEventListener("touchstart", ()=>{
+      pressTimer = setTimeout(openApiModal, 520);
+    }, {passive:true});
+    brandTap.addEventListener("touchend", ()=>clearTimeout(pressTimer), {passive:true});
+    brandTap.addEventListener("mousedown", ()=>{
+      pressTimer = setTimeout(openApiModal, 520);
+    });
+    brandTap.addEventListener("mouseup", ()=>clearTimeout(pressTimer));
+    brandTap.addEventListener("mouseleave", ()=>clearTimeout(pressTimer));
+
+    /* =========================
+       API MODAL
+    ========================== */
+    const apiModal = document.getElementById("apiModal");
+    const apiInput = document.getElementById("apiInput");
+    const apiCancel = document.getElementById("apiCancel");
+    const apiClear = document.getElementById("apiClear");
+    const apiSave = document.getElementById("apiSave");
+
+    function openApiModal(){
+      apiInput.value = state.apiUrl || "";
+      apiModal.classList.add("open");
+      setTimeout(()=>apiInput.focus(), 50);
+    }
+    function closeApiModal(){
+      apiModal.classList.remove("open");
+    }
+
+    apiModal.addEventListener("click", (e)=>{
+      if(e.target === apiModal) closeApiModal();
+    });
+    apiCancel.addEventListener("click", closeApiModal);
+
+    apiClear.addEventListener("click", ()=>{
+      state.apiUrl = "";
+      localStorage.removeItem(LS_API_KEY);
+      closeApiModal();
+      loadData(true);
+    });
+
+    apiSave.addEventListener("click", ()=>{
+      const v = (apiInput.value || "").trim();
+      state.apiUrl = v;
+      if(v) localStorage.setItem(LS_API_KEY, v);
+      else localStorage.removeItem(LS_API_KEY);
+      closeApiModal();
+      loadData(true);
+    });
+
+    /* =========================
+       DATA LOADING (puxar jogos)
+    ========================== */
+    function buildDataUrl(){
+      const base = state.apiUrl || DEFAULT_LOCAL_URL;
+      const sep = base.includes("?") ? "&" : "?";
+      return base + sep + "ts=" + Date.now();
+    }
+
+    async function fetchJsonWithTimeout(url, timeoutMs=9000){
+      const ctrl = new AbortController();
+      const t = setTimeout(()=>ctrl.abort(), timeoutMs);
       try{
-        const res = await fetch(DATA_URL, {cache:"no-store"});
-        state.data = await res.json();
+        const res = await fetch(url, {cache:"no-store", signal: ctrl.signal});
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        return await res.json();
+      }finally{
+        clearTimeout(t);
+      }
+    }
+
+    async function loadData(force=false){
+      try{
+        const url = buildDataUrl();
+        const json = await fetchJsonWithTimeout(url, 9000);
+
+        // aceita formatos:
+        // 1) { games: [...] }
+        // 2) [ ... ]
+        // 3) { data: [...] } ou { events: [...] }
+        const games = Array.isArray(json) ? json
+          : (Array.isArray(json.games) ? json.games
+          : (Array.isArray(json.data) ? json.data
+          : (Array.isArray(json.events) ? json.events : [])));
+
+        state.data = { games };
       }catch(e){
-        state.data = { games: [] };
+        // fallback: se API falhar, tenta jogos.json (se não estiver nele)
+        if(state.apiUrl){
+          try{
+            const fallback = await fetchJsonWithTimeout(DEFAULT_LOCAL_URL + "?ts=" + Date.now(), 9000);
+            const games = Array.isArray(fallback) ? fallback : (fallback.games || fallback.data || fallback.events || []);
+            state.data = { games: Array.isArray(games) ? games : [] };
+          }catch(_){
+            state.data = { games: [] };
+          }
+        }else{
+          state.data = { games: [] };
+        }
       }
       renderAll();
     }
 
+    /* =========================
+       NORMALIZATION / FILTERS
+    ========================== */
     function normalizeGames(raw){
       if(!Array.isArray(raw)) return [];
       return raw.map(g=>{
-        const sport = (g.sport || g.sportKey || "football").toLowerCase();
+        const sport = (g.sport || g.sportKey || g.category || "football").toLowerCase();
         const league = g.league || g.competition || g.leagueName || "Liga";
-        const country = g.country || g.area || "";
+        const country = g.country || g.area || g.region || "";
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
         const status = (g.status || g.state || (g.live ? "LIVE" : "NS")).toUpperCase();
         const minute = (g.minute != null ? String(g.minute) : (g.time || ""));
-        const startTs = g.startTs || g.kickoffTs || g.timestamp || null;
-        const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : null));
-        const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : null));
-        const odds = g.odds || g.market1x2 || null;
+        const startTs = g.startTs || g.kickoffTs || g.timestamp || g.start_time || null;
+        const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? null)));
+        const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? null)));
+        const odds = g.odds || g.market1x2 || g.oneXtwo || null;
         const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
+
+        const oh = odds ? (odds.home ?? odds["1"] ?? odds.h ?? null) : null;
+        const od = odds ? (odds.draw ?? odds["x"] ?? odds.d ?? null) : null;
+        const oa = odds ? (odds.away ?? odds["2"] ?? odds.a ?? null) : null;
+
         return {
           id, sport, league, country, home, away,
-          status, minute, startTs, scoreHome, scoreAway,
-          odds: odds ? { home: odds.home ?? odds["1"] ?? null, draw: odds.draw ?? odds["x"] ?? null, away: odds.away ?? odds["2"] ?? null }
-                     : { home:null, draw:null, away:null }
+          status, minute, startTs,
+          scoreHome, scoreAway,
+          odds: { home: oh, draw: od, away: oa }
         };
       });
     }
@@ -844,6 +1123,79 @@
     function shortName(s){
       if(!s) return "";
       return s.length > 20 ? s.slice(0,18) + "…" : s;
+    }
+
+    function safeTimeSort(a, b){
+      const ta = Number(a.startTs || 0);
+      const tb = Number(b.startTs || 0);
+      if(!ta && !tb) return 0;
+      if(!ta) return 1;
+      if(!tb) return -1;
+      return ta - tb;
+    }
+
+    function applyPillFilter(games){
+      if(!state.pill) return games;
+
+      if(state.pill === "eu"){
+        return games.filter(g=>{
+          const c = (g.country || "").trim();
+          if(!c) return false;
+          return EUROPE.has(c) || /europe|uefa|champions|europa|premier|la liga|serie a|bundesliga|ligue 1/i.test(g.league || "");
+        });
+      }
+      if(state.pill === "br"){
+        return games.filter(g=>/brazil|brasil/i.test(g.country || "") || /brasile/i.test(g.league || ""));
+      }
+      if(state.pill === "nba"){
+        return games.filter(g=>/nba/i.test(g.league || "") || g.sport.includes("basket"));
+      }
+      if(state.pill === "top"){
+        // liga “principais” (heurística)
+        return games.filter(g=>{
+          const L = (g.league || "").toLowerCase();
+          return /(premier|la liga|serie a|bundesliga|ligue 1|champions|europa|nba|mlb|nhl|libertadores|sul-americana|copa do brasil|brasileir)/i.test(L);
+        });
+      }
+      if(state.pill === "odds"){
+        // apenas jogos que vieram com odds (qualquer uma)
+        return games.filter(g=> g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null));
+      }
+      if(state.pill === "esports"){
+        return games.filter(g=>/esport|e-sport|cs:go|valorant|lol|league of legends|dota/i.test((g.league||"") + " " + (g.sport||"")));
+      }
+      return games;
+    }
+
+    /* =========================
+       RENDER
+    ========================== */
+    const sportsRow = document.getElementById("sportsRow");
+
+    function renderSportsRow(counts){
+      sportsRow.innerHTML = "";
+      const items = [
+        ["all", ICONS.all],
+        ["football", ICONS.football],
+        ["tennis", ICONS.tennis],
+        ["basketball", ICONS.basketball],
+        ["volley", ICONS.volley],
+      ];
+      items.forEach(([key, meta])=>{
+        const el = document.createElement("div");
+        el.className = "sport-item" + (state.sport===key ? " active" : "");
+        el.innerHTML = `
+          <div class="sport-icon">${meta.icon}</div>
+          <div class="badge">${(counts && counts[key] != null) ? counts[key] : 0}</div>
+          <div>${meta.label}</div>
+          <div class="underline"></div>
+        `;
+        el.addEventListener("click", ()=>{
+          state.sport = key;
+          renderAll();
+        });
+        sportsRow.appendChild(el);
+      });
     }
 
     function renderHero(el, games){
@@ -1006,9 +1358,10 @@
 
     function renderAll(){
       const raw = state.data?.games || [];
-      const games = normalizeGames(raw);
+      let games = normalizeGames(raw);
 
-      const sportFiltered = games.filter(g=>{
+      // filtro por esporte
+      games = games.filter(g=>{
         if(state.sport === "all") return true;
         if(state.sport === "football") return (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football");
         if(state.sport === "tennis") return g.sport.includes("tennis");
@@ -1017,15 +1370,24 @@
         return true;
       });
 
-      const liveGames = sportFiltered.filter(isLive);
-      const nextGames = sportFiltered.filter(g=>!isLive(g)).filter(g=>inNextHours(g, state.hours));
+      // filtro rápido (pills)
+      games = applyPillFilter(games);
 
+      const liveGames = games.filter(isLive);
+      let nextGames = games.filter(g=>!isLive(g)).filter(g=>inNextHours(g, state.hours));
+
+      // sort
+      if(state.sort === "time"){
+        nextGames = nextGames.slice().sort(safeTimeSort);
+      }
+
+      const countsBase = normalizeGames(raw);
       const counts = {
-        all: sportFiltered.length,
-        football: games.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
-        tennis: games.filter(g=> g.sport.includes("tennis")).length,
-        basketball: games.filter(g=> g.sport.includes("basket")).length,
-        volley: games.filter(g=> g.sport.includes("volley")).length,
+        all: countsBase.length,
+        football: countsBase.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
+        tennis: countsBase.filter(g=> g.sport.includes("tennis")).length,
+        basketball: countsBase.filter(g=> g.sport.includes("basket")).length,
+        volley: countsBase.filter(g=> g.sport.includes("volley")).length,
       };
       renderSportsRow(counts);
 
@@ -1041,20 +1403,11 @@
       renderGamesSheet(document.getElementById("gamesList"), nextGames);
     }
 
-    document.getElementById("btnRegister").addEventListener("click", ()=>alert("Cadastro (placeholder)."));
-    document.getElementById("btnLogin").addEventListener("click", ()=>alert("Login (placeholder)."));
-
-    // Clique banners (placeholder pro futuro)
-    const igClick = () => alert("Instagram (placeholder).");
-    const proClick = () => alert("Entre pro PRO (placeholder).");
-
-    document.getElementById("bannerIgHome")?.addEventListener("click", igClick);
-    document.getElementById("bannerIgLive")?.addEventListener("click", igClick);
-    document.getElementById("bannerProHome")?.addEventListener("click", proClick);
-    document.getElementById("bannerProLive")?.addEventListener("click", proClick);
-
+    /* =========================
+       INIT
+    ========================== */
     loadData();
-    setInterval(loadData, 60_000);
+    setInterval(()=>loadData(false), REFRESH_MS);
   </script>
 </body>
-</html>
+  </html>
