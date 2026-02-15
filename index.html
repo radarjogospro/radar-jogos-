@@ -972,6 +972,27 @@
           if(v > 1e12) return Math.floor(v/1000);
           if(v > 1e9) return Math.floor(v);
         }
+
+    function getStartMs(g){
+      // prioridade: startTs (segundos), kickoffTs (ms), date+time
+      const st = Number(g?.startTs);
+      if(Number.isFinite(st) && st > 0) return st * 1000;
+
+      const kt = Number(g?.kickoffTs);
+      if(Number.isFinite(kt) && kt > 0) return kt;
+
+      const date = g?.date;
+      const time = g?.time;
+      if(date){
+        const hhmm = (typeof time === "string" && /^\d{2}:\d{2}/.test(time)) ? time : "00:00";
+        const d = new Date(`${date}T${hhmm}:00`);
+        const ms = d.getTime();
+        if(Number.isFinite(ms)) return ms;
+      }
+      return null;
+    }
+
+
         if(typeof v === "string"){
           const s = v.trim();
           if(/^\d{10,13}$/.test(s)){
@@ -1113,18 +1134,21 @@
     const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
     function isLive(g){
-      // 1) status
-      const s = (g.status || "").toUpperCase();
+      const s = String(g?.status || "").toUpperCase();
+
+      // status da API-Football que realmente indicam jogo rolando
       if(LIVE_SET.has(s)) return true;
 
-      // 2) minuto / elapsed
-      const m = String(g.minute || "").trim();
-      if(m.includes("'")) return true;
-      const n = Number(m);
-      if(Number.isFinite(n) && n > 0 && n < 140) return true;
-
-      // 3) se a API te manda isLive (já entra como status LIVE no normalize, mas reforça)
-      if(g.isLive === true) return true;
+      // Se vier booleano do feed, só confia se for recente e não for status “parado”
+      if(g?.isLive){
+        if(isFinished(g)) return false;
+        if(s === "INT" || s === "SUSP" || s === "ABD" || s === "CANC" || s === "PST") return false;
+        const startMs = getStartMs(g);
+        if(!startMs) return false;
+        const age = Date.now() - startMs;
+        if(age < 0) return false;
+        return age <= 3*3600*1000; // no máximo 3h
+      }
 
       return false;
     }
@@ -1138,28 +1162,31 @@
 
     function finishedTooOld(g){
       if(!isFinished(g)) return false;
-      if(!g.startTs) return true; // sem hora? melhor esconder
+      const startMs = getStartMs(g);
+      if(!startMs) return true; // sem hora? melhor esconder
       const now = Date.now();
-      const start = Number(g.startTs) * 1000;
-      if(!Number.isFinite(start)) return true;
 
       // “fim estimado” = kickoff + 2h
-      const endEstimated = start + 2*3600*1000;
+      const endEstimated = startMs + 2*3600*1000;
       const diffMin = (now - endEstimated) / 60000;
       return diffMin > KEEP_FINISHED_MINUTES;
     }
 
     function inNextHours(g, hours){
+      // mantém os AO VIVO sempre visíveis
+      if(isLive(g)) return true;
+
       // não mostra jogo encerrado antigo
       if(finishedTooOld(g)) return false;
 
-      if(!g.startTs) return true; // não some da lista se não tem data
-      const now = Date.now();
-      const ts = Number(g.startTs)*1000;
-      if(!Number.isFinite(ts)) return true;
+      const startMs = getStartMs(g);
+      if(!startMs) return false; // sem data/hora: não entra na lista
 
-      // ✅ janela: do passado recente (até -25min depois do fim estimado é cortado acima)
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
+      const now = Date.now();
+
+      // janela: até -6h no passado e +hours no futuro
+      const diff = startMs - now;
+      return diff <= hours*3600*1000 && diff >= -6*3600*1000;
     }
 
     function startsWithinHours(g, hours){
@@ -1182,13 +1209,37 @@
     }
 
     function formatMinute(g){
-      const m = String(g.minute || "").trim();
-      if(!m) return "";
-      if(m.includes(":")) return m;
-      if(m.endsWith("'")) return m.replace("'", "") + ":00";
-      const n = Number(m);
-      if(Number.isFinite(n)) return String(n).padStart(2,"0") + ":00";
-      return m;
+      // Mostra relógio ao vivo como 8' (não 08:00)
+      if(!g || !g.isLive) return "";
+      const status = String(g.status||"").toUpperCase();
+
+      // intervalos / pausas
+      if(status === "HT") return "HT";
+      if(status === "BT") return "INT"; // break time
+      if(status === "P") return "PEN";
+
+      const now = Date.now();
+
+      // 1) se API mandar elapsed numérico, usa
+      let m = Number(g.elapsed);
+      if(!Number.isFinite(m) || m < 0) m = null;
+
+      // 2) senão, calcula localmente por startTs/kickoffTs
+      if(m === null){
+        const startMs = getStartMs(g);
+        if(startMs){
+          m = Math.floor((now - startMs) / 60000);
+          if(m < 0) m = 0;
+        }
+      }
+
+      // 3) fallback
+      if(m === null) return "AO VIVO";
+
+      // trava limites razoáveis (evita 154' infinito)
+      if(m > 130) m = 130;
+
+      return `${m}'`;
     }
 
     function formatKickoff(g){
