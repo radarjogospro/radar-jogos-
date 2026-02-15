@@ -946,15 +946,20 @@
 
         state.data = { games };
       }catch(e){
-        if(state.apiUrl){
-          try{
-            const fallback = await fetchJsonWithTimeout(DEFAULT_LOCAL_URL + "?ts=" + Date.now(), 9000);
-            const games = Array.isArray(fallback) ? fallback : (fallback.games || fallback.data || fallback.events || []);
-            state.data = { games: Array.isArray(games) ? games : [] };
-          }catch(_){ state.data = { games: [] }; }
-        }else{
-          state.data = { games: [] };
-        }
+      // Mostra erro, mas tenta um fallback no arquivo local (evita "tela vazia" por 404/cache)
+      state.error = (e && e.message) ? e.message : String(e);
+      const fallbackUrl = DEFAULT_LOCAL_URL + (DEFAULT_LOCAL_URL.includes("?") ? "&" : "?") + "ts=" + Date.now();
+      try{
+        const json2 = await fetchJsonWithTimeout(fallbackUrl, 12000);
+        const games2 = Array.isArray(json2) ? json2 : (Array.isArray(json2.games) ? json2.games : []);
+        state.data = {
+          updatedAt: json2.updatedAt || null,
+          cacheBust: json2.cacheBust || null,
+          games: games2
+        };
+        state.error = "";
+      }catch(e2){
+        state.data = { games: [] };
       }
       renderAll();
     }
@@ -1105,9 +1110,16 @@
         const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
 
         // ✅ minuto: elapsed > minute > clock > time
-        const minute = (g.elapsed != null ? String(g.elapsed) : (g.minute != null ? String(g.minute) : (g.clock || g.time || "")));
+        const minute = (elapsedSafe != null ? String(elapsedSafe) : (g.minute != null ? String(g.minute) : (g.clock || g.time || "")));
 
         const startTs = parseStartTsAny(g);
+      // Se a API não mandar 'elapsed' certinho, calcula pelo kickoffTs quando estiver AO VIVO
+      let elapsedSafe = (typeof g.elapsed === 'number') ? g.elapsed : null;
+      if((elapsedSafe === null || elapsedSafe === 0) && startTs && isLive(g)){
+        const mins = Math.floor((Date.now() - startTs) / 60000);
+        elapsedSafe = mins > 0 ? mins : 1;
+      }
+
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
         const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
@@ -1134,29 +1146,27 @@
     const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
     function isLive(g){
-      const s = String(g?.status || "").toUpperCase();
-
-      // status da API-Football que realmente indicam jogo rolando
+      const s = (g.status || "").toUpperCase();
       if(LIVE_SET.has(s)) return true;
 
-      // Se vier booleano do feed, só confia se for recente e não for status “parado”
-      if(g?.isLive){
-        if(isFinished(g)) return false;
-        if(s === "INT" || s === "SUSP" || s === "ABD" || s === "CANC" || s === "PST") return false;
-        const startMs = getStartMs(g);
-        if(!startMs) return false;
-        const age = Date.now() - startMs;
-        if(age < 0) return false;
-        return age <= 3*3600*1000; // no máximo 3h
+      // Heurística: se o jogo começou há pouco e ainda não terminou, trate como AO VIVO
+      const startMs = Number.isFinite(g.kickoffTs) ? g.kickoffTs : null;
+      const now = Date.now();
+
+      if(typeof g.elapsed === "number" && g.elapsed > 0 && !isFinished(g)) return true;
+
+      if(startMs){
+        const age = now - startMs;
+        // começou até 5min no futuro (ajuste de fuso) ou até 3h atrás
+        if(age >= -5*60*1000 && age <= 3*3600*1000 && !isFinished(g)) return true;
       }
 
-      return false;
-    }
+      // "INT" (interrompido) às vezes vem em partidas ainda abertas — só considera ao vivo se estiver na janela
+      if(s === "INT" && startMs){
+        const age = now - startMs;
+        if(age >= -5*60*1000 && age <= 3*3600*1000) return true;
+      }
 
-    function isFinished(g){
-      const s = (g.status || "").toUpperCase();
-      if(FINISHED_SET.has(s)) return true;
-      if(s.includes("FT")) return true;
       return false;
     }
 
