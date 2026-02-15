@@ -755,6 +755,9 @@
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
+    // ✅ Anti-“jogo de ontem”: tolerância p/ jogo encerrado ficar visível (em minutos)
+    const KEEP_FINISHED_MINUTES = 25; // se acabou há pouco, pode aparecer; senão some
+
     const EUROPE = new Set([
       "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia","Bulgaria","Croatia","Cyprus",
       "Czech Republic","Denmark","England","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland",
@@ -956,10 +959,11 @@
       renderAll();
     }
 
-    /* ======== PARSE DE DATA/HORA ======== */
+    /* ======== PARSE DE DATA/HORA (ROBUSTO) ======== */
     function parseStartTsAny(g){
+      // 1) timestamps diretos
       const candidates = [
-        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
+        g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.datetime,
         g.commence_time, g.kickoff, g.start, g.timeStart, g.beginTime
       ].filter(v=>v!=null && v!=="");
 
@@ -970,18 +974,100 @@
         }
         if(typeof v === "string"){
           const s = v.trim();
-
           if(/^\d{10,13}$/.test(s)){
             const n = Number(s);
             if(n > 1e12) return Math.floor(n/1000);
             return Math.floor(n);
           }
-
           const ms = Date.parse(s);
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
       }
+
+      // 2) date + time (se existir)
+      const d = (g.date || g.match_date || g.day || "").toString().trim();
+      const t = (g.time || g.kickoffTime || g.hour || "").toString().trim();
+      if(d && /^\d{4}-\d{2}-\d{2}$/.test(d) && t){
+        // assume hora local do usuário (é o mais previsível pro seu app)
+        const iso = `${d}T${t.length===5? t : (t + ":00")}`;
+        const ms = Date.parse(iso);
+        if(Number.isFinite(ms)) return Math.floor(ms/1000);
+      }
+
       return null;
+    }
+
+    function toNum(v){
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    // ✅ odds vindo em formatos diferentes
+    function extractOdds(g){
+      // formato 1: já vem do seu normalize anterior
+      if(g && g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null)){
+        return {
+          home: toNum(g.odds.home),
+          draw: toNum(g.odds.draw),
+          away: toNum(g.odds.away),
+        };
+      }
+
+      // formato 2: campos diretos
+      const direct = {
+        home: toNum(g.oddsHome ?? g.homeOdds ?? g.oddHome ?? g.odds1 ?? g.odd1 ?? g["1"]),
+        draw: toNum(g.oddsDraw ?? g.drawOdds ?? g.oddDraw ?? g.oddsX ?? g.oddX ?? g["x"] ?? g["X"]),
+        away: toNum(g.oddsAway ?? g.awayOdds ?? g.oddAway ?? g.odds2 ?? g.odd2 ?? g["2"]),
+      };
+      if(direct.home!=null || direct.draw!=null || direct.away!=null) return direct;
+
+      // formato 3: objeto market1x2 / oneXtwo
+      const m = g.market1x2 || g.oneXtwo || g["1x2"] || null;
+      if(m && typeof m === "object"){
+        const home = toNum(m.home ?? m["1"] ?? m.h ?? m.home_odds ?? m.odd1);
+        const draw = toNum(m.draw ?? m["x"] ?? m["X"] ?? m.d ?? m.oddX);
+        const away = toNum(m.away ?? m["2"] ?? m.a ?? m.away_odds ?? m.odd2);
+        if(home!=null || draw!=null || away!=null) return {home, draw, away};
+      }
+
+      // formato 4: bookmaker/bets (muitas APIs fazem isso)
+      // tenta achar "Match Winner" ou "1X2"
+      const bks = g.bookmakers || g.bookmaker || g.markets || null;
+      const arr = Array.isArray(bks) ? bks : (Array.isArray(bks?.bookmakers) ? bks.bookmakers : null);
+      if(arr){
+        for(const bk of arr){
+          const bets = bk.bets || bk.markets || [];
+          for(const bet of bets){
+            const name = (bet.name || bet.label || "").toString().toLowerCase();
+            if(name.includes("match winner") || name.includes("1x2") || name.includes("resultado")){
+              const vals = bet.values || bet.options || bet.odds || [];
+              const got = {home:null, draw:null, away:null};
+              for(const v of vals){
+                const lab = (v.value || v.label || v.name || "").toString().toLowerCase();
+                const odd = toNum(v.odd ?? v.odds ?? v.price ?? v.valueOdd);
+                if(odd==null) continue;
+                if(lab === "1" || lab.includes("home") || lab.includes("casa")) got.home = odd;
+                if(lab === "x" || lab.includes("draw") || lab.includes("empate")) got.draw = odd;
+                if(lab === "2" || lab.includes("away") || lab.includes("fora")) got.away = odd;
+              }
+              if(got.home!=null || got.draw!=null || got.away!=null) return got;
+            }
+          }
+        }
+      }
+
+      // formato 5: probabilidades em % (converte p/ odd decimal: 100/p)
+      const prob = g.probabilities || g.probability || null;
+      if(prob && typeof prob === "object"){
+        const ph = toNum(prob.home ?? prob["1"] ?? prob.h);
+        const pd = toNum(prob.draw ?? prob["x"] ?? prob.d);
+        const pa = toNum(prob.away ?? prob["2"] ?? prob.a);
+        const toOdd = (p)=> (p && p>0) ? +(100/p).toFixed(2) : null;
+        const out = {home: toOdd(ph), draw: toOdd(pd), away: toOdd(pa)};
+        if(out.home!=null || out.draw!=null || out.away!=null) return out;
+      }
+
+      return {home:null, draw:null, away:null};
     }
 
     function normalizeGames(raw){
@@ -993,78 +1079,96 @@
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
 
-        const statusRaw = (g.status || g.state || g.match_status || (g.live ? "LIVE" : "NS"));
-        const status = String(statusRaw || "").toUpperCase().trim().replace(/\s+/g,"_");
+        // ✅ status mais robusto (considera isLive / elapsed)
+        const statusRaw = (g.status || g.state || (g.isLive ? "LIVE" : (g.live ? "LIVE" : "NS")));
+        const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
 
-        // >>> FIX: minute NÃO deve pegar g.time ("21:00"), porque isso é horário e vira "ao vivo falso".
-        const elapsed = (g.elapsed ?? g.minute ?? g.minutes ?? null);
-        const minute = (elapsed != null ? String(elapsed) : (g.clock || g.matchTime || ""));
+        // ✅ minuto: elapsed > minute > clock > time
+        const minute = (g.elapsed != null ? String(g.elapsed) : (g.minute != null ? String(g.minute) : (g.clock || g.time || "")));
 
         const startTs = parseStartTsAny(g);
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
         const scoreAway = (g.scoreAway !=null ? g.scoreAway : (g.goalsAway != null ? g.goalsAway : (g.awayScore ?? (g.scores?.away ?? null))));
 
-        const odds = g.odds || g.market1x2 || g.oneXtwo || null;
-        const id = g.id || `${league}-${home}-${away}-${startTs || ""}`;
+        const id = g.id || g.fixture_id || g.fixtureId || `${league}-${home}-${away}-${startTs || ""}`;
 
-        const oh = odds ? (odds.home ?? odds["1"] ?? odds.h ?? null) : null;
-        const od = odds ? (odds.draw ?? odds["x"] ?? odds.d ?? null) : null;
-        const oa = odds ? (odds.away ?? odds["2"] ?? odds.a ?? null) : null;
-
-        const isLiveFlag = (g.isLive === true || g.live === true);
+        // odds: tenta em tudo
+        const odds = extractOdds(g);
 
         return {
           id, sport, league, country, home, away,
-          status, minute, elapsed,
-          startTs,
+          status, minute, startTs,
           scoreHome, scoreAway,
-          isLiveFlag,
-          odds: { home: oh, draw: od, away: oa }
+          odds
         };
       });
     }
 
-    /* ======== LIVE: MAIS RÍGIDO (FT NUNCA É AO VIVO) ======== */
-    const FINISHED_SET = new Set([
-      "FT","AET","PEN","FINISHED","ENDED","FULL_TIME","AFTER_PENALTIES","AFTER_EXTRA_TIME"
-    ]);
-
+    /* ======== LIVE / FINISHED (ROBUSTO) ======== */
     const LIVE_SET = new Set([
-      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET",
+      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
       "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
     ]);
+    const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
     function isLive(g){
-      const s = (g.status || "").toUpperCase().trim();
-
-      // prioridade: terminou => nunca live
-      if(FINISHED_SET.has(s)) return false;
-
-      // se o provider manda flag live
-      if(g.isLiveFlag === true) return true;
-
+      // 1) status
+      const s = (g.status || "").toUpperCase();
       if(LIVE_SET.has(s)) return true;
 
-      // minuto/elapsed “real” (não horário)
+      // 2) minuto / elapsed
       const m = String(g.minute || "").trim();
-      const n = Number(m);
-
-      // "45'" etc
       if(m.includes("'")) return true;
+      const n = Number(m);
+      if(Number.isFinite(n) && n > 0 && n < 140) return true;
 
-      // número de minuto plausível
-      if(Number.isFinite(n) && n > 0 && n < 130) return true;
+      // 3) se a API te manda isLive (já entra como status LIVE no normalize, mas reforça)
+      if(g.isLive === true) return true;
 
       return false;
     }
 
+    function isFinished(g){
+      const s = (g.status || "").toUpperCase();
+      if(FINISHED_SET.has(s)) return true;
+      if(s.includes("FT")) return true;
+      return false;
+    }
+
+    function finishedTooOld(g){
+      if(!isFinished(g)) return false;
+      if(!g.startTs) return true; // sem hora? melhor esconder
+      const now = Date.now();
+      const start = Number(g.startTs) * 1000;
+      if(!Number.isFinite(start)) return true;
+
+      // “fim estimado” = kickoff + 2h
+      const endEstimated = start + 2*3600*1000;
+      const diffMin = (now - endEstimated) / 60000;
+      return diffMin > KEEP_FINISHED_MINUTES;
+    }
+
+    function inNextHours(g, hours){
+      // não mostra jogo encerrado antigo
+      if(finishedTooOld(g)) return false;
+
+      if(!g.startTs) return true; // não some da lista se não tem data
+      const now = Date.now();
+      const ts = Number(g.startTs)*1000;
+      if(!Number.isFinite(ts)) return true;
+
+      // ✅ janela: do passado recente (até -25min depois do fim estimado é cortado acima)
+      return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
+    }
+
     function startsWithinHours(g, hours){
+      if(finishedTooOld(g)) return false;
       if(!g.startTs) return false;
       const now = Date.now();
-      const ts = Number(g.startTs) * 1000;
+      const ts = Number(g.startTs)*1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours * 3600 * 1000 && (ts - now) >= 0;
+      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
     }
 
     function groupByLeague(games){
@@ -1080,7 +1184,7 @@
     function formatMinute(g){
       const m = String(g.minute || "").trim();
       if(!m) return "";
-      if(m.includes(":")) return m; // se algum provider mandar 00:45
+      if(m.includes(":")) return m;
       if(m.endsWith("'")) return m.replace("'", "") + ":00";
       const n = Number(m);
       if(Number.isFinite(n)) return String(n).padStart(2,"0") + ":00";
@@ -1121,7 +1225,7 @@
         return games.filter(g=>/brazil|brasil/i.test(g.country || "") || /brasile/i.test(g.league || ""));
       }
       if(state.pill === "nba"){
-        return games.filter(g=>/nba/i.test(g.league || "") || g.sport.includes("basket"));
+        return games.filter(g=>/nba/i.test(g.league || "") || (g.sport||"").includes("basket"));
       }
       if(state.pill === "top"){
         return games.filter(g=>{
@@ -1130,7 +1234,7 @@
         });
       }
       if(state.pill === "odds"){
-        return games.filter(g=> g.odds && (g.odds.home!=null || g.odds.draw!=null || g.odds.away!=null));
+        return games.filter(g=> (g.odds?.home!=null || g.odds?.draw!=null || g.odds?.away!=null));
       }
       if(state.pill === "esports"){
         return games.filter(g=>/esport|e-sport|cs:go|valorant|lol|league of legends|dota/i.test((g.league||"") + " " + (g.sport||"")));
@@ -1342,6 +1446,9 @@
 
       let games = allGames.slice();
 
+      // ✅ corta “encerrado antigo” logo no início (isso resolve “jogo de ontem”)
+      games = games.filter(g=> !finishedTooOld(g));
+
       games = games.filter(g=>{
         if(state.sport === "all") return true;
         if(state.sport === "football") return (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football");
@@ -1360,21 +1467,20 @@
         .filter(g=>startsWithinHours(g, 3))
         .sort(safeTimeSort);
 
-      // >>> FIX: “Jogos” deve respeitar o raio (1h/3h/6h/12h) e ser FUTURO.
       let nextGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>startsWithinHours(g, state.hours));
+        .filter(g=>inNextHours(g, state.hours));
 
       if(state.sort === "time"){
         nextGames = nextGames.slice().sort(safeTimeSort);
       }
 
       const counts = {
-        all: allGames.length,
-        football: allGames.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
-        tennis: allGames.filter(g=> g.sport.includes("tennis")).length,
-        basketball: allGames.filter(g=> g.sport.includes("basket")).length,
-        volley: allGames.filter(g=> g.sport.includes("volley")).length,
+        all: allGames.filter(g=>!finishedTooOld(g)).length,
+        football: allGames.filter(g=>!finishedTooOld(g)).filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
+        tennis: allGames.filter(g=>!finishedTooOld(g)).filter(g=> g.sport.includes("tennis")).length,
+        basketball: allGames.filter(g=>!finishedTooOld(g)).filter(g=> g.sport.includes("basket")).length,
+        volley: allGames.filter(g=>!finishedTooOld(g)).filter(g=> g.sport.includes("volley")).length,
       };
       renderSportsRow(counts);
 
@@ -1394,4 +1500,4 @@
     setInterval(loadData, REFRESH_MS);
   </script>
 </body>
-    </html>
+        </html>
