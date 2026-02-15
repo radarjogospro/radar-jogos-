@@ -1,180 +1,273 @@
 import fs from "fs";
 
-const KEY = process.env.API_FOOTBALL_KEY || "";
+const KEY = process.env.API_FOOTBALL_KEY || process.env.API_FOOTBALL || "";
+if (!KEY) {
+  console.error("Missing API key. Set API_FOOTBALL_KEY in repo secrets.");
+  process.exit(1);
+}
+
 const OUT = "jogos.json";
 
-// Ajuste se você quiser menos/mais jogos no arquivo
+// Quantos jogos no JSON final
 const MAX_GAMES = 2500;
 
 // Janela anti “jogo de ontem” (em horas)
-const KEEP_PAST_HOURS = 6;   // mantém jogos de até 6h atrás (ex: acabou agora pouco)
-const KEEP_FUTURE_HOURS = 18; // mantém jogos de até 18h à frente
+const KEEP_PAST_HOURS = 3;    // <= reduz bem os atrasados
+const KEEP_FUTURE_HOURS = 24; // jogos das próximas 24h
 
-function pad(n){ return String(n).padStart(2,"0"); }
-function ymd(d){
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-}
-function nowMs(){ return Date.now(); }
+// (Opcional) tentar “probabilidades” via predictions
+// ATENÇÃO: isso pode consumir limite da API.
+// Se não tiver endpoint no seu plano, vai falhar e ficará null.
+const ENABLE_PREDICTIONS = true;
+const MAX_PREDICTIONS = 80; // só para os primeiros N jogos mais relevantes
 
-function asMsFromFixture(fx){
-  // API-Football geralmente manda date ISO em fixture.date
-  const iso = fx?.fixture?.date;
-  const ms = iso ? Date.parse(iso) : NaN;
-  return Number.isFinite(ms) ? ms : null;
-}
+const BASE = "https://v3.football.api-sports.io";
 
-function statusShort(fx){
-  return String(fx?.fixture?.status?.short || "").toUpperCase();
+function nowMs() { return Date.now(); }
+
+function safeNum(x) {
+  const n = Number(x);
+  return Number.isFinite(n) ? n : null;
 }
 
-function isLiveStatus(short){
-  // status live típicos do API-Football:
-  // 1H, 2H, HT, ET, P, LIVE
-  return ["1H","2H","HT","ET","P","LIVE"].includes(short);
+function toFixed2(n) {
+  return (Number.isFinite(n) ? n : null);
 }
 
-function isFinishedStatus(short){
-  return ["FT","AET","PEN"].includes(short);
+function impliedOddsFromPercents(pHome, pDraw, pAway) {
+  // p em [0..1]
+  const eps = 1e-9;
+  const oh = pHome > eps ? 1 / pHome : null;
+  const od = pDraw > eps ? 1 / pDraw : null;
+  const oa = pAway > eps ? 1 / pAway : null;
+  return {
+    o1: oh ? Math.round(oh * 100) / 100 : null,
+    ox: od ? Math.round(od * 100) / 100 : null,
+    o2: oa ? Math.round(oa * 100) / 100 : null,
+  };
 }
 
-function clampElapsed(short, elapsed){
-  if(isFinishedStatus(short)) return 90;
-  const n = Number(elapsed);
-  if(!Number.isFinite(n)) return null;
-  // cap de segurança pra não virar 154'
-  return Math.max(0, Math.min(n, 130));
+function parsePercentString(s) {
+  // "45%" => 0.45
+  if (!s) return null;
+  const m = String(s).trim().replace("%", "");
+  const n = Number(m);
+  if (!Number.isFinite(n)) return null;
+  return n / 100;
 }
 
-async function apiFetch(url){
+async function apiGet(path) {
+  const url = `${BASE}${path}`;
   const res = await fetch(url, {
     headers: {
       "x-apisports-key": KEY,
-      "accept": "application/json",
-    }
+    },
   });
-  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    throw new Error(`HTTP ${res.status} ${res.statusText} on ${path} :: ${txt.slice(0, 200)}`);
+  }
   return res.json();
 }
 
-async function getFixturesByDate(dateStr){
-  // Endpoint API-Football:
-  // https://v3.football.api-sports.io/fixtures?date=YYYY-MM-DD
-  const url = `https://v3.football.api-sports.io/fixtures?date=${encodeURIComponent(dateStr)}`;
-  const json = await apiFetch(url);
-  return Array.isArray(json?.response) ? json.response : [];
+function isLiveFromStatusShort(short) {
+  // API-Football status.short comuns:
+  // NS, 1H, HT, 2H, ET, BT, P, SUSP, INT, LIVE, FT, AET, PEN, PST, CANC, ABD...
+  const liveSet = new Set(["1H", "HT", "2H", "ET", "P", "LIVE", "BT", "SUSP", "INT"]);
+  return liveSet.has(short);
 }
 
-function normalizeFixture(fx){
-  const home = fx?.teams?.home?.name || "Casa";
-  const away = fx?.teams?.away?.name || "Fora";
-  const league = fx?.league?.name || "Liga";
-  const country = fx?.league?.country || "World";
+function normalizeFixture(fx) {
+  const fixture = fx.fixture || {};
+  const teams = fx.teams || {};
+  const league = fx.league || {};
+  const goals = fx.goals || {};
+  const score = fx.score || {};
+  const status = fixture.status || {};
 
-  const ms = asMsFromFixture(fx);
-  const kickoffTs = ms ? Math.floor(ms/1000) : null;
+  // ✅ O mais importante: usar timestamp (epoch) do API-Football
+  // fixture.timestamp vem em segundos (UTC)
+  const tsSec = safeNum(fixture.timestamp);
+  const kickoffTs = tsSec ? tsSec * 1000 : null;
 
-  const short = statusShort(fx);
-  const elapsedRaw = fx?.fixture?.status?.elapsed;
-  const elapsed = clampElapsed(short, elapsedRaw);
+  const short = status.short || null;
+  const elapsed = safeNum(status.elapsed);
 
-  const isLive = isLiveStatus(short);
-  const status = isFinishedStatus(short) ? "FT" : (isLive ? "LIVE" : (short || "NS"));
-
-  const scoreHome = fx?.goals?.home ?? null;
-  const scoreAway = fx?.goals?.away ?? null;
-
-  // ⚠️ Odds: API-Football geralmente precisa outro endpoint (/odds) e pode não vir no FREE.
-  // Aqui deixamos null (o app mostra —).
-  const odds = { home: null, draw: null, away: null };
+  const isLive = short ? isLiveFromStatusShort(short) : false;
 
   return {
-    id: fx?.fixture?.id ?? `${league}-${home}-${away}-${kickoffTs ?? ""}`,
-    home,
-    away,
-    league,
-    country,
-    date: kickoffTs ? new Date(kickoffTs*1000).toISOString().slice(0,10) : "",
-    time: kickoffTs ? new Date(kickoffTs*1000).toISOString().slice(11,16) : "",
-    kickoffTs: kickoffTs ? kickoffTs*1000 : null, // mantém compatível com seu JSON anterior (ms)
-    status,
+    id: safeNum(fixture.id),
+    home: teams.home?.name || "",
+    away: teams.away?.name || "",
+    league: league.name || "",
+    country: league.country || "",
+    // Mantém strings também (só pra exibição/compatibilidade)
+    date: (fixture.date ? String(fixture.date).slice(0, 10) : null), // YYYY-MM-DD
+    time: (fixture.date ? String(fixture.date).slice(11, 16) : null), // HH:MM
+    kickoffTs,
+
+    status: short || "",
     isLive,
-    elapsed: elapsed ?? null,
-    scoreHome,
-    scoreAway,
-    odds
+    elapsed: isLive ? (elapsed ?? null) : null,
+
+    scoreHome: safeNum(goals.home),
+    scoreAway: safeNum(goals.away),
+
+    // placares detalhados se quiser usar depois
+    htHome: safeNum(score?.halftime?.home),
+    htAway: safeNum(score?.halftime?.away),
+
+    // probabilidades / odds (vamos tentar preencher depois)
+    p1: null,
+    px: null,
+    p2: null,
+    o1: null,
+    ox: null,
+    o2: null,
   };
 }
 
-function filterWindow(g){
-  // Remove jogos muito antigos ou muito longes no futuro
-  if(!g.kickoffTs) return true;
+function withinWindow(game, now) {
+  if (!game.kickoffTs) return false;
 
-  const t = Number(g.kickoffTs);
-  if(!Number.isFinite(t)) return true;
+  const pastMs = KEEP_PAST_HOURS * 60 * 60 * 1000;
+  const futureMs = KEEP_FUTURE_HOURS * 60 * 60 * 1000;
 
-  const diffH = (t - nowMs()) / (3600*1000);
+  // Mantém:
+  // - ao vivo sempre
+  // - jogos que começaram até X horas atrás
+  // - jogos que vão começar até Y horas na frente
+  if (game.isLive) return true;
 
-  // mantém se:
-  // - ao vivo (sempre)
-  // - ou dentro da janela (passado recente / futuro próximo)
-  if(g.isLive) return true;
+  const dt = game.kickoffTs - now;
 
-  return diffH >= -KEEP_PAST_HOURS && diffH <= KEEP_FUTURE_HOURS;
-}
-
-function deDupeById(list){
-  const map = new Map();
-  for(const g of list){
-    map.set(String(g.id), g);
-  }
-  return Array.from(map.values());
-}
-
-async function main(){
-  if(!KEY){
-    // Se não tiver KEY, mantém o arquivo antigo sem quebrar tudo
-    console.log("API_FOOTBALL_KEY vazio. Mantendo jogos.json como está.");
-    process.exit(0);
+  // dt < 0: já começou
+  if (dt < 0) {
+    return (Math.abs(dt) <= pastMs);
   }
 
-  const d0 = new Date();
-  const d1 = new Date(Date.now() - 24*3600*1000);
-  const d2 = new Date(Date.now() + 24*3600*1000);
+  // dt > 0: futuro
+  return dt <= futureMs;
+}
 
-  const dates = [ymd(d1), ymd(d0), ymd(d2)];
+async function enrichPredictions(games) {
+  if (!ENABLE_PREDICTIONS) return;
 
-  let fixtures = [];
-  for(const dt of dates){
-    try{
-      const fx = await getFixturesByDate(dt);
-      fixtures = fixtures.concat(fx);
-    }catch(e){
-      console.log("Erro buscando", dt, e.message);
+  // Ordena por “mais relevante” (ao vivo primeiro, depois mais perto)
+  const now = nowMs();
+  const sorted = [...games].sort((a, b) => {
+    const la = a.isLive ? 0 : 1;
+    const lb = b.isLive ? 0 : 1;
+    if (la !== lb) return la - lb;
+    const da = Math.abs((a.kickoffTs ?? 0) - now);
+    const db = Math.abs((b.kickoffTs ?? 0) - now);
+    return da - db;
+  });
+
+  const pick = sorted.slice(0, MAX_PREDICTIONS);
+
+  // Faz requests sequenciais (menos chance de estourar limite)
+  for (const g of pick) {
+    if (!g.id) continue;
+    try {
+      const data = await apiGet(`/predictions?fixture=${g.id}`);
+      const resp = data?.response?.[0];
+      if (!resp) continue;
+
+      // A API costuma trazer percentuais no formato:
+      // resp.predictions.percent.home / draw / away  (strings "45%")
+      const perc = resp.predictions?.percent || {};
+      const p1 = parsePercentString(perc.home);
+      const px = parsePercentString(perc.draw);
+      const p2 = parsePercentString(perc.away);
+
+      // normaliza pra somar 1
+      const sum = (p1 ?? 0) + (px ?? 0) + (p2 ?? 0);
+      if (sum > 0) {
+        const np1 = p1 != null ? p1 / sum : null;
+        const npx = px != null ? px / sum : null;
+        const np2 = p2 != null ? p2 / sum : null;
+
+        g.p1 = toFixed2(np1);
+        g.px = toFixed2(npx);
+        g.p2 = toFixed2(np2);
+
+        const odds = impliedOddsFromPercents(np1 ?? 0, npx ?? 0, np2 ?? 0);
+        g.o1 = odds.o1;
+        g.ox = odds.ox;
+        g.o2 = odds.o2;
+      }
+    } catch (e) {
+      // Se não tiver endpoint no plano, vai cair aqui e seguimos sem travar o workflow
+      // console.warn("predictions failed for", g.id, String(e.message || e));
     }
   }
-
-  const games = fixtures.map(normalizeFixture);
-  const clean = deDupeById(games)
-    .filter(filterWindow)
-    // segurança: não deixar “FT” marcado como live
-    .map(g => {
-      if(g.status === "FT") g.isLive = false;
-      if(g.elapsed != null && g.status === "FT") g.elapsed = 90;
-      return g;
-    })
-    .slice(0, MAX_GAMES);
-
-  const out = {
-    updatedAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) + " BRT",
-    source: "API-Football",
-    games: clean
-  };
-
-  fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8");
-  console.log("OK ->", OUT, "games:", clean.length);
 }
 
-main().catch(e=>{
-  console.error(e);
+async function main() {
+  const now = nowMs();
+
+  // Pega fixtures do “hoje” e também do “ontem/amanhã” pra cobrir viradas e fusos
+  // (mas a FILTRAGEM final é pela janela KEEP_* acima)
+  const d0 = new Date(now);
+  const dYesterday = new Date(now - 24 * 60 * 60 * 1000);
+  const dTomorrow = new Date(now + 24 * 60 * 60 * 1000);
+
+  const yyyyMMdd = (d) => {
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const da = String(d.getUTCDate()).padStart(2, "0");
+    return `${y}-${m}-${da}`;
+  };
+
+  const dates = [yyyyMMdd(dYesterday), yyyyMMdd(d0), yyyyMMdd(dTomorrow)];
+
+  let all = [];
+  for (const date of dates) {
+    const data = await apiGet(`/fixtures?date=${date}`);
+    const arr = Array.isArray(data?.response) ? data.response : [];
+    all.push(...arr);
+  }
+
+  // Normaliza + remove duplicados
+  const map = new Map();
+  for (const fx of all) {
+    const g = normalizeFixture(fx);
+    if (!g.id) continue;
+    map.set(g.id, g);
+  }
+
+  let games = Array.from(map.values());
+
+  // Filtra pela janela (anti “ontem”)
+  games = games.filter((g) => withinWindow(g, now));
+
+  // Ordena por kickoff (ao vivo primeiro)
+  games.sort((a, b) => {
+    const la = a.isLive ? 0 : 1;
+    const lb = b.isLive ? 0 : 1;
+    if (la !== lb) return la - lb;
+    return (a.kickoffTs ?? 0) - (b.kickoffTs ?? 0);
+  });
+
+  // Limita volume
+  if (games.length > MAX_GAMES) games = games.slice(0, MAX_GAMES);
+
+  // (Opcional) tenta preencher probabilidades/odds com predictions
+  await enrichPredictions(games);
+
+  const payload = {
+    updatedAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+    cacheBust: String(Date.now()),
+    source: "API-Football",
+    games,
+  };
+
+  fs.writeFileSync(OUT, JSON.stringify(payload, null, 2), "utf-8");
+  console.log(`Saved ${games.length} games to ${OUT}`);
+}
+
+main().catch((err) => {
+  console.error(err);
   process.exit(1);
 });
