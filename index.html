@@ -956,7 +956,7 @@
       renderAll();
     }
 
-    /* ======== FIX PRINCIPAL: PARSE DE DATA/HORA ======== */
+    /* ======== PARSE DE DATA/HORA ======== */
     function parseStartTsAny(g){
       const candidates = [
         g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.date, g.datetime,
@@ -964,23 +964,19 @@
       ].filter(v=>v!=null && v!=="");
 
       for(const v of candidates){
-        // number-like
         if(typeof v === "number"){
-          // sec or ms
           if(v > 1e12) return Math.floor(v/1000);
           if(v > 1e9) return Math.floor(v);
         }
         if(typeof v === "string"){
           const s = v.trim();
 
-          // numeric string
           if(/^\d{10,13}$/.test(s)){
             const n = Number(s);
             if(n > 1e12) return Math.floor(n/1000);
             return Math.floor(n);
           }
 
-          // ISO / date string
           const ms = Date.parse(s);
           if(Number.isFinite(ms)) return Math.floor(ms/1000);
         }
@@ -996,9 +992,14 @@
         const country = g.country || g.area || g.region || "";
         const home = g.home || g.homeTeam || g.team1 || "Casa";
         const away = g.away || g.awayTeam || g.team2 || "Fora";
-        const statusRaw = (g.status || g.state || (g.live ? "LIVE" : "NS"));
-        const status = String(statusRaw || "").toUpperCase().replace(/\s+/g,"_");
-        const minute = (g.minute != null ? String(g.minute) : (g.time || g.clock || ""));
+
+        const statusRaw = (g.status || g.state || g.match_status || (g.live ? "LIVE" : "NS"));
+        const status = String(statusRaw || "").toUpperCase().trim().replace(/\s+/g,"_");
+
+        // >>> FIX: minute NÃO deve pegar g.time ("21:00"), porque isso é horário e vira "ao vivo falso".
+        const elapsed = (g.elapsed ?? g.minute ?? g.minutes ?? null);
+        const minute = (elapsed != null ? String(elapsed) : (g.clock || g.matchTime || ""));
+
         const startTs = parseStartTsAny(g);
 
         const scoreHome = (g.scoreHome !=null ? g.scoreHome : (g.goalsHome != null ? g.goalsHome : (g.homeScore ?? (g.scores?.home ?? null))));
@@ -1011,44 +1012,59 @@
         const od = odds ? (odds.draw ?? odds["x"] ?? odds.d ?? null) : null;
         const oa = odds ? (odds.away ?? odds["2"] ?? odds.a ?? null) : null;
 
+        const isLiveFlag = (g.isLive === true || g.live === true);
+
         return {
           id, sport, league, country, home, away,
-          status, minute, startTs,
+          status, minute, elapsed,
+          startTs,
           scoreHome, scoreAway,
+          isLiveFlag,
           odds: { home: oh, draw: od, away: oa }
         };
       });
     }
 
-    /* ======== FIX PRINCIPAL: STATUS LIVE ======== */
-    function isLive(g){
-      const s = (g.status || "").toUpperCase();
-      const liveSet = new Set([
-        "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET","PEN",
-        "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
-      ]);
-      if(liveSet.has(s)) return true;
-      const m = String(g.minute || "").trim();
-      if(m.includes("'")) return true;
-      // se tem placar e tem "AO_VIVO" implícito
-      if((g.scoreHome!=null || g.scoreAway!=null) && (s.includes("LIVE") || s.includes("PLAY"))) return true;
-      return false;
-    }
+    /* ======== LIVE: MAIS RÍGIDO (FT NUNCA É AO VIVO) ======== */
+    const FINISHED_SET = new Set([
+      "FT","AET","PEN","FINISHED","ENDED","FULL_TIME","AFTER_PENALTIES","AFTER_EXTRA_TIME"
+    ]);
 
-    function inNextHours(g, hours){
-      if(!g.startTs) return true; // não some da lista
-      const now = Date.now();
-      const ts = Number(g.startTs)*1000;
-      if(!Number.isFinite(ts)) return true;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= -6*3600*1000;
+    const LIVE_SET = new Set([
+      "LIVE","INPLAY","IN_PLAY","1H","2H","HT","ET",
+      "FIRST_HALF","SECOND_HALF","HALF_TIME","RUNNING","PLAYING"
+    ]);
+
+    function isLive(g){
+      const s = (g.status || "").toUpperCase().trim();
+
+      // prioridade: terminou => nunca live
+      if(FINISHED_SET.has(s)) return false;
+
+      // se o provider manda flag live
+      if(g.isLiveFlag === true) return true;
+
+      if(LIVE_SET.has(s)) return true;
+
+      // minuto/elapsed “real” (não horário)
+      const m = String(g.minute || "").trim();
+      const n = Number(m);
+
+      // "45'" etc
+      if(m.includes("'")) return true;
+
+      // número de minuto plausível
+      if(Number.isFinite(n) && n > 0 && n < 130) return true;
+
+      return false;
     }
 
     function startsWithinHours(g, hours){
       if(!g.startTs) return false;
       const now = Date.now();
-      const ts = Number(g.startTs)*1000;
+      const ts = Number(g.startTs) * 1000;
       if(!Number.isFinite(ts)) return false;
-      return (ts - now) <= hours*3600*1000 && (ts - now) >= 0;
+      return (ts - now) <= hours * 3600 * 1000 && (ts - now) >= 0;
     }
 
     function groupByLeague(games){
@@ -1064,7 +1080,7 @@
     function formatMinute(g){
       const m = String(g.minute || "").trim();
       if(!m) return "";
-      if(m.includes(":")) return m;
+      if(m.includes(":")) return m; // se algum provider mandar 00:45
       if(m.endsWith("'")) return m.replace("'", "") + ":00";
       const n = Number(m);
       if(Number.isFinite(n)) return String(n).padStart(2,"0") + ":00";
@@ -1150,7 +1166,6 @@
       });
     }
 
-    /* HERO agora mostra placar ao vivo e, se não tiver live, mostra “quentes” */
     function renderHero(el, liveGames, hotGames){
       el.innerHTML = "";
 
@@ -1340,16 +1355,15 @@
 
       const liveGames = games.filter(isLive);
 
-      // “hot games” = começam em até 3h (pra hero/banners parecer “quente”)
       const hotGames = games
         .filter(g=>!isLive(g))
         .filter(g=>startsWithinHours(g, 3))
         .sort(safeTimeSort);
 
-      // próximos jogos na aba Jogos
+      // >>> FIX: “Jogos” deve respeitar o raio (1h/3h/6h/12h) e ser FUTURO.
       let nextGames = games
         .filter(g=>!isLive(g))
-        .filter(g=>inNextHours(g, state.hours));
+        .filter(g=>startsWithinHours(g, state.hours));
 
       if(state.sort === "time"){
         nextGames = nextGames.slice().sort(safeTimeSort);
@@ -1367,7 +1381,6 @@
       document.getElementById("liveCountHome").textContent = liveGames.length;
       document.getElementById("liveCount").textContent = liveGames.length;
 
-      // HERO: agora usa live ou hot
       renderHero(document.getElementById("heroHome"), liveGames, hotGames);
       renderHero(document.getElementById("heroLive"), liveGames, hotGames);
 
@@ -1381,4 +1394,4 @@
     setInterval(loadData, REFRESH_MS);
   </script>
 </body>
-  </html>
+    </html>
