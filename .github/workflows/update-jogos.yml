@@ -26,40 +26,18 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install deps
+        run: npm i --silent || true
+
       - name: Run update script
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-        run: node scripts/update-jogos.js
+        run: node scripts/update-jogos.mjs
 
-      - name: Commit and push (safe + retry)
+      - name: Commit and push
         run: |
-          set -e
-
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jogos.json
-
-          if git diff --staged --quiet; then
-            echo "No changes in jogos.json"
-            exit 0
-          fi
-
-          git commit -m "chore: update jogos.json"
-
-          # pull --rebase to avoid non-fast-forward
-          git pull --rebase origin main
-
-          # retry push in case of race
-          for i in 1 2 3; do
-            if git push; then
-              echo "Push OK"
-              exit 0
-            fi
-            echo "Push failed, retry $i..."
-            sleep $((i*2))
-            git pull --rebase origin main
-          done
-
-          echo "Push failed after retries"
-          exit 1
+          git diff --cached --quiet || git commit -m "update jogos.json"
+          git push
