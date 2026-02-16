@@ -1145,19 +1145,40 @@
 
     // ✅ minuto do ao vivo (nunca usar "time" aqui)
     function getElapsedMinute(g){
-      const n = Number(g.minute);
-      if(Number.isFinite(n) && n > 0 && n < 200) return Math.floor(n);
+  // aceita número, "90", "90:00", "45+2", "45+02"
+  const raw = (g.minute ?? "").toString().trim();
 
-      // fallback: se está ao vivo e tem startTs, calcula pelo relógio
-      if(isLive(g) && g.startTs){
-        const startMs = Number(g.startTs) * 1000;
-        if(Number.isFinite(startMs)){
-          const diffMin = Math.floor((Date.now() - startMs) / 60000);
-          if(diffMin > 0 && diffMin < 200) return diffMin;
-        }
-      }
-      return null;
+  // 1) se vier tipo "90:00" -> pega 90
+  const mmss = raw.match(/^(\d{1,3})\s*:\s*\d{1,2}$/);
+  if(mmss){
+    const n = Number(mmss[1]);
+    if(Number.isFinite(n) && n > 0 && n < 200) return n;
+  }
+
+  // 2) se vier tipo "45+2" -> retorna 47 (pode ajustar se preferir exibir 45+2')
+  const plus = raw.match(/^(\d{1,3})\s*\+\s*(\d{1,2})$/);
+  if(plus){
+    const base = Number(plus[1]);
+    const add  = Number(plus[2]);
+    const n = base + add;
+    if(Number.isFinite(n) && n > 0 && n < 200) return n;
+  }
+
+  // 3) número puro
+  const n = Number(raw);
+  if(Number.isFinite(n) && n > 0 && n < 200) return n;
+
+  // fallback: se está ao vivo e tem startTs, calcula por diferença
+  if(isLive(g) && g.startTs){
+    const startMs = Number(g.startTs) * 1000;
+    if(Number.isFinite(startMs)){
+      const diffMin = Math.floor((Date.now() - startMs) / 60000);
+      if(diffMin > 0 && diffMin < 200) return diffMin;
     }
+  }
+
+  return null;
+}
 
     function formatLiveClock(g){
   const s = (g.status || "").toUpperCase();
