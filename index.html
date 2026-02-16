@@ -1192,9 +1192,25 @@
   if(m == null) return "AO VIVO";
 
   // aqui muda o formato: 90:00 -> 90'
-  return `${m}'`;
+  return getMinuteLabel(g) || "AO VIVO";
 }
+function getMinuteLabel(g){
+  const raw = (g.minute ?? "").toString().trim();
 
+  // 90:00 -> 90'
+  const mmss = raw.match(/^(\d{1,3})\s*:\s*\d{1,2}$/);
+  if(mmss) return `${Number(mmss[1])}'`;
+
+  // 45+2 -> 45+2'
+  const plus = raw.match(/^(\d{1,3})\s*\+\s*(\d{1,2})$/);
+  if(plus) return `${Number(plus[1])}+${Number(plus[2])}'`;
+
+  // número puro -> 18'
+  const n = Number(raw);
+  if(Number.isFinite(n) && n > 0 && n < 200) return `${n}'`;
+
+  return null;
+}
     /* ======== NORMALIZE (CORRIGIDO) ======== */
     function normalizeGames(raw){
       if(!Array.isArray(raw)) return [];
