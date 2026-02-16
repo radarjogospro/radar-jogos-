@@ -752,7 +752,7 @@
 
   <script>
     const LS_API_KEY = "RADAR_API_URL";
-    const DEFAULT_LOCAL_URL = "/radar-jogos-/jogos.json";
+    const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
     // ✅ Anti “jogo de ontem”
@@ -1070,18 +1070,18 @@
     }
 
     function isLive(g){
-      const s = (g.status || "").toUpperCase();
-      if(LIVE_SET.has(s)) return true;
+  const s = (g.status || "").toUpperCase();
+  if(LIVE_SET.has(s)) return true;
 
-      // se veio isLive do JSON original, respeita
-      if(g.isLive === true) return true;
+  // se veio isLive do JSON original, respeita
+  if(g.isLive === true) return true;
 
-      // elapsed/minute numérico
-      const m = Number(g.minute);
-      if(Number.isFinite(m) && m > 0 && m < 140) return true;
+  // elapsed/minute numérico
+  const m = Number(g.minute);
+  if(Number.isFinite(m) && m > 0 && m < 140) return true;
 
-      return false;
-    }
+  return false;
+}
 
     function finishedTooOld(g){
       if(!isFinished(g)) return false;
@@ -1160,10 +1160,19 @@
     }
 
     function formatLiveClock(g){
-      const m = getElapsedMinute(g);
-      if(m == null) return "AO VIVO";
-      return String(m).padStart(2,"0") + ":00";
-    }
+  const s = (g.status || "").toUpperCase();
+
+  // estados especiais
+  if (s === "FT") return "FT";
+  if (s === "HT") return "HT";
+  if (s === "NS") return "";
+
+  const m = getElapsedMinute(g);
+  if(m == null) return "AO VIVO";
+
+  // aqui muda o formato: 90:00 -> 90'
+  return `${m}'`;
+}
 
     /* ======== NORMALIZE (CORRIGIDO) ======== */
     function normalizeGames(raw){
