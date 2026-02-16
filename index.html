@@ -941,10 +941,8 @@ location.reload();
 
     /* DATA LOAD */
     function buildDataUrl(){
-      const base = state.apiUrl || DEFAULT_LOCAL_URL;
-      const sep = base.includes("?") ? "&" : "?";
-      return base + sep + "ts=" + Date.now();
-    }
+  return "https://restless-scene-b490.denilson-santana92.workers.dev/today?ts=" + Date.now();
+}
 
     async function fetchJsonWithTimeout(url, timeoutMs=9000){
       const ctrl = new AbortController();
@@ -961,10 +959,88 @@ location.reload();
         const url = buildDataUrl();
         const json = await fetchJsonWithTimeout(url, 9000);
 
-        const games = Array.isArray(json) ? json
-          : (Array.isArray(json.games) ? json.games
-          : (Array.isArray(json.data) ? json.data
-          : (Array.isArray(json.events) ? json.events : [])));
+        const rawGames = json.response ?? json.games ?? [];
+const games = rawGames.map(item => {
+
+  // se vier no formato API-Football
+  const g = item.fixture ? {
+    fixture: item.fixture,
+    teams: item.teams,
+    goals: item.goals,
+    league: item.league
+  } : item;
+
+  const id = g.fixture?.id ?? g.id ?? Math.random();
+
+  const homeName =
+    g.teams?.home?.name ??
+    g.home?.name ??
+    (typeof g.home === "string" ? g.home : "?");
+
+  const awayName =
+    g.teams?.away?.name ??
+    g.away?.name ??
+    (typeof g.away === "string" ? g.away : "?");
+
+  const leagueName =
+    g.league?.name ??
+    (typeof g.league === "string" ? g.league : "");
+
+  const countryName =
+    g.league?.country ??
+    g.country?.name ??
+    (typeof g.country === "string" ? g.country : "");
+
+  const minute =
+    g.fixture?.status?.elapsed ??
+    g.status?.elapsed ??
+    g.minute ??
+    0;
+
+  const status =
+    g.fixture?.status?.short ??
+    g.status?.short ??
+    g.status ??
+    "";
+
+  const homeGoals = g.goals?.home ?? 0;
+  const awayGoals = g.goals?.away ?? 0;
+
+  // -------- HORA UNIVERSAL (ANTI BUG API) --------
+const tsSecFinal = parseStartTsAny(g); // <- pega timestamp em segundos, de qualquer formato
+
+const tsMs =
+  (typeof tsSecFinal === "number")
+    ? (tsSecFinal * 1000)
+    : null;
+return {
+  id,
+  home: homeName,
+  away: awayName,
+  league: leagueName,
+  country: countryName,
+
+  start: g.fixture?.date ?? g.date ?? null,
+startTs: tsSecFinal,
+kickoffTs: tsSecFinal,
+timestamp: tsSecFinal,
+startMs: tsMs,
+kickoffMs: tsMs,
+timestampMs: tsMs,
+
+  // ao vivo
+  minute,
+  status,
+
+  // placar (resolve odds e traços)
+  homeGoals,
+  awayGoals,
+  goalsHome: homeGoals,
+  goalsAway: awayGoals,
+  goals: { home: homeGoals, away: awayGoals },
+  score: `${homeGoals} - ${awayGoals}`
+};
+});
 
         state.data = { games };
        }catch(e){
@@ -1308,7 +1384,20 @@ function getMinuteLabel(g){
       return games;
     }
 
-    /* RENDER */
+ // ================== AUTO REFRESH (AO VIVO) ==================
+if (!window.__AUTO_REFRESH__) {
+  window.__AUTO_REFRESH__ = true;
+
+  setInterval(() => {
+    try {
+      // só puxa de novo quando estiver na aba Ao vivo
+      if (state && state.tab === "live") {
+        loadData();
+      }
+    } catch (e) {}
+  }, 30000);
+}
+// ============================================================   /* RENDER */
     const sportsRow = document.getElementById("sportsRow");
     function renderSportsRow(counts){
       sportsRow.innerHTML = "";
@@ -1562,7 +1651,6 @@ function getMinuteLabel(g){
     }
 
     loadData();
-    setInterval(loadData, REFRESH_MS);
   </script>
 </body>
                                                        </html>
