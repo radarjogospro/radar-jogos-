@@ -25,31 +25,42 @@ self.addEventListener("activate", (e) => {
 });
 
 // NUNCA cachear jogos.json nem chamadas da API
-self.addEventListener("fetch", (e) => {
-  const url = new URL(e.request.url);
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  const url = new URL(req.url);
 
-  // evita cache do arquivo de jogos (sempre rede)
-  if (url.pathname.endsWith("/jogos.json") || url.pathname.endsWith("/jogos.demo.json")) {
-    e.respondWith(fetch(e.request, { cache: "no-store" }));
+  // Atualização confiável: network-first para navegação e para o index.html
+  const accept = req.headers.get("accept") || "";
+  const isHTML = req.mode === "navigate" || accept.includes("text/html");
+  const isIndex = url.pathname.endsWith("/index.html") || url.pathname === "/" || url.pathname.endsWith("/");
+
+  if (isHTML || isIndex) {
+    event.respondWith(
+      fetch(req)
+        .then((resp) => {
+          const copy = resp.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+          return resp;
+        })
+        .catch(() => caches.match(req))
+    );
     return;
   }
 
-  // se for a própria API (se você usa alguma rota externa), também não cacheia
-  // (se sua API tiver domínio específico, posso ajustar depois)
-  if (url.hostname !== self.location.hostname) {
-    e.respondWith(fetch(e.request, { cache: "no-store" }));
-    return;
-  }
-
-  // para arquivos do site: cache-first
-  e.respondWith(
-    caches.match(e.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(e.request).then((resp) => {
-        const copy = resp.clone();
-        caches.open(CACHE).then((cache) => cache.put(e.request, copy));
-        return resp;
-      });
+  // Assets: cache-first
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      return (
+        cached ||
+        fetch(req)
+          .then((resp) => {
+            const copy = resp.clone();
+            caches.open(CACHE).then((c) => c.put(req, copy));
+            return resp;
+          })
+          .catch(() => cached)
+      );
     })
   );
 });
+
