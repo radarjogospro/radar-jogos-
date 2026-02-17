@@ -1693,11 +1693,14 @@ loadData();
 </script>
 <script>
 if ("serviceWorker" in navigator) {
-window.addEventListener("load", () => {
-navigator.serviceWorker.register("/radar-jogos-/sw.js")
-.then(() => console.log("SW ok"))
-.catch(err => console.log("SW erro", err));
-});
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("sw.js", { scope: "./" });
+      console.log("SW ok", reg.scope);
+    } catch (err) {
+      console.log("SW erro", err);
+    }
+  });
 }
 </script>
 </body>
