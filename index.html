@@ -1690,6 +1690,14 @@ if (!window.__AUTO_REFRESH__) {
     }
 
     loadData();
-  </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/radar-jogos-/sw.js")
+      .then(() => console.log("SW registrado"))
+      .catch(err => console.log("Erro SW", err));
+  });
+}
+</script>
 </body>
                                                        </html>
