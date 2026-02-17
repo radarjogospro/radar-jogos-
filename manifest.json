@@ -1,24 +1,26 @@
 {
-  "name": "Radar Jogos",
+  "name": "Radar Jogos PRO",
   "short_name": "Radar",
   "start_url": "/radar-jogos-/",
   "scope": "/radar-jogos-/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b1d26",
   "theme_color": "#0b1d26",
-  "orientation": "portrait",
-  "description": "Placar ao vivo, odds e jogos em tempo real",
+  "description": "Placares ao vivo, estatísticas e odds em tempo real",
 
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
