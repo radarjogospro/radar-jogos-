@@ -1162,44 +1162,55 @@ timestampMs: tsMs,
     const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
     function isFinished(g){
-  const s = (g.status || "").toUpperCase();
+  const s = (g.status || "").toString().trim().toUpperCase();
 
   // status explícito
-  if(FINISHED_SET.has(s)) return true;
+  if (FINISHED_SET.has(s)) return true;
 
-  const m = Number(g.minute);
-  // heurística: minutos altos normalmente significam encerrado,
-  // mesmo quando a API "trava" em LIVE/2H.
-  if(Number.isFinite(m)){
-    if(m >= 120) return true; // segurança
-    if(m >= 97 && !["ET","P","PEN"].includes(s)) return true; // pós-acréscimos
+  // heurística por minuto (quando API marca FT mas não atualiza status)
+  const m = getElapsedMinute(g);
+  if (typeof m === "number") {
+    // 120+ normalmente já saiu do "ao vivo"
+    if (m >= 130) return true;
   }
 
-  // heurística por tempo decorrido desde o início (evita ficar preso em 90')
-  if(g.startTs){
-    const start = Number(g.startTs) * 1000;
-    if(Number.isFinite(start)){
-      const now = Date.now();
-      // 3h depois do início: consideramos finalizado mesmo se a API não atualizou status
-      if(now - start > 3 * 3600 * 1000) return true;
-    }
+  // se passou muito do normal desde o início, considera encerrado (evita LIVE eterno)
+  const startTs = Number(g.startTs ?? g.start_ts ?? g.start_time ?? g.timestamp ?? 0);
+  if (Number.isFinite(startTs) && startTs > 0) {
+    const startMs = startTs > 1e12 ? startTs : startTs * 1000;
+    const elapsedMs = Date.now() - startMs;
+
+    // 2h40 de jogo já é excesso (até com intervalo + acréscimos); depois disso, encerra
+    if (elapsedMs > 160 * 60 * 1000) return true;
+
+    // regra antiga (muito velho)
+    if (elapsedMs > 3 * 60 * 60 * 1000) return true;
   }
 
   return false;
 }
+
 
     function isLive(g){
-  if(isFinished(g)) return false;
+  const st = (g.status ?? g.status_short ?? g.time_status ?? g.state ?? "").toString().trim().toUpperCase();
 
-  const s = (g.status || "").toUpperCase();
-  if(LIVE_SET.has(s)) return true;
+  // terminou não é live
+  if (isFinished(g)) return false;
 
-  // fallback por minuto numérico (se a API não envia status confiável)
-  const m = Number(g.minute);
-  if(Number.isFinite(m) && m > 0 && m < 120) return true;
+  // status explícito de live
+  if (LIVE_SET.has(st) || st === "INPLAY" || st === "IN PLAY") return true;
+
+  // minuto calculado/confiável => live
+  const m = getElapsedMinute(g);
+  if (typeof m === "number" && m > 0 && m < 200) return true;
+
+  // flag booleana (se existir)
+  const liveRaw = (g.is_live ?? g.live ?? g.inplay ?? g.in_play ?? "").toString().trim().toLowerCase();
+  if (liveRaw === "true" || liveRaw === "1" || liveRaw === "yes") return true;
 
   return false;
 }
+
 
     function finishedTooOld(g){
       if(!isFinished(g)) return false;
@@ -1251,11 +1262,20 @@ timestampMs: tsMs,
       return Array.from(map.entries());
     }
 
-    function formatKickoff(g){
-      if(!g.startTs) return "";
-      const d = new Date(Number(g.startTs)*1000);
-      return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-    }
+    function formatKickoff(ts){
+  if (!ts) return "";
+  const n = Number(ts);
+  if (!Number.isFinite(n) || n <= 0) return "";
+  const d = new Date(n > 1e12 ? n : n * 1000);
+
+  // sempre horário do Brasil (America/Sao_Paulo)
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(d);
+}
+
 
     function shortName(s){
       if(!s) return "";
@@ -1273,40 +1293,51 @@ timestampMs: tsMs,
 
     // ✅ minuto do ao vivo (nunca usar "time" aqui)
     function getElapsedMinute(g){
-  // aceita número, "90", "90:00", "45+2", "45+02"
-  const raw = (g.minute ?? "").toString().trim();
+  // status pode vir como status / status_short / time_status etc.
+  const st = (g.status ?? g.status_short ?? g.time_status ?? g.state ?? "").toString().trim().toUpperCase();
 
-  // 1) se vier tipo "90:00" -> pega 90
-  const mmss = raw.match(/^(\d{1,3})\s*:\s*\d{1,2}$/);
-  if(mmss){
-    const n = Number(mmss[1]);
-    if(Number.isFinite(n) && n > 0 && n < 200) return n;
+  // terminou? não tenta calcular minuto
+  if (st === "FT" || st === "AET" || st === "PEN" || st === "FINISHED" || st === "ENDED") return null;
+
+  // tenta pegar start (epoch em segundos ou ms)
+  const startRaw = (g.startTs ?? g.start_ts ?? g.start ?? g.start_time ?? g.timestamp ?? g.kickoff ?? null);
+  let startMs = null;
+  if (startRaw != null && startRaw !== "" && startRaw !== 0) {
+    const n = Number(startRaw);
+    if (Number.isFinite(n)) startMs = (n > 1e12) ? n : (n > 1e9 ? n * 1000 : null);
   }
 
-  // 2) se vier tipo "45+2" -> retorna 47 (pode ajustar se preferir exibir 45+2')
-  const plus = raw.match(/^(\d{1,3})\s*\+\s*(\d{1,2})$/);
-  if(plus){
-    const base = Number(plus[1]);
-    const add  = Number(plus[2]);
-    const n = base + add;
-    if(Number.isFinite(n) && n > 0 && n < 200) return n;
+  // minuto vindo da API (vários nomes)
+  const rawMinute = (g.minute ?? g.elapsed ?? g.time ?? g.clock ?? g.timer ?? null);
+  const raw = Number(rawMinute);
+  const rawOk = Number.isFinite(raw) && raw > 0 && raw < 200;
+
+  // se tem start, calcula minuto real
+  let elapsed = null;
+  if (startMs) {
+    elapsed = Math.floor((Date.now() - startMs) / 60000);
+    if (!(Number.isFinite(elapsed) && elapsed > 0 && elapsed < 250)) elapsed = null;
   }
 
-  // 3) número puro
-  const n = Number(raw);
-  if(Number.isFinite(n) && n > 0 && n < 200) return n;
-
-  // fallback: se está ao vivo e tem startTs, calcula por diferença
-  if(isLive(g) && g.startTs){
-    const startMs = Number(g.startTs) * 1000;
-    if(Number.isFinite(startMs)){
-      const diffMin = Math.floor((Date.now() - startMs) / 60000);
-      if(diffMin > 0 && diffMin < 200) return diffMin;
+  // se a API trouxe minuto, usa, MAS se estiver travado (ex: 90 eterno) e o cálculo pelo start avançou, corrige
+  if (rawOk) {
+    if (elapsed != null) {
+      // tolerância pequena; só corrige quando for claramente "travado"
+      if (raw >= 88 && elapsed >= raw + 2 && elapsed <= 200) return elapsed;
     }
+    return raw;
+  }
+
+  // se não veio minuto, tenta pelo start
+  if (elapsed != null) {
+    // se passou demais do normal e status ainda não finalizou, não marca como ao vivo
+    if (elapsed > 200) return null;
+    return Math.max(1, Math.min(elapsed, 200));
   }
 
   return null;
 }
+
 
     function formatLiveClock(g){
   const s = (g.status || "").toUpperCase();
@@ -1323,26 +1354,22 @@ timestampMs: tsMs,
   return getMinuteLabel(g) || "AO VIVO";
 }
 function getMinuteLabel(g){
-  const s = (g.status || "").toUpperCase();
+  const st = (g.status ?? "").toString().trim().toUpperCase();
+  // prioridade: label pronto da API (quando existir)
+  const lbl = (g.minuteLabel ?? g.elapsedLabel ?? g.timeLabel ?? "").toString().trim();
+  if (lbl) return lbl.endsWith("′") ? lbl : (lbl + "′");
 
-  // prioridade: campos explícitos (quando a API manda)
-  const ft = (g.minuteLabel || g.elapsed || g.time || g.clock || "").toString().trim();
-  if(ft) return ft.endsWith("'") ? ft : (ft + "'");
+  const m = getElapsedMinute(g);
+  if (m == null) return "AO VIVO";
 
-  const m = Number(g.minute);
-  if(!Number.isFinite(m) || m <= 0) return "—";
+  // para futebol, mostra 90+X depois do 90
+  const sport = (g.sport ?? "").toString().toLowerCase();
+  const isFootball = sport.includes("foot") || sport === "soccer" || sport === "football";
+  if (isFootball && m > 90 && m <= 120) return `90+${m-90}′`;
 
-  // 45+ / 90+ (acréscimos)
-  // Se vier 47, mostra 45+2'. Se vier 92, mostra 90+2'.
-  if(m > 45 && m < 60 && (s === "1H" || s === "1ST" || s === "LIVE" || s === "INPLAY" || s === "IN_PLAY")){
-    return `45+${m-45}'`;
-  }
-  if(m > 90 && m < 120 && (s === "2H" || s === "2ND" || s === "LIVE" || s === "INPLAY" || s === "IN_PLAY")){
-    return `90+${m-90}'`;
-  }
-
-  return `${Math.min(m, 120)}'`;
+  return `${m}′`;
 }
+
     /* ======== NORMALIZE (CORRIGIDO) ======== */
     function normalizeGames(raw){
       if(!Array.isArray(raw)) return [];
