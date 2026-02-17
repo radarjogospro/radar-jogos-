@@ -1688,8 +1688,16 @@ if (!window.__AUTO_REFRESH__) {
 
       renderGamesSheet(document.getElementById("gamesList"), nextGames);
     }
-
-    loadData();
-  </script>
+loadData();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+window.addEventListener("load", () => {
+navigator.serviceWorker.register("/radar-jogos-/sw.js")
+.then(() => console.log("SW ok"))
+.catch(err => console.log("SW erro", err));
+});
+}
+</script>
 </body>
-                                                       </html>
+</html>
