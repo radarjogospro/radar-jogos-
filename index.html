@@ -1283,12 +1283,14 @@ timestampMs: tsMs,
 function formatDow(g){
   const ms = getStartMs(g);
   if(!ms) return "—";
+  // dia da semana sempre no fuso do Brasil (São Paulo)
   try{
-    const wd = new Intl.DateTimeFormat("pt-BR",{weekday:"short", timeZone:"America/Sao_Paulo"}).format(new Date(ms));
-    return wd.endsWith(".") ? wd : (wd + ".");
-  }catch(_){
+    const txt = new Intl.DateTimeFormat("pt-BR", { weekday: "short", timeZone: "America/Sao_Paulo" }).format(new Date(ms));
+    return txt.endsWith(".") ? txt : (txt + ".");
+  }catch(e){
+    const d = new Date(ms);
     const names = ["dom.","seg.","ter.","qua.","qui.","sex.","sáb."];
-    return names[new Date(ms).getDay()];
+    return names[d.getDay()] || "—";
   }
 }
 
@@ -1647,8 +1649,7 @@ if (!window.__AUTO_REFRESH__) {
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const __ms = getStartMs(g);
-          const timeTxt = __ms ? (formatDow(g) + " " + formatKickoff(__ms)) : "horário indefinido";
+          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
