@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Radar PRO - Login</title>
+</head>
+<body style="background:#0b2022;color:white;font-family:sans-serif;text-align:center;padding:40px;">
+
+<h2>Radar PRO</h2>
+
+<input id="email" placeholder="Email" style="padding:10px;margin:5px;"><br>
+<input id="password" type="password" placeholder="Senha" style="padding:10px;margin:5px;"><br>
+
+<button onclick="login()" style="padding:10px 20px;margin:10px;background:#ff2d7a;color:white;border:none;border-radius:8px;">
+Entrar
+</button>
+
+<p id="msg"></p>
+
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const supabase = createClient(
+  "COLE_AQUI_SUA_PROJECT_URL",
+  "COLE_AQUI_SUA_PUBLISHABLE_KEY"
+)
+
+async function login() {
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if(error){
+    document.getElementById("msg").innerText = "Erro: " + error.message
+  } else {
+    window.location.href = "/"
+  }
+}
+
+</script>
+
+</body>
+</html>
