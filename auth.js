@@ -1,10 +1,10 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // 1) COLE AQUI:
-const SUPABASE_URL = "https://wthlxrukcwyqdkewvjs.supabase.co";
+const SUPABASE_URL = "https://wthlxrukcwyqdkeuvjcs.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vfPvj4TOQRPD5GA35QgXVg_wIBIlmZi"; // (NUNCA use service_role/secret)
 
-// --------- Helpers
+// ---------- Helpers
 const $ = (id) => document.getElementById(id);
 const envPill = $("envPill");
 const tabLogin = $("tabLogin");
@@ -41,36 +41,30 @@ function setBusy(busy) {
 
 // Base do seu app (IMPORTANTE por causa do /radar-jogos-/)
 function getBasePath() {
-  // Ex: /radar-jogos-/login.html  -> /radar-jogos-/
   return window.location.pathname.replace(/[^/]*$/, "");
 }
-const BASE_PATH = getBasePath(); // "/radar-jogos-/"
+const BASE_PATH = getBasePath();          // "/radar-jogos-/" ou "/"
 const BASE_URL = window.location.origin + BASE_PATH;
 
-// --------- Tabs
-let mode = "login"; // login | signup
+let mode = "login"; // "login" | "signup"
 
 function setMode(next) {
   mode = next;
   clearMsg();
-
   const isSignup = mode === "signup";
   tabLogin.classList.toggle("active", !isSignup);
   tabSignup.classList.toggle("active", isSignup);
   signupExtra.style.display = isSignup ? "block" : "none";
   btnSubmit.textContent = isSignup ? "Criar conta" : "Entrar";
-
   pass2El.required = isSignup;
   pass2El.value = "";
 }
+
 tabLogin.addEventListener("click", () => setMode("login"));
 tabSignup.addEventListener("click", () => setMode("signup"));
+btnBack.addEventListener("click", () => { window.location.href = "./"; });
 
-btnBack.addEventListener("click", () => {
-  window.location.href = "./";
-});
-
-// --------- Supabase init
+// --- Supabase init
 function isConfigured() {
   return (
     typeof SUPABASE_URL === "string" &&
@@ -79,23 +73,21 @@ function isConfigured() {
     typeof SUPABASE_KEY === "string" &&
     SUPABASE_KEY.length > 30 &&
     !SUPABASE_URL.includes("SEU-PROJECT-REF") &&
-    !SUPABASE_KEY.includes("SUA_")
+    !SUPABASE_KEY.includes("sb_...")
   );
 }
 
 if (!isConfigured()) {
-  envPill.textContent = "⚠️ Configure SUPABASE_URL e SUPABASE_KEY no auth.js";
+  envPill.textContent = "⚠️ Falta configurar SUPABASE_URL e SUPABASE_KEY no auth.js";
   showMsg(
-    "Falta configurar:\n\n- SUPABASE_URL (Project URL)\n- SUPABASE_KEY (Publishable/anon)\n\nDepois recarregue a página.",
+    "Abra o arquivo auth.js e cole:\n\n- SUPABASE_URL (Project URL)\n- SUPABASE_KEY (Publishable/anon)\n\nDepois suba no GitHub e recarregue.",
     "warn"
   );
 }
 
 const supabase = isConfigured() ? createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-if (supabase) {
-  envPill.textContent = "Supabase conectado ✅";
-}
+if (supabase) envPill.textContent = "Supabase conectado ✅";
 
 // Se já estiver logado, volta pro app
 (async function boot() {
@@ -106,7 +98,7 @@ if (supabase) {
   } catch {}
 })();
 
-// --------- Submit
+// --- Submit
 form.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   clearMsg();
@@ -118,74 +110,63 @@ form.addEventListener("submit", async (ev) => {
 
   if (!email || !password) return showMsg("Preencha e-mail e senha.", "warn");
 
-  if (mode === "signup") {
-    if (password.length < 6) return showMsg("Senha muito curta (mínimo 6).", "warn");
-    if (password !== password2) return showMsg("As senhas não conferem.", "warn");
-  }
-
   setBusy(true);
   try {
-    if (mode === "login") {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (data?.session) {
-        showMsg("Login realizado! Entrando…", "ok");
-        window.location.replace("./");
-        return;
-      }
-      showMsg("Login feito, mas sem sessão. Tente novamente.", "warn");
-    } else {
+    if (mode === "signup") {
+      if (password.length < 6) return showMsg("Senha muito curta (mínimo 6).", "warn");
+      if (password !== password2) return showMsg("As senhas não conferem.", "warn");
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: BASE_URL }, // <- importante
+        options: {
+          emailRedirectTo: BASE_URL,
+        },
       });
-      if (error) throw error;
 
-      if (data?.session) {
-        showMsg("Conta criada e logada! Entrando…", "ok");
-        window.location.replace("./");
-        return;
+      if (error) return showMsg(error.message, "warn");
+
+      // Se confirmação por email estiver ativa, o session pode vir null
+      if (!data?.session) {
+        showMsg("Conta criada! Verifique seu e-mail para confirmar e depois faça login.", "ok");
+      } else {
+        showMsg("Conta criada e logada ✅ Indo pro app…", "ok");
+        setTimeout(() => window.location.replace("./"), 600);
       }
-
-      showMsg(
-        "Conta criada!\n\nSe a confirmação por e-mail estiver ATIVA, confirme no e-mail e depois volte para entrar.\nSe você desativou a confirmação, tente entrar agora.",
-        "ok"
-      );
-      setMode("login");
+      return;
     }
-  } catch (err) {
-    const msg = err?.message || err?.error_description || String(err);
-    const lower = msg.toLowerCase();
 
-    if (lower.includes("invalid login credentials")) showMsg("E-mail ou senha incorretos.", "bad");
-    else if (lower.includes("email not confirmed")) showMsg("Confirme seu e-mail e tente novamente.", "warn");
-    else if (lower.includes("already registered")) { showMsg("Esse e-mail já existe. Tente entrar.", "warn"); setMode("login"); }
-    else showMsg("Erro: " + msg, "bad");
+    // login
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return showMsg(error.message, "warn");
+    if (data?.session) {
+      showMsg("Logado ✅ Indo pro app…", "ok");
+      setTimeout(() => window.location.replace("./"), 400);
+    }
+  } catch (e) {
+    showMsg(String(e?.message || e), "warn");
   } finally {
     setBusy(false);
   }
 });
 
-// --------- Reset senha
-forgot.addEventListener("click", async (ev) => {
-  ev.preventDefault();
+// --- Forgot password
+forgot.addEventListener("click", async () => {
   clearMsg();
   if (!supabase) return;
 
   const email = (emailEl.value || "").trim();
-  if (!email) return showMsg("Digite seu e-mail acima e toque em “Esqueci minha senha”.", "warn");
+  if (!email) return showMsg("Digite seu e-mail acima para recuperar a senha.", "warn");
 
   setBusy(true);
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: BASE_URL + "login.html", // <- importante
+      redirectTo: BASE_URL,
     });
-    if (error) throw error;
-    showMsg("Se existir conta com esse e-mail, você receberá um link para redefinir a senha.", "ok");
-  } catch (err) {
-    const msg = err?.message || err?.error_description || String(err);
-    showMsg("Erro: " + msg, "bad");
+    if (error) return showMsg(error.message, "warn");
+    showMsg("Enviei um link de recuperação para seu e-mail.", "ok");
+  } catch (e) {
+    showMsg(String(e?.message || e), "warn");
   } finally {
     setBusy(false);
   }
