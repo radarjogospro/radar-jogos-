@@ -1280,6 +1280,19 @@ timestampMs: tsMs,
   }).format(d);
 }
 
+function formatDow(g){
+  const ms = getStartMs(g);
+  if(!ms) return "—";
+  try{
+    const wd = new Intl.DateTimeFormat("pt-BR",{weekday:"short"}).format(new Date(ms));
+    return wd.endsWith(".") ? wd : (wd + ".");
+  }catch(_){
+    const names = ["dom.","seg.","ter.","qua.","qui.","sex.","sáb."];
+    return names[new Date(ms).getDay()];
+  }
+}
+
+
 
     function shortName(s){
       if(!s) return "";
@@ -1375,9 +1388,10 @@ function getMinuteLabel(g){
 }
 
     /* ======== NORMALIZE (CORRIGIDO) ======== */
-    function normalizeGames(raw){
+    function normalizeGames(raw, fetchedAtMs){
       if(!Array.isArray(raw)) return [];
       return raw.map(g=>{
+        const _fetchedAtMs = fetchedAtMs || Date.now();
         const sport = (g.sport || g.sportKey || g.category || "football").toLowerCase();
         const league = g.league || g.competition || g.leagueName || "Liga";
         const country = g.country || g.area || g.region || "";
@@ -1413,6 +1427,7 @@ function getMinuteLabel(g){
         const odds = extractOdds(g);
 
         return {
+          _fetchedAtMs,
           id, sport, league, country, home, away,
           status,
           minute: (Number.isFinite(minute) ? minute : null),
