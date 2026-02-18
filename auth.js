@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // 1) COLE AQUI:
-const SUPABASE_URL = "https://wthlxrukcwyqdkeuvjcs.supabase.co";
+const SUPABASE_URL = "https://wthlxrukcwyqdkewvjs.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vfPvj4TOQRPD5GA35QgXVg_wIBIlmZi"; // (NUNCA use service_role/secret)
 
 // --------- Helpers
