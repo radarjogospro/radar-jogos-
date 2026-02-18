@@ -1216,17 +1216,29 @@ timestampMs: tsMs,
 }
 
 
-    function finishedTooOld(g){
-      if(!isFinished(g)) return false;
-      if(!g.startTs) return true;
-      const now = Date.now();
-      const start = Number(g.startTs) * 1000;
-      if(!Number.isFinite(start)) return true;
+    function finishedTooOld(g) {
+  const now = Math.floor(Date.now() / 1000);
+  // Se o jogo terminou (FT), ele só fica na tela por 20 minutos (1200 segundos)
+  if (g.status === "FT" || g.status === "AET" || g.status === "PEN") {
+    const endTs = g.startTs + (110 * 60); // Aproximação do fim do jogo
+    return now > (endTs + 1200); 
+  }
+  // Se o jogo for muito antigo (mais de 12 horas) e não for LIVE, remove
+  if (g.status === "NS" && now > (g.startTs + 43200)) return true;
+  
+  return false;
+}
 
-      const endEstimated = start + 2*3600*1000;
-      const diffMin = (now - endEstimated) / 60000;
-      return diffMin > KEEP_FINISHED_MINUTES;
-    }
+function getStatusLabel(g) {
+  if (g.status === "LIVE") return (g.minute || "0") + "'";
+  if (g.status === "FT") return "Encerrado";
+  if (g.status === "HT") return "Intervalo";
+  if (g.status === "NS") {
+    const dt = new Date(g.startTs * 1000);
+    return dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  }
+  return g.status;
+}
 
     function inNextHours(g, hours){
   if(finishedTooOld(g)) return false;
