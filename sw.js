@@ -1,13 +1,17 @@
 // sw.js - Radar PRO
 // Importante: NÃO cacheie jogos.json / dados da API. Sempre pegar da rede.
 
-const CACHE = "radar-pro-v13"; // aumente para forçar atualização do cache
+const CACHE = "radar-pro-v14"; // aumente para forçar atualização do cache
+const SCOPE_URL = new URL(self.registration.scope);
+const BASE = SCOPE_URL.pathname.endsWith("/") ? SCOPE_URL.pathname : (SCOPE_URL.pathname + "/");
+
+// Cache apenas arquivos estáticos do próprio escopo (serve tanto em / quanto em /radar-jogos-/)
 const ASSETS = [
-  "/radar-jogos-/",
-  "/radar-jogos-/index.html",
-  "/radar-jogos-/manifest.json",
-  "/radar-jogos-/icon-192.png",
-  "/radar-jogos-/icon-512.png"
+  BASE,
+  BASE + "index.html",
+  BASE + "manifest.json",
+  BASE + "icon-192.png",
+  BASE + "icon-512.png"
 ];
 
 // instala e guarda só os arquivos estáticos
