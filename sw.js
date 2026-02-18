@@ -1,4 +1,4 @@
-const CACHE = "radar-pro-v10"; // muda o número sempre que atualizar
+const CACHE = "radar-pro-v11"; // muda o número sempre que atualizar
 
 const ASSETS = [
   "/radar-jogos-/",
