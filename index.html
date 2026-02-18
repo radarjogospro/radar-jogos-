@@ -1282,9 +1282,24 @@ timestampMs: tsMs,
 
 function formatDow(g){
   const ms = getStartMs(g);
-  if(!ms) return "—";
-  try{
-    const wd = new Intl.DateTimeFormat("pt-BR",{weekday:"short"}).format(new Date(ms));
+  if (!ms) return "—";
+
+  // força calendário no fuso do Brasil (evita "dom." errado)
+  const tz = "America/Sao_Paulo";
+  const now = Date.now();
+
+  // se for dentro de 48h, mostra "hoje" / "amanhã" (mais intuitivo)
+  const dayKey = (t) => new Intl.DateTimeFormat("en-CA", { timeZone: tz, year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date(t)); // YYYY-MM-DD
+  const dk = dayKey(ms);
+  const dk0 = dayKey(now);
+  const dk1 = dayKey(now + 24*60*60*1000);
+
+  if (dk === dk0) return "hoje";
+  if (dk === dk1) return "amanhã";
+
+  return new Intl.DateTimeFormat("pt-BR", { weekday: "short", timeZone: tz }).format(new Date(ms));
+}
+).format(new Date(ms));
     return wd.endsWith(".") ? wd : (wd + ".");
   }catch(_){
     const names = ["dom.","seg.","ter.","qua.","qui.","sex.","sáb."];
