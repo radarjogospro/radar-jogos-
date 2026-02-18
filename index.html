@@ -1216,29 +1216,17 @@ timestampMs: tsMs,
 }
 
 
-    function finishedTooOld(g) {
-  const now = Math.floor(Date.now() / 1000);
-  // Se o jogo terminou (FT), ele só fica na tela por 20 minutos (1200 segundos)
-  if (g.status === "FT" || g.status === "AET" || g.status === "PEN") {
-    const endTs = g.startTs + (110 * 60); // Aproximação do fim do jogo
-    return now > (endTs + 1200); 
-  }
-  // Se o jogo for muito antigo (mais de 12 horas) e não for LIVE, remove
-  if (g.status === "NS" && now > (g.startTs + 43200)) return true;
-  
-  return false;
-}
+    function finishedTooOld(g){
+      if(!isFinished(g)) return false;
+      if(!g.startTs) return true;
+      const now = Date.now();
+      const start = Number(g.startTs) * 1000;
+      if(!Number.isFinite(start)) return true;
 
-function getStatusLabel(g) {
-  if (g.status === "LIVE") return (g.minute || "0") + "'";
-  if (g.status === "FT") return "Encerrado";
-  if (g.status === "HT") return "Intervalo";
-  if (g.status === "NS") {
-    const dt = new Date(g.startTs * 1000);
-    return dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-  }
-  return g.status;
-}
+      const endEstimated = start + 2*3600*1000;
+      const diffMin = (now - endEstimated) / 60000;
+      return diffMin > KEEP_FINISHED_MINUTES;
+    }
 
     function inNextHours(g, hours){
   if(finishedTooOld(g)) return false;
@@ -1290,6 +1278,29 @@ function getStatusLabel(g) {
     hour: "2-digit",
     minute: "2-digit"
   }).format(d);
+}
+
+
+/* ===== FIX DIA DA SEMANA / TIMESTAMP ===== */
+function getStartMs(g){
+  if(!g) return null;
+
+  const ts = Number(
+    g.startTs ??
+    g.start_ts ??
+    g.timestamp ??
+    g.kickoffTs ??
+    g.kickoff ??
+    0
+  );
+
+  if(!Number.isFinite(ts) || ts <= 0) return null;
+
+  // já está em milissegundos
+  if(ts > 1e12) return ts;
+
+  // está em segundos → converte
+  return ts * 1000;
 }
 
 function formatDow(g){
@@ -1661,7 +1672,7 @@ if (!window.__AUTO_REFRESH__) {
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
+          const timeTxt = g.startTs ? (formatDow(g) + " " + formatKickoff(g)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
