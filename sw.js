@@ -1,5 +1,7 @@
-const CACHE = "radar-pro-v11"; // muda o número sempre que atualizar
+// sw.js - Radar PRO
+// Importante: NÃO cacheie jogos.json / dados da API. Sempre pegar da rede.
 
+const CACHE = "radar-pro-v13"; // aumente para forçar atualização do cache
 const ASSETS = [
   "/radar-jogos-/",
   "/radar-jogos-/index.html",
@@ -10,7 +12,9 @@ const ASSETS = [
 
 // instala e guarda só os arquivos estáticos
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));
+  e.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(ASSETS))
+  );
   self.skipWaiting();
 });
 
@@ -24,43 +28,41 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-// NUNCA cachear jogos.json nem chamadas da API
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
+function isDataRequest(url) {
+  // não cachear dados dinâmicos
+  const p = url.pathname;
+  return (
+    p.endsWith("/jogos.json") ||
+    p.includes("jogos.json") ||
+    p.endsWith(".json") && (p.includes("jogos") || p.includes("api")) ||
+    url.searchParams.has("cacheBust") ||
+    url.searchParams.has("cb")
+  );
+}
 
-  // Atualização confiável: network-first para navegação e para o index.html
-  const accept = req.headers.get("accept") || "";
-  const isHTML = req.mode === "navigate" || accept.includes("text/html");
-  const isIndex = url.pathname.endsWith("/index.html") || url.pathname === "/" || url.pathname.endsWith("/");
+self.addEventListener("fetch", (e) => {
+  const url = new URL(e.request.url);
 
-  if (isHTML || isIndex) {
-    event.respondWith(
-      fetch(req)
-        .then((resp) => {
-          const copy = resp.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-          return resp;
-        })
-        .catch(() => caches.match(req))
+  // só controla requests do seu domínio (GitHub Pages)
+  if (url.origin !== location.origin) return;
+
+  // dados: rede sempre, sem cache
+  if (isDataRequest(url)) {
+    e.respondWith(
+      fetch(e.request, { cache: "no-store" }).catch(() => caches.match(e.request))
     );
     return;
   }
 
-  // Assets: cache-first
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      return (
-        cached ||
-        fetch(req)
-          .then((resp) => {
-            const copy = resp.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy));
-            return resp;
-          })
-          .catch(() => cached)
-      );
+  // estáticos: cache-first
+  e.respondWith(
+    caches.match(e.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(e.request).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((cache) => cache.put(e.request, copy));
+        return res;
+      });
     })
   );
 });
-
