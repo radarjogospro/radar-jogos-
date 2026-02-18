@@ -1284,7 +1284,7 @@ function formatDow(g){
   const ms = getStartMs(g);
   if(!ms) return "—";
   try{
-    const wd = new Intl.DateTimeFormat("pt-BR",{weekday:"short"}).format(new Date(ms));
+    const wd = new Intl.DateTimeFormat("pt-BR",{weekday:"short", timeZone:"America/Sao_Paulo"}).format(new Date(ms));
     return wd.endsWith(".") ? wd : (wd + ".");
   }catch(_){
     const names = ["dom.","seg.","ter.","qua.","qui.","sex.","sáb."];
@@ -1647,7 +1647,8 @@ if (!window.__AUTO_REFRESH__) {
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? ("dom. " + formatKickoff(g)) : "horário indefinido";
+          const __ms = getStartMs(g);
+          const timeTxt = __ms ? (formatDow(g) + " " + formatKickoff(__ms)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
