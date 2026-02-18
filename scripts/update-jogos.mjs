@@ -1,14 +1,115 @@
 import fs from "fs";
 
-// Gera dados DEMO no formato do seu app (sem API)
-// Roda no GitHub Actions e atualiza jogos.json sempre que quiser.
+// Atualiza jogos.json usando API-Football (api-sports) quando houver chave.
+// Se não houver chave (ou der erro), cai no DEMO (mesmo formato do app).
 
 const OUT = "jogos.json";
-const nowMs = Date.now();
-const now = new Date(nowMs);
+const API_KEY = process.env.API_FOOTBALL_KEY || "";
+const API_HOST = "v3.football.api-sports.io";
+const BASE = `https://${API_HOST}`;
 
+function tsSeconds(ms){ return Math.floor(ms/1000); }
+
+async function fetchJson(url){
+  const res = await fetch(url, {
+    headers: {
+      "x-apisports-key": API_KEY,
+      "x-apisports-host": API_HOST
+    }
+  });
+  if(!res.ok){
+    const txt = await res.text().catch(()=> "");
+    throw new Error(`HTTP ${res.status} ${res.statusText} :: ${txt.slice(0,300)}`);
+  }
+  return res.json();
+}
+
+function mapFixtureToGame(fx){
+  const fixture = fx.fixture || {};
+  const league  = fx.league || {};
+  const teams   = fx.teams || {};
+  const goals   = fx.goals || {};
+  const score   = fx.score || {};
+  const st      = (fx.fixture?.status?.short || "").toUpperCase();
+  const elapsed = fx.fixture?.status?.elapsed;
+  const startISO = fixture.date; // API já respeita timezone=America/Sao_Paulo na string
+  const startMs = startISO ? Date.parse(startISO) : null;
+
+  // status no formato do app (mantém short quando possível)
+  // LIVE / NS / FT / HT / 1H / 2H / AET / PEN etc.
+  const status = st || "NS";
+
+  // minuto: usa elapsed (minuto real)
+  const minute = (typeof elapsed === "number") ? elapsed : null;
+
+  // placar: usa goals (futebol) ou score fulltime quando terminar
+  const scoreHome = (typeof goals.home === "number") ? goals.home : null;
+  const scoreAway = (typeof goals.away === "number") ? goals.away : null;
+
+  const id = fx.fixture?.id ? `fb-${fx.fixture.id}` : `fb-${Math.random().toString(16).slice(2)}`;
+
+  return {
+    id,
+    sport: "football",
+    league: league.name || "",
+    country: league.country || "",
+    home: teams.home?.name || "",
+    away: teams.away?.name || "",
+    startTs: startMs ? tsSeconds(startMs) : null,
+    status,
+    minute,
+    scoreHome,
+    scoreAway,
+    odds: { home: null, draw: null, away: null }
+  };
+}
+
+async function generateReal(){
+  // Puxa ao vivo + jogos de hoje e amanhã (horário do Brasil)
+  const tz = "America/Sao_Paulo";
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth()+1).padStart(2,"0");
+  const dd = String(today.getDate()).padStart(2,"0");
+  const dateStr = `${yyyy}-${mm}-${dd}`;
+
+  const tomorrow = new Date(today.getTime() + 24*60*60*1000);
+  const yyyy2 = tomorrow.getFullYear();
+  const mm2 = String(tomorrow.getMonth()+1).padStart(2,"0");
+  const dd2 = String(tomorrow.getDate()).padStart(2,"0");
+  const dateStr2 = `${yyyy2}-${mm2}-${dd2}`;
+
+  const liveUrl = `${BASE}/fixtures?live=all&timezone=${encodeURIComponent(tz)}`;
+  const todayUrl = `${BASE}/fixtures?date=${dateStr}&timezone=${encodeURIComponent(tz)}`;
+  const tomorrowUrl = `${BASE}/fixtures?date=${dateStr2}&timezone=${encodeURIComponent(tz)}`;
+
+  const [live, day1, day2] = await Promise.all([
+    fetchJson(liveUrl).catch(()=> ({response:[]})),
+    fetchJson(todayUrl).catch(()=> ({response:[]})),
+    fetchJson(tomorrowUrl).catch(()=> ({response:[]}))
+  ]);
+
+  const seen = new Set();
+  const all = [];
+  for (const src of [live.response||[], day1.response||[], day2.response||[]]){
+    for (const fx of src){
+      const fid = fx?.fixture?.id;
+      if (fid && seen.has(fid)) continue;
+      if (fid) seen.add(fid);
+      all.push(mapFixtureToGame(fx));
+    }
+  }
+
+  // ordena por horário
+  all.sort((a,b)=> (a.startTs||0) - (b.startTs||0));
+
+  return all;
+}
+
+/* ================= DEMO (fallback) ================= */
+
+const nowMs = Date.now();
 const rnd = (seed) => {
-  // PRNG simples e determinístico por dia (pra não ficar “pulando” do nada)
   let x = seed >>> 0;
   return () => {
     x ^= x << 13; x >>>= 0;
@@ -17,20 +118,10 @@ const rnd = (seed) => {
     return (x >>> 0) / 4294967296;
   };
 };
-
-const daySeed = Number(now.toISOString().slice(0,10).replaceAll("-","")) + Math.floor(nowMs/60000);
+const daySeed = Number(new Date().toISOString().slice(0,10).replaceAll("-","")) + Math.floor(nowMs/60000);
 const r = rnd(daySeed);
-
 const pick = (arr) => arr[Math.floor(r() * arr.length)];
 const randint = (a,b) => a + Math.floor(r() * (b - a + 1));
-
-const sports = [
-  { key: "football", label: "Futebol" },
-  { key: "tennis", label: "Tênis" },
-  { key: "basketball", label: "Basquete" },
-  { key: "volleyball", label: "Vôlei" },
-];
-
 const footballLeagues = [
   ["Premier League", "England"],
   ["La Liga", "Spain"],
@@ -46,7 +137,6 @@ const footballLeagues = [
   ["Libertadores", "South America"],
   ["Champions League", "Europe"],
 ];
-
 const footballTeams = [
   "Arsenal","Chelsea","Liverpool","Man City","Man United","Tottenham",
   "Barcelona","Real Madrid","Atletico Madrid","Sevilla",
@@ -58,223 +148,66 @@ const footballTeams = [
   "Al Hilal","Al Nassr","Al Ittihad",
   "Kawasaki Frontale","Yokohama F. Marinos","Urawa Reds",
 ];
-
-const tennisTours = [
-  ["ATP 250", "World"],
-  ["ATP 500", "World"],
-  ["Masters 1000", "World"],
-  ["WTA 250", "World"],
-  ["WTA 500", "World"],
-  ["Grand Slam", "World"],
-];
-
-const tennisPlayers = [
-  "Djokovic","Alcaraz","Sinner","Medvedev","Zverev","Rublev",
-  "Swiatek","Sabalenka","Gauff","Rybakina","Pegula","Jabeur",
-];
-
-const basketballLeagues = [
-  ["NBA","USA"],
-  ["EuroLeague","Europe"],
-  ["NBB","Brazil"],
-  ["ACB","Spain"],
-];
-
-const basketballTeams = [
-  "Lakers","Warriors","Celtics","Bulls","Heat","Nuggets",
-  "Real Madrid","Barcelona","Olympiacos","Fenerbahçe",
-  "Flamengo","Franca","Minas","Corinthians",
-];
-
-const volleyballLeagues = [
-  ["Superliga","Brazil"],
-  ["VNL","World"],
-  ["CEV Champions League","Europe"],
-];
-
-const volleyballTeams = [
-  "Sada Cruzeiro","Minas","SESI Bauru","Vôlei Renata",
-  "Trentino","Perugia","Zaksa","Zenit Kazan",
-];
-
-function makeGameId(prefix, i) {
-  return `${prefix}-${String(i).padStart(4,"0")}`;
-}
-
-function tsSecondsFromMs(ms){ return Math.floor(ms/1000); }
-
+function makeGameId(prefix, i) { return `${prefix}-${String(i).padStart(4,"0")}`; }
 function footballGame(i){
   const [league, country] = pick(footballLeagues);
   const home = pick(footballTeams);
   let away = pick(footballTeams);
   if (away === home) away = pick(footballTeams);
-
-  // janela: -90min até +12h
   const startMs = nowMs + randint(-90*60*1000, 12*60*60*1000);
   const started = startMs <= nowMs;
-
-  let status = "NS";
-  let minute = null;
-  let scoreHome = null;
-  let scoreAway = null;
-
+  let status = "NS", minute = null, scoreHome = null, scoreAway = null;
   if (started) {
-    // 70% fica LIVE, 30% vira FT
     const isLive = r() < 0.7;
     if (isLive) {
-      status = "LIVE";
-      minute = randint(1, 90);
-      scoreHome = randint(0, 4);
-      scoreAway = randint(0, 4);
+      status = "LIVE"; minute = randint(1, 90);
+      scoreHome = randint(0, 4); scoreAway = randint(0, 4);
     } else {
-      status = "FT";
-      minute = 90;
-      scoreHome = randint(0, 5);
-      scoreAway = randint(0, 5);
+      status = "FT"; minute = 90;
+      scoreHome = randint(0, 5); scoreAway = randint(0, 5);
     }
   }
-
-  const oddsHome = Number((1.5 + r()*2.2).toFixed(2));
-  const oddsDraw = Number((2.6 + r()*1.8).toFixed(2));
-  const oddsAway = Number((1.6 + r()*3.0).toFixed(2));
-
   return {
     id: makeGameId("fb", i),
     sport: "football",
-    league,
-    country,
-    home,
-    away,
-    startTs: tsSecondsFromMs(startMs),
-    status,
-    minute,
-    scoreHome,
-    scoreAway,
-    odds: { home: oddsHome, draw: oddsDraw, away: oddsAway }
-  };
-}
-
-function tennisGame(i){
-  const [league, country] = pick(tennisTours);
-  const home = pick(tennisPlayers);
-  let away = pick(tennisPlayers);
-  if (away === home) away = pick(tennisPlayers);
-
-  const startMs = nowMs + randint(-60*60*1000, 10*60*60*1000);
-  const started = startMs <= nowMs;
-
-  let status = started ? (r() < 0.75 ? "LIVE" : "FT") : "NS";
-  let minute = started && status==="LIVE" ? randint(1, 180) : null;
-
-  // Para simplificar, usamos scoreHome/scoreAway como “games/sets” genéricos
-  const scoreHome = started ? randint(0, 2) : null;
-  const scoreAway = started ? randint(0, 2) : null;
-
-  return {
-    id: makeGameId("tn", i),
-    sport: "tennis",
-    league,
-    country,
-    home,
-    away,
-    startTs: tsSecondsFromMs(startMs),
-    status,
-    minute,
-    scoreHome,
-    scoreAway,
+    league, country, home, away,
+    startTs: tsSeconds(startMs),
+    status, minute, scoreHome, scoreAway,
     odds: { home: null, draw: null, away: null }
   };
 }
-
-function basketballGame(i){
-  const [league, country] = pick(basketballLeagues);
-  const home = pick(basketballTeams);
-  let away = pick(basketballTeams);
-  if (away === home) away = pick(basketballTeams);
-
-  const startMs = nowMs + randint(-90*60*1000, 10*60*60*1000);
-  const started = startMs <= nowMs;
-
-  let status = started ? (r() < 0.8 ? "LIVE" : "FT") : "NS";
-  let minute = started && status==="LIVE" ? randint(1, 48) : null;
-
-  const scoreHome = started ? randint(40, 130) : null;
-  const scoreAway = started ? randint(40, 130) : null;
-
-  return {
-    id: makeGameId("bb", i),
-    sport: "basketball",
-    league,
-    country,
-    home,
-    away,
-    startTs: tsSecondsFromMs(startMs),
-    status,
-    minute,
-    scoreHome,
-    scoreAway,
-    odds: { home: null, draw: null, away: null }
-  };
-}
-
-function volleyballGame(i){
-  const [league, country] = pick(volleyballLeagues);
-  const home = pick(volleyballTeams);
-  let away = pick(volleyballTeams);
-  if (away === home) away = pick(volleyballTeams);
-
-  const startMs = nowMs + randint(-90*60*1000, 10*60*60*1000);
-  const started = startMs <= nowMs;
-
-  let status = started ? (r() < 0.8 ? "LIVE" : "FT") : "NS";
-  let minute = started && status==="LIVE" ? randint(1, 120) : null;
-
-  // sets
-  const scoreHome = started ? randint(0, 3) : null;
-  const scoreAway = started ? randint(0, 3) : null;
-
-  return {
-    id: makeGameId("vb", i),
-    sport: "volleyball",
-    league,
-    country,
-    home,
-    away,
-    startTs: tsSecondsFromMs(startMs),
-    status,
-    minute,
-    scoreHome,
-    scoreAway,
-    odds: { home: null, draw: null, away: null }
-  };
-}
-
-function generateAll(){
+function generateDemo(){
   const games = [];
-
-  // Total grande (mundo inteiro)
   for (let i=1;i<=220;i++) games.push(footballGame(i));
-  for (let i=1;i<=90;i++)  games.push(tennisGame(i));
-  for (let i=1;i<=70;i++)  games.push(basketballGame(i));
-  for (let i=1;i<=60;i++)  games.push(volleyballGame(i));
-
-  // Ordena por horário
-  games.sort((a,b)=> (a.startTs||0) - (b.startTs||0));
-
+  games.sort((a,b)=> (a.startTs||0)-(b.startTs||0));
   return games;
 }
 
-function main(){
-  const games = generateAll();
+/* ================= MAIN ================= */
+
+async function main(){
+  let games = [];
+  let source = "DEMO";
+  try{
+    if(!API_KEY) throw new Error("Sem API_FOOTBALL_KEY");
+    games = await generateReal();
+    source = "REAL";
+    if(!games.length) throw new Error("API retornou 0 jogos");
+  }catch(err){
+    console.log("[WARN] Caindo no DEMO:", err?.message || err);
+    games = generateDemo();
+    source = "DEMO";
+  }
+
   const payload = {
-    updatedAt: new Date().toLocaleString("pt-BR"),
+    updatedAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
     cacheBust: String(Date.now()),
-    source: "DEMO",
+    source,
     games
   };
 
   fs.writeFileSync(OUT, JSON.stringify(payload, null, 2), "utf-8");
-  console.log("DEMO gerado:", games.length);
+  console.log(`jogos.json gerado: ${games.length} (${source})`);
 }
 
 main();
