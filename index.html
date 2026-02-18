@@ -1010,8 +1010,12 @@ const games = rawGames.map(item => {
     g.status ??
     "";
 
-  const homeGoals = g.goals?.home ?? 0;
-  const awayGoals = g.goals?.away ?? 0;
+  const homeGoals = Number(
+    (g.goals?.home ?? g.scoreHome ?? g.score?.home ?? g.scores?.home ?? 0)
+  );
+  const awayGoals = Number(
+    (g.goals?.away ?? g.scoreAway ?? g.score?.away ?? g.scores?.away ?? 0)
+  );
 
   // -------- HORA UNIVERSAL (ANTI BUG API) --------
 const tsSecFinal = parseStartTsAny(g); // <- pega timestamp em segundos, de qualquer formato
