@@ -1145,6 +1145,50 @@ timestampMs: tsMs,
     ]);
     const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
+    // Guarda de "ao vivo travado": se o jogo passa de ~115' sem mudar o placar por um tempo,
+    // consideramos encerrado para não confundir o usuário (API às vezes não troca para FT).
+    const LIVE_GUARD = new Map(); // id -> { scoreKey, lastScoreChangeMs, lastSeenMs, lastMinute }
+
+    function _gameIdKey(g){
+      return String(g?.id ?? `${g?.league||""}-${g?.home||""}-${g?.away||""}-${g?.startTs||""}`);
+    }
+
+    function _scoreKey(g){
+      const h = (g?.scoreHome ?? g?.homeGoals ?? g?.goalsHome ?? g?.goals?.home ?? g?.goals?.Home ?? 0);
+      const a = (g?.scoreAway ?? g?.awayGoals ?? g?.goalsAway ?? g?.goals?.away ?? g?.goals?.Away ?? 0);
+      return `${Number(h)||0}:${Number(a)||0}`;
+    }
+
+    function guardUpdate(g, minute){
+      const id = _gameIdKey(g);
+      const now = Date.now();
+      const sk = _scoreKey(g);
+
+      const prev = LIVE_GUARD.get(id);
+      if(!prev){
+        LIVE_GUARD.set(id, { scoreKey: sk, lastScoreChangeMs: now, lastSeenMs: now, lastMinute: (typeof minute==="number"? minute : null) });
+        return;
+      }
+
+      prev.lastSeenMs = now;
+
+      if(sk !== prev.scoreKey){
+        prev.scoreKey = sk;
+        prev.lastScoreChangeMs = now;
+      }
+
+      if(typeof minute === "number" && Number.isFinite(minute) && minute > 0){
+        prev.lastMinute = minute;
+      }
+    }
+
+    function scoreUnchangedMs(g){
+      const st = LIVE_GUARD.get(_gameIdKey(g));
+      if(!st) return 0;
+      return Date.now() - (st.lastScoreChangeMs || Date.now());
+    }
+
+
     function isFinished(g){
   const s = (g.status || "").toString().trim().toUpperCase();
 
@@ -1158,6 +1202,12 @@ timestampMs: tsMs,
     if (m >= 130) return true;
   }
 
+
+  // Se a API "esqueceu" de trocar para FT, mas já está muito tarde e o placar não muda, encerra.
+  const unchangedMs = scoreUnchangedMs(g);
+  if (typeof m === "number" && m >= 115 && unchangedMs >= 2 * REFRESH_MS) return true;
+
+
   // se passou muito do normal desde o início, considera encerrado (evita LIVE eterno)
   const startTs = Number(g.startTs ?? g.start_ts ?? g.start_time ?? g.timestamp ?? 0);
   if (Number.isFinite(startTs) && startTs > 0) {
@@ -1165,7 +1215,7 @@ timestampMs: tsMs,
     const elapsedMs = Date.now() - startMs;
 
     // 2h40 de jogo já é excesso (até com intervalo + acréscimos); depois disso, encerra
-    if (elapsedMs > 160 * 60 * 1000) return true;
+    if (elapsedMs > 135 * 60 * 1000 && (m == null || m >= 100)) return true;
 
     // regra antiga (muito velho)
     if (elapsedMs > 3 * 60 * 60 * 1000) return true;
@@ -1181,19 +1231,31 @@ timestampMs: tsMs,
   // terminou não é live
   if (isFinished(g)) return false;
 
-  // status explícito de live
-  if (LIVE_SET.has(st) || st === "INPLAY" || st === "IN PLAY") return true;
-
-  // minuto calculado/confiável => live
+  // minuto (usa regras robustas)
   const m = getElapsedMinute(g);
-  if (typeof m === "number" && m > 0 && m < 200) return true;
+
+  // status explícito de live
+  if (LIVE_SET.has(st) || st === "INPLAY" || st === "IN PLAY") {
+    guardUpdate(g, (typeof m === "number" ? m : null));
+    return true;
+  }
+
+  // minuto confiável => live
+  if (typeof m === "number" && m > 0 && m < 200) {
+    guardUpdate(g, m);
+    return true;
+  }
 
   // flag booleana (se existir)
   const liveRaw = (g.is_live ?? g.live ?? g.inplay ?? g.in_play ?? "").toString().trim().toLowerCase();
-  if (liveRaw === "true" || liveRaw === "1" || liveRaw === "yes") return true;
+  if (liveRaw === "true" || liveRaw === "1" || liveRaw === "yes") {
+    guardUpdate(g, (typeof m === "number" ? m : null));
+    return true;
+  }
 
   return false;
 }
+
 
 
     function finishedTooOld(g){
