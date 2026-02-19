@@ -277,7 +277,7 @@
     .list{padding: 0 12px 10px;display:flex;flex-direction:column;gap:12px;}
     .league{
       border-radius: 22px;
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.05);
       border:1px solid var(--line);
       overflow:hidden;
       box-shadow: 0 18px 40px rgba(0,0,0,.25);
@@ -308,7 +308,7 @@
     .match{
       padding: 12px;
       display:flex; flex-direction:column; gap:10px;
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.03);
       border-top: 1px solid rgba(255,255,255,.06);
     }
     .match-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
@@ -540,7 +540,45 @@
       outline:none;
     }
     .modal-actions{display:flex; gap:10px; margin-top:10px; justify-content:flex-end;}
-  </style>
+  
+/* --- App menu (⋮) + dropdown --- */
+.hidden{display:none !important;}
+.icon-btn{
+  width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:16px;border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06); color:rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+}
+.icon-btn:active{ transform: scale(.98); }
+.menu-dropdown{
+  position:absolute; top:52px; right:0;
+  min-width: 220px;
+  padding:10px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(10,20,24,.72);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+  z-index: 50;
+}
+.menu-dropdown.hidden{ display:none; }
+.menu-item{
+  width:100%;
+  display:flex; gap:10px; align-items:center; justify-content:flex-start;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid transparent;
+  background:transparent;
+  color:rgba(255,255,255,.92);
+  font-weight:700;
+}
+.menu-item:active{ transform: scale(.99); }
+.menu-item:hover{ border-color: rgba(255,255,255,.10); background: rgba(255,255,255,.06); }
+.menu-sep{ height:1px; margin:8px 6px; background: rgba(255,255,255,.10); border:0; }
+.menu-muted{ font-weight:600; opacity:.75; font-size:12px; padding:6px 10px; }
+.top-actions{ position:relative; }
+
+</style>
 </head>
 
 <body>
@@ -558,11 +596,42 @@
         <div class="top-actions">
           <button class="btn white" id="btnRegister">CADASTRE-SE</button>
           <button class="btn pink" id="btnLogin">ENTRAR</button>
-        </div>
+
+          <!-- menu (mostra quando logado) -->
+          <button class="icon-btn hidden" id="btnMenu" aria-label="Menu" title="Menu">⋮</button>
+          <div class="menu-dropdown hidden" id="menuDropdown" role="menu" aria-label="Menu">
+            <div class="menu-muted" id="menuUserLine">Conta</div>
+            <hr class="menu-sep" />
+            <button class="menu-item" id="menuLogout" role="menuitem">🚪 Sair</button>
+          </div>
+        </div></div>
       </div>
 
       <div class="sports-row" id="sportsRow"></div>
     </header> 
+<button onclick="configurarAPI()" style="
+position:fixed;
+bottom:90px;
+right:20px;
+z-index:9999;
+padding:12px 16px;
+border-radius:14px;
+background:#00ffaa;
+color:#000;
+font-weight:bold;
+border:none;">
+API
+</button>
+
+<script>
+function configurarAPI(){
+const url = prompt("Cole a URL da sua API:");
+if(!url) return;
+localStorage.setItem("RADAR_API_URL", url);
+location.reload();
+}
+</script>
+
     <main>
       <section class="page active" id="page-home">
         <div class="banners" id="bannersHome">
@@ -633,11 +702,10 @@
       <section class="page" id="page-games">
         <div class="sheet">
           <div class="time-filters">
-            <div class="tchip" data-hours="1">🕒 1 hora</div>
+            <div class="tchip active" data-hours="1">🕒 1 hora</div>
             <div class="tchip" data-hours="3">🕒 3 horas</div>
             <div class="tchip" data-hours="6">🕒 6 horas</div>
-            <div class="tchip active" data-hours="12">🕒 12 horas</div>
-            <div class="tchip" data-hours="24">🕒 24 horas</div>
+            <div class="tchip" data-hours="12">🕒 12 horas</div>
           </div>
 
           <div class="sheet-row">
@@ -926,13 +994,10 @@
 
     /* DATA LOAD */
     function buildDataUrl(){
-  // prioridade: URL configurada pelo usuário (modal / long press)
-  const base = (state.apiUrl && state.apiUrl.trim()) ? state.apiUrl.trim() : DEFAULT_LOCAL_URL;
-  // cache-bust para não ficar preso no cache do GitHub Pages / navegador
-  const sep = base.includes("?") ? "&" : "?";
-  return base + sep + "ts=" + Date.now();
+  return "https://restless-scene-b490.denilson-santana92.workers.dev/today?ts=" + Date.now();
 }
-async function fetchJsonWithTimeout(url, timeoutMs=9000){
+
+    async function fetchJsonWithTimeout(url, timeoutMs=9000){
       const ctrl = new AbortController();
       const t = setTimeout(()=>ctrl.abort(), timeoutMs);
       try{
@@ -1146,50 +1211,6 @@ timestampMs: tsMs,
     ]);
     const FINISHED_SET = new Set(["FT","AET","PEN_FT","FINISHED","ENDED","END","FULL_TIME"]);
 
-    // Guarda de "ao vivo travado": se o jogo passa de ~115' sem mudar o placar por um tempo,
-    // consideramos encerrado para não confundir o usuário (API às vezes não troca para FT).
-    const LIVE_GUARD = new Map(); // id -> { scoreKey, lastScoreChangeMs, lastSeenMs, lastMinute }
-
-    function _gameIdKey(g){
-      return String(g?.id ?? `${g?.league||""}-${g?.home||""}-${g?.away||""}-${g?.startTs||""}`);
-    }
-
-    function _scoreKey(g){
-      const h = (g?.scoreHome ?? g?.homeGoals ?? g?.goalsHome ?? g?.goals?.home ?? g?.goals?.Home ?? 0);
-      const a = (g?.scoreAway ?? g?.awayGoals ?? g?.goalsAway ?? g?.goals?.away ?? g?.goals?.Away ?? 0);
-      return `${Number(h)||0}:${Number(a)||0}`;
-    }
-
-    function guardUpdate(g, minute){
-      const id = _gameIdKey(g);
-      const now = Date.now();
-      const sk = _scoreKey(g);
-
-      const prev = LIVE_GUARD.get(id);
-      if(!prev){
-        LIVE_GUARD.set(id, { scoreKey: sk, lastScoreChangeMs: now, lastSeenMs: now, lastMinute: (typeof minute==="number"? minute : null) });
-        return;
-      }
-
-      prev.lastSeenMs = now;
-
-      if(sk !== prev.scoreKey){
-        prev.scoreKey = sk;
-        prev.lastScoreChangeMs = now;
-      }
-
-      if(typeof minute === "number" && Number.isFinite(minute) && minute > 0){
-        prev.lastMinute = minute;
-      }
-    }
-
-    function scoreUnchangedMs(g){
-      const st = LIVE_GUARD.get(_gameIdKey(g));
-      if(!st) return 0;
-      return Date.now() - (st.lastScoreChangeMs || Date.now());
-    }
-
-
     function isFinished(g){
   const s = (g.status || "").toString().trim().toUpperCase();
 
@@ -1203,12 +1224,6 @@ timestampMs: tsMs,
     if (m >= 130) return true;
   }
 
-
-  // Se a API "esqueceu" de trocar para FT, mas já está muito tarde e o placar não muda, encerra.
-  const unchangedMs = scoreUnchangedMs(g);
-  if (typeof m === "number" && m >= 115 && unchangedMs >= 2 * REFRESH_MS) return true;
-
-
   // se passou muito do normal desde o início, considera encerrado (evita LIVE eterno)
   const startTs = Number(g.startTs ?? g.start_ts ?? g.start_time ?? g.timestamp ?? 0);
   if (Number.isFinite(startTs) && startTs > 0) {
@@ -1216,7 +1231,7 @@ timestampMs: tsMs,
     const elapsedMs = Date.now() - startMs;
 
     // 2h40 de jogo já é excesso (até com intervalo + acréscimos); depois disso, encerra
-    if (elapsedMs > 125 * 60 * 1000 && (m == null || m >= 95)) return true;
+    if (elapsedMs > 160 * 60 * 1000) return true;
 
     // regra antiga (muito velho)
     if (elapsedMs > 3 * 60 * 60 * 1000) return true;
@@ -1232,31 +1247,19 @@ timestampMs: tsMs,
   // terminou não é live
   if (isFinished(g)) return false;
 
-  // minuto (usa regras robustas)
-  const m = getElapsedMinute(g);
-
   // status explícito de live
-  if (LIVE_SET.has(st) || st === "INPLAY" || st === "IN PLAY") {
-    guardUpdate(g, (typeof m === "number" ? m : null));
-    return true;
-  }
+  if (LIVE_SET.has(st) || st === "INPLAY" || st === "IN PLAY") return true;
 
-  // minuto confiável => live
-  if (typeof m === "number" && m > 0 && m < 200) {
-    guardUpdate(g, m);
-    return true;
-  }
+  // minuto calculado/confiável => live
+  const m = getElapsedMinute(g);
+  if (typeof m === "number" && m > 0 && m < 200) return true;
 
   // flag booleana (se existir)
   const liveRaw = (g.is_live ?? g.live ?? g.inplay ?? g.in_play ?? "").toString().trim().toLowerCase();
-  if (liveRaw === "true" || liveRaw === "1" || liveRaw === "yes") {
-    guardUpdate(g, (typeof m === "number" ? m : null));
-    return true;
-  }
+  if (liveRaw === "true" || liveRaw === "1" || liveRaw === "yes") return true;
 
   return false;
 }
-
 
 
     function finishedTooOld(g){
@@ -1325,18 +1328,6 @@ timestampMs: tsMs,
 
 
 /* ===== FIX DIA DA SEMANA / TIMESTAMP ===== */
-
-function isStaleLive(g){
-  const s = String(g.statusShort || g.status_short || (g.status && g.status.short) || g.status || "").toUpperCase();
-  if (!LIVE_SET.has(s)) return false;
-  const sm = getStartMs(g);
-  if (!sm) return false;
-  const ageMin = (Date.now() - sm) / 60000;
-  const m = getElapsedMinute(g);
-  // 2h05–2h15 depois do início já deveria ter virado FT; se não virou, tratamos como FT
-  return ageMin > 125 && (m == null || m >= 95);
-}
-
 function getStartMs(g){
   if(!g) return null;
 
@@ -1437,10 +1428,9 @@ function formatDow(g){
 
 
     function formatLiveClock(g){
-  const s = String(g.statusShort || g.status_short || (g.status && g.status.short) || g.status || "").toUpperCase();
-  // Se a fonte não atualiza após o fim, evitamos travar em 90+xx
-  if (isStaleLive(g)) return "FT";
-// estados especiais
+  const s = (g.status || "").toUpperCase();
+
+  // estados especiais
   if (s === "FT") return "FT";
   if (s === "HT") return "HT";
   if (s === "NS") return "";
@@ -1555,27 +1545,16 @@ function getMinuteLabel(g){
 if (!window.__AUTO_REFRESH__) {
   window.__AUTO_REFRESH__ = true;
 
-  const shouldRefresh = () => {
-    // só atualiza quando a aba está visível (economiza bateria/dados)
-    if (document.visibilityState !== "visible") return false;
-    // atualiza em Home e Ao vivo (onde você vê live)
-    return state && (state.page === "home" || state.page === "live");
-  };
-
   setInterval(() => {
     try {
-      if (shouldRefresh()) loadData();
+      // só puxa de novo quando estiver na aba Ao vivo
+      if (state && state.tab === "live") {
+        loadData();
+      }
     } catch (e) {}
-  }, REFRESH_MS);
-
-  document.addEventListener("visibilitychange", () => {
-    try {
-      if (shouldRefresh()) loadData(true);
-    } catch (e) {}
-  });
+  }, 30000);
 }
-// ============================================================
-/* RENDER */
+// ============================================================   /* RENDER */
     const sportsRow = document.getElementById("sportsRow");
     function renderSportsRow(counts){
       sportsRow.innerHTML = "";
@@ -1841,5 +1820,125 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+
+<script>
+(function () {
+  function findSupabaseAuthKeys() {
+    var keys = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!k) continue;
+        // Supabase v2 normalmente guarda algo como: sb-<project-ref>-auth-token
+        if (k.startsWith("sb-") && k.includes("auth-token")) keys.push(k);
+      }
+    } catch (e) {}
+    return keys;
+  }
+
+  function readSession() {
+    var keys = findSupabaseAuthKeys();
+    for (var i = 0; i < keys.length; i++) {
+      try {
+        var raw = localStorage.getItem(keys[i]);
+        if (!raw) continue;
+        var obj = JSON.parse(raw);
+        // pode variar conforme versão, mas normalmente tem access_token e user
+        if (obj && (obj.access_token || (obj.currentSession && obj.currentSession.access_token) || obj.user)) {
+          return obj.currentSession || obj;
+        }
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  function getUserEmail(sessionObj) {
+    try {
+      if (!sessionObj) return "";
+      if (sessionObj.user && sessionObj.user.email) return sessionObj.user.email;
+      // fallback
+      return "";
+    } catch (e) { return ""; }
+  }
+
+  function setHidden(el, hidden) {
+    if (!el) return;
+    if (hidden) el.classList.add("hidden");
+    else el.classList.remove("hidden");
+  }
+
+  function closeMenu() {
+    setHidden(menuDropdown, true);
+    isOpen = false;
+  }
+
+  function toggleMenu() {
+    isOpen = !isOpen;
+    setHidden(menuDropdown, !isOpen);
+  }
+
+  function clearAuthStorage() {
+    try {
+      var keys = findSupabaseAuthKeys();
+      keys.forEach(function (k) { try { localStorage.removeItem(k); } catch(e) {} });
+      // também limpa sessionStorage se existir algo
+      try {
+        for (var i = 0; i < sessionStorage.length; i++) {
+          var k2 = sessionStorage.key(i);
+          if (k2 && k2.startsWith("sb-") && k2.includes("auth-token")) sessionStorage.removeItem(k2);
+        }
+      } catch (e) {}
+    } catch (e) {}
+  }
+
+  var btnRegister = document.getElementById("btnRegister");
+  var btnLogin = document.getElementById("btnLogin");
+  var btnMenu = document.getElementById("btnMenu");
+  var menuDropdown = document.getElementById("menuDropdown");
+  var menuLogout = document.getElementById("menuLogout");
+  var menuUserLine = document.getElementById("menuUserLine");
+  var isOpen = false;
+
+  function updateAuthUI() {
+    var session = readSession();
+    var logged = !!(session && (session.access_token || session.user));
+    setHidden(btnRegister, logged);
+    setHidden(btnLogin, logged);
+    setHidden(btnMenu, !logged);
+
+    if (logged && menuUserLine) {
+      var email = getUserEmail(session);
+      menuUserLine.textContent = email ? ("Conta: " + email) : "Conta";
+    }
+  }
+
+  if (btnMenu) {
+    btnMenu.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMenu();
+    });
+  }
+
+  if (menuLogout) {
+    menuLogout.addEventListener("click", function (e) {
+      e.preventDefault();
+      clearAuthStorage();
+      // volta para o login (mantém relativo para funcionar no GitHub Pages)
+      window.location.href = "./login.html";
+    });
+  }
+
+  // fecha ao clicar fora
+  document.addEventListener("click", function () {
+    if (isOpen) closeMenu();
+  });
+
+  // atualiza na carga + quando storage mudar (ex: login em outra aba)
+  updateAuthUI();
+  window.addEventListener("storage", updateAuthUI);
+})();
+</script>
+
 </body>
 </html>
