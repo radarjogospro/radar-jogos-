@@ -541,54 +541,9 @@
     }
     .modal-actions{display:flex; gap:10px; margin-top:10px; justify-content:flex-end;}
   </style>
-<style id="rp-logout-style">
-  .rp-logout-wrap{position:fixed;top:14px;right:14px;z-index:9999}
-  .rp-menu-btn{
-    width:42px;height:42px;border-radius:14px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(18,24,28,.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color:#e9f1f6;
-    font-size:22px;line-height:1;
-    display:flex;align-items:center;justify-content:center;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
-  }
-  .rp-menu-btn:active{transform:scale(.98)}
-  .rp-menu{
-    position:absolute;top:50px;right:0;
-    min-width:180px;padding:8px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(18,24,28,.62);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 18px 45px rgba(0,0,0,.45);
-  }
-  .rp-menu-item{
-    width:100%;
-    border:0;
-    border-radius:12px;
-    padding:12px 12px;
-    background:transparent;
-    color:#e9f1f6;
-    font-size:15px;
-    text-align:left;
-  }
-  .rp-menu-item:hover{background:rgba(255,255,255,.08)}
-  .rp-menu-item:active{background:rgba(255,255,255,.12)}
-  .rp-menu-divider{height:1px;background:rgba(255,255,255,.10);margin:6px 0}
-</style>
 </head>
 
 <body>
-<!-- Radar PRO: menu (logout) -->
-<div id="rpLogoutWrap" class="rp-logout-wrap">
-  <button id="rpMenuBtn" class="rp-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Menu">⋮</button>
-  <div id="rpMenu" class="rp-menu" role="menu" aria-label="Menu" hidden>
-    <button id="rpLogoutBtn" class="rp-menu-item" type="button" role="menuitem">Sair</button>
-  </div>
-</div>
   <div class="app">
     <header class="topbar">
       <div class="topbar-inner">
@@ -1818,77 +1773,6 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
-</script>
-<script id="rp-logout-script">
-(function(){
-  const btn = document.getElementById('rpMenuBtn');
-  const menu = document.getElementById('rpMenu');
-  const logoutBtn = document.getElementById('rpLogoutBtn');
-  if(!btn || !menu || !logoutBtn) return;
-
-  function closeMenu(){
-    menu.hidden = true;
-    btn.setAttribute('aria-expanded','false');
-  }
-  function openMenu(){
-    menu.hidden = false;
-    btn.setAttribute('aria-expanded','true');
-  }
-  function toggleMenu(){
-    if(menu.hidden) openMenu(); else closeMenu();
-  }
-
-  btn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleMenu(); });
-  document.addEventListener('click', ()=> closeMenu(), {passive:true});
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
-
-  function clearSupabaseTokens(){
-    try{
-      const keys = Object.keys(localStorage || {});
-      for(const k of keys){
-        if((k.startsWith('sb-') && k.endsWith('-auth-token')) || k === 'supabase.auth.token'){
-          localStorage.removeItem(k);
-        }
-      }
-    }catch(_){}
-    try{
-      const keys = Object.keys(sessionStorage || {});
-      for(const k of keys){
-        if((k.startsWith('sb-') && k.endsWith('-auth-token')) || k === 'supabase.auth.token'){
-          sessionStorage.removeItem(k);
-        }
-      }
-    }catch(_){}
-  }
-
-  async function trySupabaseSignOut(){
-    // tenta assinar via cliente global, se existir
-    try{
-      const client = window.supabase || window.supabaseClient || window._supabase;
-      if(client && client.auth && typeof client.auth.signOut === 'function'){
-        await client.auth.signOut();
-      }
-    }catch(_){}
-  }
-
-  function buildLoginUrl(){
-    const baseEl = document.querySelector('base');
-    const baseHref = baseEl ? baseEl.href : (location.origin + location.pathname.replace(/\/[^\/]*$/, '/'));
-    const u = new URL('login.html', baseHref);
-    // volta pra home após login
-    u.searchParams.set('returnTo', location.pathname + location.search + location.hash);
-    return u.toString();
-  }
-
-  logoutBtn.addEventListener('click', async (e)=>{
-    e.preventDefault();
-    e.stopPropagation();
-    closeMenu();
-    await trySupabaseSignOut();
-    clearSupabaseTokens();
-    location.href = buildLoginUrl();
-  });
-})();
 </script>
 </body>
 </html>
