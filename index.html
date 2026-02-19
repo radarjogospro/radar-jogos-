@@ -13,7 +13,34 @@
   
   <title>Radar PRO</title>
 
-  <style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase (public anon key) - used only for client-side auth session
+    window.__SUPABASE_URL = "https://fvwvmyprsvxmhfcewjbc.supabase.co";
+    window.__SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2d3ZteXByc3Z4bWhmY2V3amJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk1OTg0NjEsImV4cCI6MjA1NTE3NDQ2MX0.LNQFuyI4xBl5WVUjVra0K2LxTTGK5tT4nA4mkZ0MxW0";
+    window.__supa = (window.supabase && window.supabase.createClient)
+      ? window.supabase.createClient(window.__SUPABASE_URL, window.__SUPABASE_ANON)
+      : null;
+
+    // Hard gate: if not logged, send to login (prevents opening the Radar directly)
+    (async () => {
+      try {
+        if (!window.__supa) return;
+        const { data } = await window.__supa.auth.getSession();
+        if (!data || !data.session) {
+          const returnTo = encodeURIComponent(location.href);
+          if (!/\/login\.html$/i.test(location.pathname)) {
+            location.replace("login.html?returnTo=" + returnTo);
+          }
+        }
+      } catch (e) {
+        console.warn("Auth gate error:", e);
+      }
+    })();
+  </script>
+
+<style>
     :root{
       --bg0:#071f25;
       --bg1:#08252c;
