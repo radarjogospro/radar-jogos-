@@ -540,80 +540,7 @@
       outline:none;
     }
     .modal-actions{display:flex; gap:10px; margin-top:10px; justify-content:flex-end;}
-  
-    /* MENU (⋮) + SHEET */
-    .iconbtn{
-      width:42px; height:42px;
-      display:inline-grid; place-items:center;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      cursor:pointer;
-      padding:0;
-    }
-    .iconbtn:active{ transform: scale(0.99); }
-    .kebab{ font-size:20px; line-height:1; transform: translateY(-1px); }
-
-    .sheet-backdrop{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(6px);
-      z-index: 9998;
-      display:none;
-    }
-    .sheet{
-      position:fixed; left:0; right:0; bottom:0;
-      z-index: 9999;
-      display:none;
-      padding: 12px 12px calc(14px + env(safe-area-inset-bottom));
-    }
-    .sheet-card{
-      border-radius: 22px;
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(10, 37, 40, .96), rgba(7, 23, 26, .92));
-      box-shadow: 0 18px 50px rgba(0,0,0,.55);
-      overflow:hidden;
-    }
-    .sheet-hd{
-      padding: 14px 14px 10px;
-      display:flex; align-items:center; justify-content:space-between;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .sheet-title{ font-weight:800; letter-spacing:.2px; }
-    .sheet-x{
-      width:38px; height:38px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      cursor:pointer;
-    }
-    .sheet-list{ padding: 8px; }
-    .sheet-item{
-      width:100%;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px;
-      padding: 12px 12px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.92);
-      font-weight:800;
-      cursor:pointer;
-      margin: 8px 0;
-      text-align:left;
-    }
-    .sheet-item .left{ display:flex; align-items:center; gap:10px; }
-    .sheet-item .ico{ width:26px; text-align:center; opacity:.95; }
-    .sheet-item.danger{
-      border-color: rgba(255,47,125,.22);
-      background: rgba(255,47,125,.10);
-    }
-    .sheet-item:active{ transform: scale(0.99); }
-    .hidden{ display:none !important; }
-
-</style>
+  </style>
 </head>
 
 <body>
@@ -631,9 +558,6 @@
         <div class="top-actions">
           <button class="btn white" id="btnRegister">CADASTRE-SE</button>
           <button class="btn pink" id="btnLogin">ENTRAR</button>
-                  <button class="iconbtn" id="btnMenu" title="Menu" aria-label="Menu">
-            <span class="kebab">⋮</span>
-          </button>
         </div>
       </div>
 
@@ -709,10 +633,11 @@
       <section class="page" id="page-games">
         <div class="sheet">
           <div class="time-filters">
-            <div class="tchip active" data-hours="1">🕒 1 hora</div>
+            <div class="tchip" data-hours="1">🕒 1 hora</div>
             <div class="tchip" data-hours="3">🕒 3 horas</div>
             <div class="tchip" data-hours="6">🕒 6 horas</div>
-            <div class="tchip" data-hours="12">🕒 12 horas</div>
+            <div class="tchip active" data-hours="12">🕒 12 horas</div>
+            <div class="tchip" data-hours="24">🕒 24 horas</div>
           </div>
 
           <div class="sheet-row">
@@ -1291,7 +1216,7 @@ timestampMs: tsMs,
     const elapsedMs = Date.now() - startMs;
 
     // 2h40 de jogo já é excesso (até com intervalo + acréscimos); depois disso, encerra
-    if (elapsedMs > 135 * 60 * 1000 && (m == null || m >= 100)) return true;
+    if (elapsedMs > 125 * 60 * 1000 && (m == null || m >= 95)) return true;
 
     // regra antiga (muito velho)
     if (elapsedMs > 3 * 60 * 60 * 1000) return true;
@@ -1400,6 +1325,18 @@ timestampMs: tsMs,
 
 
 /* ===== FIX DIA DA SEMANA / TIMESTAMP ===== */
+
+function isStaleLive(g){
+  const s = String(g.statusShort || g.status_short || (g.status && g.status.short) || g.status || "").toUpperCase();
+  if (!LIVE_SET.has(s)) return false;
+  const sm = getStartMs(g);
+  if (!sm) return false;
+  const ageMin = (Date.now() - sm) / 60000;
+  const m = getElapsedMinute(g);
+  // 2h05–2h15 depois do início já deveria ter virado FT; se não virou, tratamos como FT
+  return ageMin > 125 && (m == null || m >= 95);
+}
+
 function getStartMs(g){
   if(!g) return null;
 
@@ -1500,9 +1437,10 @@ function formatDow(g){
 
 
     function formatLiveClock(g){
-  const s = (g.status || "").toUpperCase();
-
-  // estados especiais
+  const s = String(g.statusShort || g.status_short || (g.status && g.status.short) || g.status || "").toUpperCase();
+  // Se a fonte não atualiza após o fim, evitamos travar em 90+xx
+  if (isStaleLive(g)) return "FT";
+// estados especiais
   if (s === "FT") return "FT";
   if (s === "HT") return "HT";
   if (s === "NS") return "";
@@ -1903,123 +1841,5 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-
-
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    // ⚠️ Cole aqui os MESMOS dados do seu auth.js (publishable/anon apenas)
-    const SUPABASE_URL = "https://wthlxrukcwyqdkeuvjcs.supabase.co";     // ex: https://xxxx.supabase.co
-    const SUPABASE_KEY = "sb_publishable_vfPvj4TOQRPD5GA35QgXVg_wIBIlmZi"; // sb_publishable_...
-
-    const basePath = "/radar-jogos-/"; // seu <base href> já usa isso
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const btnLogin = document.getElementById("btnLogin");
-    const btnRegister = document.getElementById("btnRegister");
-    const btnMenu = document.getElementById("btnMenu");
-
-    const backdrop = document.getElementById("menuBackdrop");
-    const sheet = document.getElementById("menuSheet");
-    const closeBtn = document.getElementById("menuClose");
-    const menuLogout = document.getElementById("menuLogout");
-    const menuAccount = document.getElementById("menuAccount");
-
-    function openSheet(){
-      if(!backdrop || !sheet) return;
-      backdrop.style.display = "block";
-      sheet.style.display = "block";
-      sheet.setAttribute("aria-hidden","false");
-      document.body.style.overflow = "hidden";
-    }
-    function closeSheet(){
-      if(!backdrop || !sheet) return;
-      backdrop.style.display = "none";
-      sheet.style.display = "none";
-      sheet.setAttribute("aria-hidden","true");
-      document.body.style.overflow = "";
-    }
-
-    backdrop?.addEventListener("click", closeSheet);
-    closeBtn?.addEventListener("click", closeSheet);
-    btnMenu?.addEventListener("click", openSheet);
-
-    // Protege o app: se não estiver logado, manda pro login
-    async function protectIndex(){
-      try{
-        const { data } = await supabase.auth.getSession();
-        const logged = !!data?.session;
-
-        // Top actions: se logado, esconde ENTRAR/CADASTRE-SE e mostra menu
-        if (btnLogin) btnLogin.classList.toggle("hidden", logged);
-        if (btnRegister) btnRegister.classList.toggle("hidden", logged);
-        if (btnMenu) btnMenu.classList.toggle("hidden", !logged);
-
-        if(!logged){
-          const target = encodeURIComponent(window.location.href);
-          window.location.replace(`${basePath}login.html?returnTo=${target}`);
-          return;
-        }
-      }catch(e){
-        // Se algo der errado, manda pro login por segurança
-        const target = encodeURIComponent(window.location.href);
-        window.location.replace(`${basePath}login.html?returnTo=${target}`);
-      }
-    }
-
-    // Logout
-    menuLogout?.addEventListener("click", async () => {
-      try{
-        await supabase.auth.signOut();
-      }finally{
-        closeSheet();
-        window.location.replace(`${basePath}login.html`);
-      }
-    });
-
-    // Minha conta (por enquanto manda pro login; depois podemos criar account.html)
-    menuAccount?.addEventListener("click", () => {
-      closeSheet();
-      // placeholder: você pode criar account.html depois
-      window.location.href = `${basePath}login.html`;
-    });
-
-    // Reage a mudanças de sessão
-    supabase.auth.onAuthStateChange((_evt, session) => {
-      const logged = !!session;
-      if (btnLogin) btnLogin.classList.toggle("hidden", logged);
-      if (btnRegister) btnRegister.classList.toggle("hidden", logged);
-      if (btnMenu) btnMenu.classList.toggle("hidden", !logged);
-
-      if(!logged){
-        const target = encodeURIComponent(window.location.href);
-        window.location.replace(`${basePath}login.html?returnTo=${target}`);
-      }
-    });
-
-    protectIndex();
-  </script>
-
-  <!-- MENU SHEET -->
-  <div class="sheet-backdrop" id="menuBackdrop"></div>
-  <div class="sheet" id="menuSheet" aria-hidden="true">
-    <div class="sheet-card">
-      <div class="sheet-hd">
-        <div class="sheet-title">Menu</div>
-        <button class="sheet-x" id="menuClose" aria-label="Fechar">✕</button>
-      </div>
-      <div class="sheet-list">
-        <button class="sheet-item" id="menuAccount" type="button">
-          <span class="left"><span class="ico">👤</span> Minha conta</span>
-          <span>›</span>
-        </button>
-        <button class="sheet-item danger" id="menuLogout" type="button">
-          <span class="left"><span class="ico">🚪</span> Sair</span>
-          <span>›</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
