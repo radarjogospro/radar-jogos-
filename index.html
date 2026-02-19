@@ -1826,6 +1826,21 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    
+
+    const { data } = await supabase.auth.getSession();
+
+    if (!data?.session) {
+      window.location.replace("login.html");
+    }
+  } catch (e) {
+    console.log("Auth check error:", e);
+  }
+});
+
 </script>
 </body>
 </html>
