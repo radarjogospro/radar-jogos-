@@ -4,211 +4,193 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b2022" />
-  <title>Radar PRO - Login</title>
+  <title>Radar PRO • Entrar</title>
+  <link rel="icon" href="icon-192.png" />
   <style>
     :root{
-      --bg:#0b2022;
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.08);
-      --text:#e8f2f2;
-      --muted:rgba(232,242,242,.65);
-      --stroke:rgba(255,255,255,.12);
-      --pink:#ff2d77;
-      --pink2:#ff4a8f;
-      --radius:22px;
+      --bg:#07191b;
+      --bg2:#0b2022;
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.09);
+      --line: rgba(255,255,255,0.10);
+      --txt: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.62);
+      --accent:#ff2d7a;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --shadow: 0 14px 42px rgba(0,0,0,.45);
+      --r: 18px;
+      --r2: 22px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:radial-gradient(900px 500px at 50% 0%, rgba(255,45,119,.08), transparent 60%),
-                 radial-gradient(900px 500px at 50% 100%, rgba(0,255,200,.06), transparent 60%),
-                 var(--bg);
-      color:var(--text);
-      min-height:100vh;
+      font-family: var(--font);
+      color:var(--txt);
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(255,45,122,0.16), transparent 55%),
+                  radial-gradient(900px 650px at 85% 20%, rgba(34,197,94,0.10), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--bg2));
       display:flex;
       align-items:center;
       justify-content:center;
       padding:18px;
     }
-    .wrap{width:min(520px, 100%); }
-    .brand{
-      display:flex; gap:12px; align-items:center;
-      margin:0 0 14px 0;
-    }
+    .wrap{ width:min(470px, 100%); }
+    .top{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
     .logo{
-      width:54px;height:54px;border-radius:18px;
-      display:grid;place-items:center;
-      background:linear-gradient(135deg, rgba(255,45,119,.9), rgba(255,45,119,.35));
-      border:1px solid rgba(255,255,255,.18);
-      font-weight:800;
-      letter-spacing:.5px;
+      width:44px;height:44px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(255,45,122,.85), rgba(99,102,241,.6));
+      display:grid; place-items:center;
+      box-shadow: var(--shadow);
+      flex:0 0 auto;
     }
-    .title{display:flex;flex-direction:column;line-height:1.1}
-    .title h1{margin:0;font-size:22px}
-    .title small{color:var(--muted);font-size:13px;margin-top:4px}
+    .logo span{font-weight:800; letter-spacing:0.5px}
+    .brand .title{font-size:18px; font-weight:800; line-height:1.1}
+    .brand .sub{font-size:12px;color:var(--muted); margin-top:2px}
     .card{
-      background:linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      padding:16px;
-      box-shadow:0 10px 30px rgba(0,0,0,.22);
-      backdrop-filter: blur(6px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+      border:1px solid var(--line);
+      border-radius: var(--r2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(12px);
     }
-    .tabs{
-      display:flex;
-      background:rgba(0,0,0,.18);
-      border:1px solid var(--stroke);
-      border-radius:18px;
-      padding:6px;
-      gap:6px;
-      margin-bottom:12px;
+    .seg{
+      display:flex; gap:8px; padding:10px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,0.12);
     }
-    .tab{
+    .seg button{
       flex:1;
-      border:0;
-      border-radius:14px;
+      border:1px solid var(--line);
+      border-radius: 14px;
       padding:10px 12px;
-      background:transparent;
-      color:var(--muted);
+      background: rgba(255,255,255,0.04);
+      color:var(--txt);
       font-weight:700;
+      cursor:pointer;
+      transition: .15s transform, .15s background, .15s border;
     }
-    .tab.active{
-      background:rgba(255,45,119,.18);
-      color:var(--text);
-      border:1px solid rgba(255,45,119,.25);
+    .seg button.active{
+      background: rgba(255,45,122,0.16);
+      border-color: rgba(255,45,122,0.35);
     }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(0,0,0,.18);
-      border:1px solid var(--stroke);
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:12px;
-    }
-    .msg{
-      display:none;
-      margin:10px 0 0 0;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.18);
-      color:var(--text);
-      font-size:14px;
-      line-height:1.35;
-      white-space:pre-line;
-    }
-    .msg.warn{border-color:rgba(255,170,0,.35); background:rgba(255,170,0,.08)}
-    .msg.ok{border-color:rgba(0,255,180,.28); background:rgba(0,255,180,.06)}
-    form{margin-top:6px}
-    label{display:block; font-size:13px; color:var(--muted); margin:10px 0 6px}
+    .seg button:active{transform: scale(0.99)}
+    .content{padding:14px 14px 10px}
+    label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px}
     input{
       width:100%;
-      padding:14px 14px;
-      border-radius:16px;
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.20);
-      color:var(--text);
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,0.18);
+      color: var(--txt);
       outline:none;
-      font-size:15px;
     }
-    input:focus{border-color:rgba(255,45,119,.35)}
-    .row{
-      display:flex;
-      gap:10px;
-      margin-top:14px;
-    }
+    input:focus{border-color: rgba(255,45,122,0.5)}
+    .actions{ display:flex; gap:10px; margin-top:12px; }
     .btn{
-      flex:1;
-      border:0;
-      border-radius:16px;
-      padding:13px 14px;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding:12px 12px;
+      background: rgba(255,255,255,0.05);
+      color:var(--txt);
       font-weight:800;
       cursor:pointer;
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border:1px solid var(--stroke);
+      width:100%;
+      transition: .15s transform, .15s background, .15s border;
     }
     .btn.primary{
-      background:linear-gradient(135deg, var(--pink), var(--pink2));
-      border:0;
-      color:white;
+      background: linear-gradient(135deg, rgba(255,45,122,0.95), rgba(255,45,122,0.65));
+      border-color: rgba(255,45,122,0.35);
     }
+    .btn:active{transform: scale(0.99)}
     .btn:disabled{opacity:.6; cursor:not-allowed}
-    .links{
-      display:flex;
-      justify-content:space-between;
-      margin-top:12px;
-      gap:10px;
-      flex-wrap:wrap;
+    .footer{
+      padding:0 14px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
-    a{color:rgba(232,242,242,.75); text-decoration:none; font-size:13px}
-    a:hover{color:white; text-decoration:underline}
-    .extra{display:none;margin-top:8px}
-    .note{
-      margin-top:12px;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid rgba(255,200,0,.25);
-      background:rgba(255,200,0,.06);
-      color:rgba(255,255,255,.88);
-      font-size:13px;
-      line-height:1.35;
+    .link{ color: rgba(255,255,255,0.75); font-size:12px; text-decoration:none; }
+    .link:hover{color:#fff; text-decoration:underline}
+    .msg{
+      margin-top:10px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      font-size:12px;
+      background: rgba(0,0,0,0.14);
+      display:none;
+      white-space:pre-wrap;
+    }
+    .msg.ok{border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.10)}
+    .msg.warn{border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.10)}
+    .msg.bad{border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.10)}
+    .hint{ margin-top:10px; font-size:12px; color: var(--muted); line-height:1.35; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      font-size:12px;
+      color: var(--muted);
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="brand">
-      <div class="logo">RD</div>
-      <div class="title">
-        <h1>Radar PRO</h1>
-        <small>Login • Conta • PRO</small>
+    <div class="top">
+      <div class="logo" aria-hidden="true"><span>RD</span></div>
+      <div class="brand">
+        <div class="title">Radar PRO</div>
+        <div class="sub">Login • Conta • PRO</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="tabs">
-        <button id="tabLogin" class="tab active" type="button">Entrar</button>
-        <button id="tabSignup" class="tab" type="button">Criar conta</button>
+      <div class="seg">
+        <button id="tabLogin" class="active" type="button">Entrar</button>
+        <button id="tabSignup" type="button">Criar conta</button>
       </div>
 
-      <div id="envPill" class="pill">Carregando…</div>
+      <div class="content">
+        <div class="pill" id="envPill">Conectando ao Supabase…</div>
 
-      <form id="form">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" />
+        <form id="form" autocomplete="on">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" inputmode="email" placeholder="seuemail@exemplo.com" required />
 
-        <label for="password">Senha</label>
-        <input id="password" type="password" placeholder="Sua senha" autocomplete="current-password" />
+          <label for="password">Senha</label>
+          <input id="password" type="password" placeholder="Sua senha" required />
 
-        <div id="signupExtra" class="extra">
-          <label for="password2">Confirmar senha</label>
-          <input id="password2" type="password" placeholder="Repita a senha" autocomplete="new-password" />
-        </div>
+          <div id="signupExtra" style="display:none;">
+            <label for="password2">Confirmar senha</label>
+            <input id="password2" type="password" placeholder="Repita a senha" />
+          </div>
 
-        <div class="row">
-          <button id="btnSubmit" class="btn primary" type="submit">Entrar</button>
-          <button id="btnBack" class="btn" type="button">Voltar</button>
-        </div>
+          <div class="actions">
+            <button id="btnSubmit" class="btn primary" type="submit">Entrar</button>
+            <button id="btnBack" class="btn" type="button">Voltar</button>
+          </div>
 
-        <div id="msg" class="msg"></div>
+          <div id="msg" class="msg"></div>
 
-        <div class="links">
-          <a id="forgot" href="javascript:void(0)">Esqueci minha senha</a>
-          <a href="./">Ir para o Radar</a>
-        </div>
+          <div class="hint">
+            Dica: no começo, você pode <b>desligar confirmação por e-mail</b> no Supabase pra testar mais rápido.
+          </div>
+        </form>
+      </div>
 
-        <div class="note">
-          Dica: no começo, você pode desligar confirmação por e-mail no Supabase pra testar mais rápido.
-        </div>
-      </form>
+      <div class="footer">
+        <a class="link" href="#" id="forgot">Esqueci minha senha</a>
+        <a class="link" href="./" id="home">Ir para o Radar</a>
+      </div>
     </div>
   </div>
 
-  <!-- IMPORTANTÍSSIMO: auth.js precisa ser módulo -->
   <script type="module" src="./auth.js"></script>
 </body>
 </html>
