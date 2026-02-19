@@ -540,48 +540,55 @@
       outline:none;
     }
     .modal-actions{display:flex; gap:10px; margin-top:10px; justify-content:flex-end;}
-  
-/* --- App menu (⋮) + dropdown --- */
-.hidden{display:none !important;}
-.icon-btn{
-  width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:16px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.06); color:rgba(255,255,255,.92);
-  backdrop-filter: blur(10px);
-}
-.icon-btn:active{ transform: scale(.98); }
-.menu-dropdown{
-  position:absolute; top:52px; right:0;
-  min-width: 220px;
-  padding:10px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(10,20,24,.72);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 60px rgba(0,0,0,.35);
-  z-index: 50;
-}
-.menu-dropdown.hidden{ display:none; }
-.menu-item{
-  width:100%;
-  display:flex; gap:10px; align-items:center; justify-content:flex-start;
-  padding:12px 12px;
-  border-radius:14px;
-  border:1px solid transparent;
-  background:transparent;
-  color:rgba(255,255,255,.92);
-  font-weight:700;
-}
-.menu-item:active{ transform: scale(.99); }
-.menu-item:hover{ border-color: rgba(255,255,255,.10); background: rgba(255,255,255,.06); }
-.menu-sep{ height:1px; margin:8px 6px; background: rgba(255,255,255,.10); border:0; }
-.menu-muted{ font-weight:600; opacity:.75; font-size:12px; padding:6px 10px; }
-.top-actions{ position:relative; }
-
+  </style>
+<style id="rp-logout-style">
+  .rp-logout-wrap{position:fixed;top:14px;right:14px;z-index:9999}
+  .rp-menu-btn{
+    width:42px;height:42px;border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(18,24,28,.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color:#e9f1f6;
+    font-size:22px;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  .rp-menu-btn:active{transform:scale(.98)}
+  .rp-menu{
+    position:absolute;top:50px;right:0;
+    min-width:180px;padding:8px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(18,24,28,.62);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 18px 45px rgba(0,0,0,.45);
+  }
+  .rp-menu-item{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:12px 12px;
+    background:transparent;
+    color:#e9f1f6;
+    font-size:15px;
+    text-align:left;
+  }
+  .rp-menu-item:hover{background:rgba(255,255,255,.08)}
+  .rp-menu-item:active{background:rgba(255,255,255,.12)}
+  .rp-menu-divider{height:1px;background:rgba(255,255,255,.10);margin:6px 0}
 </style>
 </head>
 
 <body>
+<!-- Radar PRO: menu (logout) -->
+<div id="rpLogoutWrap" class="rp-logout-wrap">
+  <button id="rpMenuBtn" class="rp-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Menu">⋮</button>
+  <div id="rpMenu" class="rp-menu" role="menu" aria-label="Menu" hidden>
+    <button id="rpLogoutBtn" class="rp-menu-item" type="button" role="menuitem">Sair</button>
+  </div>
+</div>
   <div class="app">
     <header class="topbar">
       <div class="topbar-inner">
@@ -596,14 +603,6 @@
         <div class="top-actions">
           <button class="btn white" id="btnRegister">CADASTRE-SE</button>
           <button class="btn pink" id="btnLogin">ENTRAR</button>
-
-          <!-- menu (mostra quando logado) -->
-          <button class="icon-btn hidden" id="btnMenu" aria-label="Menu" title="Menu">⋮</button>
-          <div class="menu-dropdown hidden" id="menuDropdown" role="menu" aria-label="Menu">
-            <div class="menu-muted" id="menuUserLine">Conta</div>
-            <hr class="menu-sep" />
-            <button class="menu-item" id="menuLogout" role="menuitem">🚪 Sair</button>
-          </div>
         </div>
       </div>
 
@@ -1820,125 +1819,76 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+<script id="rp-logout-script">
+(function(){
+  const btn = document.getElementById('rpMenuBtn');
+  const menu = document.getElementById('rpMenu');
+  const logoutBtn = document.getElementById('rpLogoutBtn');
+  if(!btn || !menu || !logoutBtn) return;
 
-<script>
-(function () {
-  function findSupabaseAuthKeys() {
-    var keys = [];
-    try {
-      for (var i = 0; i < localStorage.length; i++) {
-        var k = localStorage.key(i);
-        if (!k) continue;
-        // Supabase v2 normalmente guarda algo como: sb-<project-ref>-auth-token
-        if (k.startsWith("sb-") && k.includes("auth-token")) keys.push(k);
+  function closeMenu(){
+    menu.hidden = true;
+    btn.setAttribute('aria-expanded','false');
+  }
+  function openMenu(){
+    menu.hidden = false;
+    btn.setAttribute('aria-expanded','true');
+  }
+  function toggleMenu(){
+    if(menu.hidden) openMenu(); else closeMenu();
+  }
+
+  btn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleMenu(); });
+  document.addEventListener('click', ()=> closeMenu(), {passive:true});
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+
+  function clearSupabaseTokens(){
+    try{
+      const keys = Object.keys(localStorage || {});
+      for(const k of keys){
+        if((k.startsWith('sb-') && k.endsWith('-auth-token')) || k === 'supabase.auth.token'){
+          localStorage.removeItem(k);
+        }
       }
-    } catch (e) {}
-    return keys;
-  }
-
-  function readSession() {
-    var keys = findSupabaseAuthKeys();
-    for (var i = 0; i < keys.length; i++) {
-      try {
-        var raw = localStorage.getItem(keys[i]);
-        if (!raw) continue;
-        var obj = JSON.parse(raw);
-        // pode variar conforme versão, mas normalmente tem access_token e user
-        if (obj && (obj.access_token || (obj.currentSession && obj.currentSession.access_token) || obj.user)) {
-          return obj.currentSession || obj;
+    }catch(_){}
+    try{
+      const keys = Object.keys(sessionStorage || {});
+      for(const k of keys){
+        if((k.startsWith('sb-') && k.endsWith('-auth-token')) || k === 'supabase.auth.token'){
+          sessionStorage.removeItem(k);
         }
-      } catch (e) {}
-    }
-    return null;
+      }
+    }catch(_){}
   }
 
-  function getUserEmail(sessionObj) {
-    try {
-      if (!sessionObj) return "";
-      if (sessionObj.user && sessionObj.user.email) return sessionObj.user.email;
-      // fallback
-      return "";
-    } catch (e) { return ""; }
+  async function trySupabaseSignOut(){
+    // tenta assinar via cliente global, se existir
+    try{
+      const client = window.supabase || window.supabaseClient || window._supabase;
+      if(client && client.auth && typeof client.auth.signOut === 'function'){
+        await client.auth.signOut();
+      }
+    }catch(_){}
   }
 
-  function setHidden(el, hidden) {
-    if (!el) return;
-    if (hidden) el.classList.add("hidden");
-    else el.classList.remove("hidden");
+  function buildLoginUrl(){
+    const baseEl = document.querySelector('base');
+    const baseHref = baseEl ? baseEl.href : (location.origin + location.pathname.replace(/\/[^\/]*$/, '/'));
+    const u = new URL('login.html', baseHref);
+    // volta pra home após login
+    u.searchParams.set('returnTo', location.pathname + location.search + location.hash);
+    return u.toString();
   }
 
-  function closeMenu() {
-    setHidden(menuDropdown, true);
-    isOpen = false;
-  }
-
-  function toggleMenu() {
-    isOpen = !isOpen;
-    setHidden(menuDropdown, !isOpen);
-  }
-
-  function clearAuthStorage() {
-    try {
-      var keys = findSupabaseAuthKeys();
-      keys.forEach(function (k) { try { localStorage.removeItem(k); } catch(e) {} });
-      // também limpa sessionStorage se existir algo
-      try {
-        for (var i = 0; i < sessionStorage.length; i++) {
-          var k2 = sessionStorage.key(i);
-          if (k2 && k2.startsWith("sb-") && k2.includes("auth-token")) sessionStorage.removeItem(k2);
-        }
-      } catch (e) {}
-    } catch (e) {}
-  }
-
-  var btnRegister = document.getElementById("btnRegister");
-  var btnLogin = document.getElementById("btnLogin");
-  var btnMenu = document.getElementById("btnMenu");
-  var menuDropdown = document.getElementById("menuDropdown");
-  var menuLogout = document.getElementById("menuLogout");
-  var menuUserLine = document.getElementById("menuUserLine");
-  var isOpen = false;
-
-  function updateAuthUI() {
-    var session = readSession();
-    var logged = !!(session && (session.access_token || session.user));
-    setHidden(btnRegister, logged);
-    setHidden(btnLogin, logged);
-    setHidden(btnMenu, !logged);
-
-    if (logged && menuUserLine) {
-      var email = getUserEmail(session);
-      menuUserLine.textContent = email ? ("Conta: " + email) : "Conta";
-    }
-  }
-
-  if (btnMenu) {
-    btnMenu.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleMenu();
-    });
-  }
-
-  if (menuLogout) {
-    menuLogout.addEventListener("click", function (e) {
-      e.preventDefault();
-      clearAuthStorage();
-      // volta para o login (mantém relativo para funcionar no GitHub Pages)
-      window.location.href = "./login.html";
-    });
-  }
-
-  // fecha ao clicar fora
-  document.addEventListener("click", function () {
-    if (isOpen) closeMenu();
+  logoutBtn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    closeMenu();
+    await trySupabaseSignOut();
+    clearSupabaseTokens();
+    location.href = buildLoginUrl();
   });
-
-  // atualiza na carga + quando storage mudar (ex: login em outra aba)
-  updateAuthUI();
-  window.addEventListener("storage", updateAuthUI);
 })();
 </script>
-
 </body>
 </html>
