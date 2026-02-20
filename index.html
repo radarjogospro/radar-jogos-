@@ -1123,8 +1123,16 @@ timestampMs: tsMs,
     /* ======== PARSE DE DATA/HORA (ROBUSTO) ======== */
     function parseStartTsAny(g){
       const candidates = [
+        // diretos
         g.startTs, g.kickoffTs, g.timestamp, g.start_time, g.startTime, g.datetime,
-        g.commence_time, g.kickoff, g.start, g.timeStart, g.beginTime, g.kickoffTimestamp
+        g.commence_time, g.kickoff, g.start, g.timeStart, g.beginTime, g.kickoffTimestamp,
+        // comuns em APIs (nested)
+        g.fixture?.timestamp, g.fixture?.date,
+        g.match?.timestamp, g.match?.date,
+        g.game?.timestamp, g.game?.start, g.game?.date,
+        g.event?.start_time, g.event?.timestamp, g.event?.date,
+        g.time?.timestamp, g.time?.ts, g.time?.start,
+        g.start?.timestamp, g.start?.date
       ].filter(v=>v!=null && v!=="");
 
       for(const v of candidates){
@@ -1271,6 +1279,9 @@ timestampMs: tsMs,
     function isFinished(g){
   const s = (g.status || "").toString().trim().toUpperCase();
 
+  // prorrogação/pênaltis: não encerra por heurística de minuto
+  if (s === "ET" || s === "PEN") return false;
+
   // status explícito
   if (FINISHED_SET.has(s)) return true;
 
@@ -1284,7 +1295,7 @@ timestampMs: tsMs,
 
   // Se a API "esqueceu" de trocar para FT, mas já está muito tarde e o placar não muda, encerra.
   const unchangedMs = scoreUnchangedMs(g);
-  if (typeof m === "number" && m >= 115 && unchangedMs >= 2 * REFRESH_MS) return true;
+  if (typeof m === "number" && m >= 100 && unchangedMs >= 2 * REFRESH_MS) return true;
 
 
   // se passou muito do normal desde o início, considera encerrado (evita LIVE eterno)
@@ -1525,16 +1536,40 @@ function formatDow(g){
 function getMinuteLabel(g){
   const st = (g.status ?? "").toString().trim().toUpperCase();
   // prioridade: label pronto da API (quando existir)
-  const lbl = (g.minuteLabel ?? g.elapsedLabel ?? g.timeLabel ?? "").toString().trim();
-  if (lbl) return lbl.endsWith("′") ? lbl : (lbl + "′");
+  const lblRaw = (g.minuteLabel ?? g.elapsedLabel ?? g.timeLabel ?? "").toString().trim();
+  if (lblRaw){
+    // alguns feeds travam e mandam "90+28" eterno. Limitamos o acréscimo.
+    const mLbl = lblRaw.match(/^\s*(\d{1,3})(?:\s*\+\s*(\d{1,3}))?\s*′?\s*$/);
+    if (mLbl){
+      const base = Number(mLbl[1]);
+      const plus = mLbl[2] ? Number(mLbl[2]) : null;
+      const sport = (g.sport ?? "").toString().toLowerCase();
+      const isFootball = sport.includes("foot") || sport === "soccer" || sport === "football";
+      if (isFootball && base === 90 && plus != null){
+        const MAX_STOPPAGE = 9;
+        if (plus > MAX_STOPPAGE) return "FT";
+        return `90+${plus}′`;
+      }
+    }
+    return lblRaw.endsWith("′") ? lblRaw : (lblRaw + "′");
+  }
 
   const m = getElapsedMinute(g);
   if (m == null) return "AO VIVO";
 
-  // para futebol, mostra 90+X depois do 90
+  // para futebol, mostra 90+X depois do 90, mas evita "90+29" eterno quando a API trava.
   const sport = (g.sport ?? "").toString().toLowerCase();
   const isFootball = sport.includes("foot") || sport === "soccer" || sport === "football";
-  if (isFootball && m > 90 && m <= 120) return `90+${m-90}′`;
+
+  // se estiver em prorrogação/pênaltis, não força FT
+  if (st === "ET" || st === "AET" || st === "PEN") return `${m}′`;
+
+  if (isFootball && m > 90) {
+    const extra = m - 90;
+    const MAX_STOPPAGE = 9; // 90+1 .. 90+9
+    if (extra > MAX_STOPPAGE) return "FT";
+    return `90+${extra}′`;
+  }
 
   return `${m}′`;
 }
@@ -1851,6 +1886,18 @@ if (!window.__AUTO_REFRESH__) {
       let games = allGames.slice();
       games = games.filter(g=> !finishedTooOld(g));
 
+      // Limita a lista para reduzir "1000+ jogos": mostra apenas dentro de uma janela de 3 dias
+      // (mantém ao vivo e recém-encerrados pelo filtro finishedTooOld).
+      const nowSec = Math.floor(Date.now()/1000);
+      const WINDOW_PAST_SEC = 24*60*60;   // 1 dia pra trás
+      const WINDOW_FUTURE_SEC = 3*24*60*60; // 3 dias pra frente
+      games = games.filter(g=>{
+        if (isLive(g)) return true;
+        const ts = Number(g.startTs || 0);
+        if (!ts) return false;
+        return ts >= (nowSec - WINDOW_PAST_SEC) && ts <= (nowSec + WINDOW_FUTURE_SEC);
+      });
+
       games = games.filter(g=>{
         if(state.sport === "all") return true;
         if(state.sport === "football") return (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football");
@@ -1877,7 +1924,18 @@ if (!window.__AUTO_REFRESH__) {
         nextGames = nextGames.slice().sort(safeTimeSort);
       }
 
-      const base = allGames.filter(g=>!finishedTooOld(g));
+      const nowSec2 = Math.floor(Date.now()/1000);
+      const WINDOW_PAST_SEC2 = 24*60*60;
+      const WINDOW_FUTURE_SEC2 = 3*24*60*60;
+
+      const base = allGames
+        .filter(g=>!finishedTooOld(g))
+        .filter(g=>{
+          if (isLive(g)) return true;
+          const ts = Number(g.startTs || 0);
+          if (!ts) return false;
+          return ts >= (nowSec2 - WINDOW_PAST_SEC2) && ts <= (nowSec2 + WINDOW_FUTURE_SEC2);
+        });
       const counts = {
         all: base.length,
         football: base.filter(g=> (g.sport.includes("foot") || g.sport==="soccer" || g.sport==="football")).length,
