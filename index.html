@@ -1350,7 +1350,7 @@ timestampMs: tsMs,
 
     function finishedTooOld(g){
       if(!isFinished(g)) return false;
-      if(!g.startTs) return true;
+      if(!g.startTs) return false;
       const now = Date.now();
       const start = Number(g.startTs) * 1000;
       if(!Number.isFinite(start)) return true;
@@ -1366,7 +1366,7 @@ timestampMs: tsMs,
   // jogos ao vivo sempre entram
   if(isLive(g)) return true;
 
-  if(!g.startTs) return true;
+  if(!g.startTs) return false;
 
   const now = Date.now();
   const ts = Number(g.startTs) * 1000;
@@ -1736,7 +1736,7 @@ if (!window.__AUTO_REFRESH__) {
       picks.forEach(g=>{
         const live = isLive(g);
         const scoreTxt = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome} - ${g.scoreAway}` : "—";
-        const clock = live ? formatLiveClock(g) : (formatKickoff(g) ? ("Começa " + formatKickoff(g)) : "Em breve");
+        const clock = live ? formatLiveClock(g) : (formatKickoff(g.startTs) ? ("Começa " + formatKickoff(g.startTs)) : "Em breve");
 
         const card = document.createElement("div");
         card.className = "hero-card";
@@ -1845,7 +1845,7 @@ if (!window.__AUTO_REFRESH__) {
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? (formatDow(g) + " " + formatKickoff(g)) : "horário indefinido";
+          const timeTxt = g.startTs ? (formatDow(g) + " " + formatKickoff(g.startTs)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
@@ -1886,17 +1886,25 @@ if (!window.__AUTO_REFRESH__) {
       let games = allGames.slice();
       games = games.filter(g=> !finishedTooOld(g));
 
-      // Limita a lista para reduzir "1000+ jogos": mostra apenas dentro de uma janela de 3 dias
-      // (mantém ao vivo e recém-encerrados pelo filtro finishedTooOld).
-      const nowSec = Math.floor(Date.now()/1000);
-      const WINDOW_PAST_SEC = 24*60*60;   // 1 dia pra trás
-      const WINDOW_FUTURE_SEC = 3*24*60*60; // 3 dias pra frente
+      // Limita a lista para reduzir "1000+ jogos":
+      // Mantém AO VIVO sempre, e fora do ao vivo mostra só: HOJE + 2 DIAS (no fuso do Brasil).
+      function tzNowSaoPaulo(){
+        return new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+      }
+      function startOfTodaySaoPauloMs(){
+        const d = tzNowSaoPaulo();
+        d.setHours(0,0,0,0);
+        return d.getTime();
+      }
+      const START_TODAY_MS = startOfTodaySaoPauloMs();
+      const END_WINDOW_MS = START_TODAY_MS + (3 * 24 * 60 * 60 * 1000) - 1; // hoje + 2 dias (3 dias no total)
       games = games.filter(g=>{
         if (isLive(g)) return true;
-        const ts = Number(g.startTs || 0);
-        if (!ts) return false;
-        return ts >= (nowSec - WINDOW_PAST_SEC) && ts <= (nowSec + WINDOW_FUTURE_SEC);
+        const tsMs = getStartMs(g);
+        if (!tsMs) return false;
+        return tsMs >= START_TODAY_MS && tsMs <= END_WINDOW_MS;
       });
+
 
       games = games.filter(g=>{
         if(state.sport === "all") return true;
@@ -1924,14 +1932,21 @@ if (!window.__AUTO_REFRESH__) {
         nextGames = nextGames.slice().sort(safeTimeSort);
       }
 
-      const nowSec2 = Math.floor(Date.now()/1000);
-      const WINDOW_PAST_SEC2 = 24*60*60;
-      const WINDOW_FUTURE_SEC2 = 3*24*60*60;
+      const START_TODAY_MS2 = (function(){
+        const d = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+        d.setHours(0,0,0,0);
+        return d.getTime();
+      })();
+      const END_WINDOW_MS2 = START_TODAY_MS2 + (3 * 24 * 60 * 60 * 1000) - 1; // hoje + 2 dias
 
       const base = allGames
         .filter(g=>!finishedTooOld(g))
         .filter(g=>{
           if (isLive(g)) return true;
+          const tsMs = getStartMs(g);
+          if (!tsMs) return false;
+          return tsMs >= START_TODAY_MS2 && tsMs <= END_WINDOW_MS2;
+        });
           const ts = Number(g.startTs || 0);
           if (!ts) return false;
           return ts >= (nowSec2 - WINDOW_PAST_SEC2) && ts <= (nowSec2 + WINDOW_FUTURE_SEC2);
