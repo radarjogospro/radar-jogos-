@@ -1,6 +1,6 @@
 {
-  "updatedAt": "20/02/2026, 18:29:25",
-  "cacheBust": "1771622965245",
+  "updatedAt": "20/02/2026, 18:54:42",
+  "cacheBust": "1771624483179",
   "source": "REAL",
   "games": [
     {
@@ -641,10 +641,10 @@
       "home": "Fremad Amager",
       "away": "AB Copenhagen",
       "startTs": 1771585200,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -2945,10 +2945,10 @@
       "home": "Ljungskile SK",
       "away": "Trollhättan",
       "startTs": 1771610400,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -3071,10 +3071,10 @@
       "home": "LASK Juniors",
       "away": "Bischofshofen",
       "startTs": 1771610400,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 2,
       "odds": {
         "home": null,
         "draw": null,
@@ -3694,24 +3694,6 @@
       }
     },
     {
-      "id": "fb-1389323",
-      "sport": "football",
-      "league": "Ligue 2",
-      "country": "France",
-      "home": "Nancy",
-      "away": "Grenoble",
-      "startTs": 1771614000,
-      "status": "2H",
-      "minute": 76,
-      "scoreHome": 0,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
       "id": "fb-1381080",
       "sport": "football",
       "league": "Eredivisie",
@@ -3848,6 +3830,24 @@
       "status": "FT",
       "minute": 90,
       "scoreHome": 3,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1389323",
+      "sport": "football",
+      "league": "Ligue 2",
+      "country": "France",
+      "home": "Nancy",
+      "away": "Grenoble",
+      "startTs": 1771614000,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
         "home": null,
@@ -4367,100 +4367,10 @@
       "home": "Widzew Łódź",
       "away": "Cracovia Krakow",
       "startTs": 1771615800,
-      "status": "2H",
-      "minute": 88,
-      "scoreHome": 0,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1388510",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "FSV Mainz 05",
-      "away": "Hamburger SV",
-      "startTs": 1771615800,
-      "status": "2H",
-      "minute": 89,
-      "scoreHome": 1,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1392060",
-      "sport": "football",
-      "league": "Segunda División",
-      "country": "Spain",
-      "home": "AD Ceuta FC",
-      "away": "Granada CF",
-      "startTs": 1771615800,
-      "status": "2H",
-      "minute": 90,
-      "scoreHome": 2,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1418928",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "Egypt",
-      "home": "Ismaily SC",
-      "away": "Wadi Degla",
-      "startTs": 1771615800,
-      "status": "2H",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1418929",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "Egypt",
-      "home": "Ghazl El Mehalla",
-      "away": "Masr",
-      "startTs": 1771615800,
-      "status": "2H",
+      "status": "FT",
       "minute": 90,
       "scoreHome": 0,
       "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1431371",
-      "sport": "football",
-      "league": "Primera División RFEF - Group 2",
-      "country": "Spain",
-      "home": "Real Betis II",
-      "away": "Villarreal II",
-      "startTs": 1771615800,
-      "status": "2H",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 4,
       "odds": {
         "home": null,
         "draw": null,
@@ -4486,12 +4396,48 @@
       }
     },
     {
+      "id": "fb-1388510",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "FSV Mainz 05",
+      "away": "Hamburger SV",
+      "startTs": 1771615800,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
       "id": "fb-1391762",
       "sport": "football",
       "league": "2. Liga",
       "country": "Austria",
       "home": "First Vienna",
       "away": "SKN ST. Polten",
+      "startTs": 1771615800,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1392060",
+      "sport": "football",
+      "league": "Segunda División",
+      "country": "Spain",
+      "home": "AD Ceuta FC",
+      "away": "Granada CF",
       "startTs": 1771615800,
       "status": "FT",
       "minute": 90,
@@ -4612,6 +4558,42 @@
       }
     },
     {
+      "id": "fb-1418928",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "Egypt",
+      "home": "Ismaily SC",
+      "away": "Wadi Degla",
+      "startTs": 1771615800,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1418929",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "Egypt",
+      "home": "Ghazl El Mehalla",
+      "away": "Masr",
+      "startTs": 1771615800,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
       "id": "fb-1419842",
       "sport": "football",
       "league": "Serie B",
@@ -4623,6 +4605,24 @@
       "minute": 90,
       "scoreHome": 2,
       "scoreAway": 2,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1431371",
+      "sport": "football",
+      "league": "Primera División RFEF - Group 2",
+      "country": "Spain",
+      "home": "Real Betis II",
+      "away": "Villarreal II",
+      "startTs": 1771615800,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 4,
       "odds": {
         "home": null,
         "draw": null,
@@ -4709,8 +4709,8 @@
       "home": "Sassuolo",
       "away": "Verona",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 87,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 3,
       "scoreAway": 0,
       "odds": {
@@ -4727,8 +4727,8 @@
       "home": "Gent",
       "away": "Cercle Brugge",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 0,
       "scoreAway": 1,
       "odds": {
@@ -4745,8 +4745,8 @@
       "home": "Raith Rovers",
       "away": "ST Johnstone",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 86,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
@@ -4763,8 +4763,8 @@
       "home": "Coleraine FC",
       "away": "Ballymena United",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 86,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 1,
       "scoreAway": 0,
       "odds": {
@@ -4781,9 +4781,9 @@
       "home": "Larne",
       "away": "Carrick Rangers",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 87,
-      "scoreHome": 1,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
       "scoreAway": 3,
       "odds": {
         "home": null,
@@ -4799,8 +4799,8 @@
       "home": "Stade Brestois 29",
       "away": "Marseille",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 87,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 2,
       "scoreAway": 0,
       "odds": {
@@ -4817,10 +4817,10 @@
       "home": "Buckley Town",
       "away": "Holywell",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 83,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 1,
-      "scoreAway": 1,
+      "scoreAway": 2,
       "odds": {
         "home": null,
         "draw": null,
@@ -4835,9 +4835,9 @@
       "home": "Llandudno",
       "away": "Denbigh Town",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
-      "scoreHome": 3,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 4,
       "scoreAway": 0,
       "odds": {
         "home": null,
@@ -4853,208 +4853,10 @@
       "home": "Newtown AFC",
       "away": "Guilsfield",
       "startTs": 1771616700,
-      "status": "2H",
-      "minute": 82,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 2,
       "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1405262",
-      "sport": "football",
-      "league": "Football League - Lowland League",
-      "country": "Scotland",
-      "home": "Hearts U21",
-      "away": "Broxburn Athletic",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
-      "scoreHome": 0,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1443364",
-      "sport": "football",
-      "league": "Non League Div One - Isthmian North",
-      "country": "England",
-      "home": "Felixstowe & Walton Utd",
-      "away": "Stanway Rovers",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
-      "scoreHome": 3,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492626",
-      "sport": "football",
-      "league": "Premier Division",
-      "country": "Ireland",
-      "home": "Derry City",
-      "away": "Bohemians",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
-      "scoreHome": 0,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492628",
-      "sport": "football",
-      "league": "Premier Division",
-      "country": "Ireland",
-      "home": "Shelbourne",
-      "away": "Galway United",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 87,
-      "scoreHome": 1,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492629",
-      "sport": "football",
-      "league": "Premier Division",
-      "country": "Ireland",
-      "home": "Waterford",
-      "away": "Sligo Rovers",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 83,
-      "scoreHome": 0,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492825",
-      "sport": "football",
-      "league": "First Division",
-      "country": "Ireland",
-      "home": "Finn Harps",
-      "away": "UCD",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
-      "scoreHome": 2,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492826",
-      "sport": "football",
-      "league": "First Division",
-      "country": "Ireland",
-      "home": "Kerry",
-      "away": "Athlone Town",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 89,
-      "scoreHome": 0,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492827",
-      "sport": "football",
-      "league": "First Division",
-      "country": "Ireland",
-      "home": "Treaty United",
-      "away": "Bray Wanderers",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 88,
-      "scoreHome": 0,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492828",
-      "sport": "football",
-      "league": "First Division",
-      "country": "Ireland",
-      "home": "Wexford",
-      "away": "Cork City",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 88,
-      "scoreHome": 1,
-      "scoreAway": 4,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1508967",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "Wales",
-      "home": "The New Saints",
-      "away": "Caernarfon Town",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 85,
-      "scoreHome": 2,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1508997",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "Wales",
-      "home": "llanelli AFC",
-      "away": "Haverfordwest County AFC",
-      "startTs": 1771616700,
-      "status": "2H",
-      "minute": 87,
-      "scoreHome": 0,
-      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5080,17 +4882,197 @@
       }
     },
     {
-      "id": "fb-1386938",
+      "id": "fb-1405262",
       "sport": "football",
-      "league": "Championship",
+      "league": "Football League - Lowland League",
+      "country": "Scotland",
+      "home": "Hearts U21",
+      "away": "Broxburn Athletic",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1443364",
+      "sport": "football",
+      "league": "Non League Div One - Isthmian North",
       "country": "England",
-      "home": "Blackburn",
-      "away": "Preston",
-      "startTs": 1771617600,
-      "status": "2H",
-      "minute": 73,
+      "home": "Felixstowe & Walton Utd",
+      "away": "Stanway Rovers",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 3,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492626",
+      "sport": "football",
+      "league": "Premier Division",
+      "country": "Ireland",
+      "home": "Derry City",
+      "away": "Bohemians",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492628",
+      "sport": "football",
+      "league": "Premier Division",
+      "country": "Ireland",
+      "home": "Shelbourne",
+      "away": "Galway United",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492629",
+      "sport": "football",
+      "league": "Premier Division",
+      "country": "Ireland",
+      "home": "Waterford",
+      "away": "Sligo Rovers",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
       "scoreHome": 0,
       "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492825",
+      "sport": "football",
+      "league": "First Division",
+      "country": "Ireland",
+      "home": "Finn Harps",
+      "away": "UCD",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492826",
+      "sport": "football",
+      "league": "First Division",
+      "country": "Ireland",
+      "home": "Kerry",
+      "away": "Athlone Town",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492827",
+      "sport": "football",
+      "league": "First Division",
+      "country": "Ireland",
+      "home": "Treaty United",
+      "away": "Bray Wanderers",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1492828",
+      "sport": "football",
+      "league": "First Division",
+      "country": "Ireland",
+      "home": "Wexford",
+      "away": "Cork City",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 4,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1508967",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "Wales",
+      "home": "The New Saints",
+      "away": "Caernarfon Town",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 1,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1508997",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "Wales",
+      "home": "llanelli AFC",
+      "away": "Haverfordwest County AFC",
+      "startTs": 1771616700,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5106,8 +5088,8 @@
       "away": "Elche",
       "startTs": 1771617600,
       "status": "2H",
-      "minute": 69,
-      "scoreHome": 1,
+      "minute": 90,
+      "scoreHome": 2,
       "scoreAway": 1,
       "odds": {
         "home": null,
@@ -5124,25 +5106,7 @@
       "away": "Flint Mountain",
       "startTs": 1771617600,
       "status": "2H",
-      "minute": 68,
-      "scoreHome": 3,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1421618",
-      "sport": "football",
-      "league": "Feminine Division 1",
-      "country": "France",
-      "home": "Paris Saint Germain W",
-      "away": "Lens W",
-      "startTs": 1771617600,
-      "status": "2H",
-      "minute": 71,
+      "minute": 90,
       "scoreHome": 3,
       "scoreAway": 0,
       "odds": {
@@ -5160,27 +5124,9 @@
       "away": "Drogheda United",
       "startTs": 1771617600,
       "status": "2H",
-      "minute": 73,
+      "minute": 90,
       "scoreHome": 1,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-1492630",
-      "sport": "football",
-      "league": "Premier Division",
-      "country": "Ireland",
-      "home": "Shamrock Rovers",
-      "away": "St Patrick's Athl.",
-      "startTs": 1771617600,
-      "status": "2H",
-      "minute": 71,
-      "scoreHome": 1,
-      "scoreAway": 0,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5206,6 +5152,42 @@
       }
     },
     {
+      "id": "fb-1386938",
+      "sport": "football",
+      "league": "Championship",
+      "country": "England",
+      "home": "Blackburn",
+      "away": "Preston",
+      "startTs": 1771617600,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-1421618",
+      "sport": "football",
+      "league": "Feminine Division 1",
+      "country": "France",
+      "home": "Paris Saint Germain W",
+      "away": "Lens W",
+      "startTs": 1771617600,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 3,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
       "id": "fb-1434712",
       "sport": "football",
       "league": "Premier Division",
@@ -5224,6 +5206,24 @@
       }
     },
     {
+      "id": "fb-1492630",
+      "sport": "football",
+      "league": "Premier Division",
+      "country": "Ireland",
+      "home": "Shamrock Rovers",
+      "away": "St Patrick's Athl.",
+      "startTs": 1771617600,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
       "id": "fb-1431754",
       "sport": "football",
       "league": "Primera División RFEF - Group 1",
@@ -5232,7 +5232,7 @@
       "away": "CF Talavera",
       "startTs": 1771618500,
       "status": "2H",
-      "minute": 55,
+      "minute": 81,
       "scoreHome": 1,
       "scoreAway": 0,
       "odds": {
@@ -5250,9 +5250,9 @@
       "away": "Belgrano Cordoba",
       "startTs": 1771618500,
       "status": "2H",
-      "minute": 53,
+      "minute": 78,
       "scoreHome": 0,
-      "scoreAway": 0,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5268,7 +5268,7 @@
       "away": "Al Quwa Al Jawiya",
       "startTs": 1771618500,
       "status": "2H",
-      "minute": 54,
+      "minute": 79,
       "scoreHome": 0,
       "scoreAway": 1,
       "odds": {
@@ -5285,8 +5285,8 @@
       "home": "Estrela",
       "away": "Tondela",
       "startTs": 1771620300,
-      "status": "1H",
-      "minute": 40,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
       "scoreAway": 1,
       "odds": {
@@ -5303,8 +5303,8 @@
       "home": "Estudiantes L.P.",
       "away": "Sarmiento Junin",
       "startTs": 1771620300,
-      "status": "1H",
-      "minute": 41,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
@@ -5321,8 +5321,8 @@
       "home": "Tamaraceite",
       "away": "UD San Fernando",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 29,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
@@ -5339,8 +5339,8 @@
       "home": "Union La Calera",
       "away": "Nublense",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 29,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
@@ -5357,8 +5357,8 @@
       "home": "Metropolitanos FC",
       "away": "Carabobo FC",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 29,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 1,
       "scoreAway": 1,
       "odds": {
@@ -5375,10 +5375,10 @@
       "home": "Depor FC",
       "away": "Patriotas",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 29,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
-      "scoreAway": 0,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5393,8 +5393,8 @@
       "home": "ASO Chlef",
       "away": "CS Constantine",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 29,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
       "scoreAway": 1,
       "odds": {
@@ -5411,8 +5411,8 @@
       "home": "CR Belouizdad",
       "away": "El Bayadh",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 24,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
@@ -5429,10 +5429,10 @@
       "home": "ES Setif",
       "away": "MB Rouisset",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 29,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 1,
-      "scoreAway": 0,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5447,10 +5447,10 @@
       "home": "MC Oran",
       "away": "MC Alger",
       "startTs": 1771621200,
-      "status": "1H",
-      "minute": 28,
+      "status": "HT",
+      "minute": 45,
       "scoreHome": 1,
-      "scoreAway": 0,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -5501,10 +5501,10 @@
       "home": "Libertad Asuncion",
       "away": "Rubio NU",
       "startTs": 1771623000,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "status": "1H",
+      "minute": 25,
+      "scoreHome": 0,
+      "scoreAway": 0,
       "odds": {
         "home": null,
         "draw": null,
@@ -5519,10 +5519,10 @@
       "home": "Tombense",
       "away": "Uniao Trabalhadores",
       "startTs": 1771623000,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "status": "1H",
+      "minute": 24,
+      "scoreHome": 0,
+      "scoreAway": 0,
       "odds": {
         "home": null,
         "draw": null,
@@ -5537,10 +5537,10 @@
       "home": "Cerro",
       "away": "Liverpool Montevideo",
       "startTs": 1771623900,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "status": "1H",
+      "minute": 9,
+      "scoreHome": 0,
+      "scoreAway": 0,
       "odds": {
         "home": null,
         "draw": null,
