@@ -802,42 +802,6 @@
     </div>
   </div>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    // Supabase (publishable key) — mantém sessão e permite logout
-    const SUPABASE_URL = "https://wthlxrukcwyqdkeuvjcs.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_vfPvj4TOQRPD5GA35QgXVg_wIBIlmZi";
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    // expõe para o script normal (menu/logout já usa window.supabase)
-    window.supabase = supabase;
-
-    async function requireAuth() {
-      try {
-        const { data } = await supabase.auth.getSession();
-        if (!data?.session) {
-          const rt = encodeURIComponent(window.location.href);
-          window.location.replace("login.html?returnTo=" + rt);
-        }
-      } catch (e) {
-        const rt = encodeURIComponent(window.location.href);
-        window.location.replace("login.html?returnTo=" + rt);
-      }
-    }
-
-    // Se entrar aqui sem sessão, manda pro login
-    await requireAuth();
-
-    // Se deslogar em qualquer lugar, volta pro login
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_OUT") {
-        window.location.replace("login.html");
-      }
-    });
-  </script>
-
-
   <script>
     const LS_API_KEY = "RADAR_API_URL";
     const DEFAULT_LOCAL_URL = "jogos.json";
@@ -1539,17 +1503,23 @@ function formatDow(g){
 
 
     function formatLiveClock(g){
-  const s = (g.status || "").toUpperCase();
+  // Alguns feeds deixam status "NS" mesmo com minuto/clock preenchido.
+  // Então: só trata NS como "vazio" quando realmente NÃO há minuto.
+  const sRaw = (g.status ?? g.status_short ?? g.time_status ?? g.state ?? "").toString().trim().toUpperCase();
 
   // estados especiais
-  if (s === "FT") return "FT";
-  if (s === "HT") return "HT";
-  if (s === "NS") return "";
+  if (sRaw === "FT") return "FT";
+  if (sRaw === "HT") return "HT";
 
   const m = getElapsedMinute(g);
-  if(m == null) return "AO VIVO";
 
-  // aqui muda o formato: 90:00 -> 90'
+  // se ainda não começou e não há minuto, não mostra nada
+  if ((sRaw === "NS" || sRaw === "NOT_STARTED") && m == null) return "";
+
+  // se é ao vivo mas não veio minuto, mostra ao vivo
+  if (m == null) return "AO VIVO";
+
+  // 90:00 -> 90′ / 90+X′
   return getMinuteLabel(g) || "AO VIVO";
 }
 function getMinuteLabel(g){
