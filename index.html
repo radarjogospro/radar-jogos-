@@ -803,7 +803,9 @@
   </div>
 
   <script>
-    const LS_API_KEY = "RADAR_API_URL";
+    
+  const APP_VERSION = "20260220153820";
+const LS_API_KEY = "RADAR_API_URL";
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
@@ -1364,7 +1366,7 @@ timestampMs: tsMs,
   if(finishedTooOld(g)) return false;
 
   // jogos ao vivo sempre entram
-  if(isLive(g)) return true;
+  if (isLive(g)) return true;
 
   if(!g.startTs) return false;
 
@@ -1426,7 +1428,14 @@ function getStartMs(g){
     0
   );
 
-  if(!Number.isFinite(ts) || ts <= 0) return null;
+  if(!Number.isFinite(ts) || ts <= 0){
+    // fallback: tenta parsear datas ISO comuns
+    const s = (g.start || g.date || g.fixture?.date || g.match?.date || "").toString().trim();
+    const ms = s ? Date.parse(s) : NaN;
+    if(Number.isFinite(ms)) return ms;
+    return null;
+  }
+
 
   // já está em milissegundos
   if(ts > 1e12) return ts;
@@ -1900,7 +1909,7 @@ if (!window.__AUTO_REFRESH__) {
       const END_WINDOW_MS = START_TODAY_MS + (3 * 24 * 60 * 60 * 1000) - 1; // hoje + 2 dias (3 dias no total)
       games = games.filter(g=>{
         if (isLive(g)) return true;
-        const tsMs = getStartMs(g);
+        const tsMs = (g.startMs ?? g.kickoffMs ?? g.timestampMs) || getStartMs(g);
         if (!tsMs) return false;
         return tsMs >= START_TODAY_MS && tsMs <= END_WINDOW_MS;
       });
@@ -1943,7 +1952,7 @@ if (!window.__AUTO_REFRESH__) {
         .filter(g=>!finishedTooOld(g))
         .filter(g=>{
           if (isLive(g)) return true;
-          const tsMs = getStartMs(g);
+          const tsMs = (g.startMs ?? g.kickoffMs ?? g.timestampMs) || getStartMs(g);
           if (!tsMs) return false;
           return tsMs >= START_TODAY_MS2 && tsMs <= END_WINDOW_MS2;
         });
@@ -1977,7 +1986,7 @@ loadData();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("sw.js", { scope: "./" });
+      const reg = await navigator.serviceWorker.register("sw.js?v=" + APP_VERSION, { scope: "./" });
       console.log("SW ok", reg.scope);
     } catch (err) {
       console.log("SW erro", err);
