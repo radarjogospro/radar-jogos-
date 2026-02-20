@@ -803,9 +803,7 @@
   </div>
 
   <script>
-    
-  const APP_VERSION = "20260220160001";
-const LS_API_KEY = "RADAR_API_URL";
+    const LS_API_KEY = "RADAR_API_URL";
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
 
@@ -1007,30 +1005,17 @@ const LS_API_KEY = "RADAR_API_URL";
     /* DATA LOAD */
     function buildDataUrl(){
   // prioridade: URL configurada pelo usuário (modal / long press)
-  const raw = (state.apiUrl && state.apiUrl.trim()) ? state.apiUrl.trim() : DEFAULT_LOCAL_URL;
-
-  // Resolve URL:
-  // - Se for http(s), usa direto
-  // - Se for caminho absoluto (/...), mantém no mesmo domínio
-  // - Se for relativo (jogos.json), resolve sempre na pasta atual (respeita <base> e /repo/)
-  let u;
-  try{
-    if(/^https?:\/\//i.test(raw)) u = new URL(raw);
-    else u = new URL(raw, document.baseURI);
-  }catch{
-    u = new URL(DEFAULT_LOCAL_URL, document.baseURI);
-  }
-
+  const base = (state.apiUrl && state.apiUrl.trim()) ? state.apiUrl.trim() : DEFAULT_LOCAL_URL;
   // cache-bust para não ficar preso no cache do GitHub Pages / navegador
-  u.searchParams.set("ts", String(Date.now()));
-  return u.toString();
+  const sep = base.includes("?") ? "&" : "?";
+  return base + sep + "ts=" + Date.now();
 }
 async function fetchJsonWithTimeout(url, timeoutMs=9000){
       const ctrl = new AbortController();
       const t = setTimeout(()=>ctrl.abort(), timeoutMs);
       try{
         const res = await fetch(url, {cache:"no-store", signal: ctrl.signal});
-        if(!res.ok) throw new Error("HTTP " + res.status + " ao buscar " + url);
+        if(!res.ok) throw new Error("HTTP " + res.status);
         return await res.json();
       }finally{ clearTimeout(t); }
     }
@@ -1365,7 +1350,7 @@ timestampMs: tsMs,
 
     function finishedTooOld(g){
       if(!isFinished(g)) return false;
-      if(!g.startTs) return false;
+      if(!g.startTs) return true;
       const now = Date.now();
       const start = Number(g.startTs) * 1000;
       if(!Number.isFinite(start)) return true;
@@ -1379,9 +1364,9 @@ timestampMs: tsMs,
   if(finishedTooOld(g)) return false;
 
   // jogos ao vivo sempre entram
-  if (isLive(g)) return true;
+  if(isLive(g)) return true;
 
-  if(!g.startTs) return false;
+  if(!g.startTs) return true;
 
   const now = Date.now();
   const ts = Number(g.startTs) * 1000;
@@ -1441,14 +1426,7 @@ function getStartMs(g){
     0
   );
 
-  if(!Number.isFinite(ts) || ts <= 0){
-    // fallback: tenta parsear datas ISO comuns
-    const s = (g.start || g.date || g.fixture?.date || g.match?.date || "").toString().trim();
-    const ms = s ? Date.parse(s) : NaN;
-    if(Number.isFinite(ms)) return ms;
-    return null;
-  }
-
+  if(!Number.isFinite(ts) || ts <= 0) return null;
 
   // já está em milissegundos
   if(ts > 1e12) return ts;
@@ -1758,7 +1736,7 @@ if (!window.__AUTO_REFRESH__) {
       picks.forEach(g=>{
         const live = isLive(g);
         const scoreTxt = (g.scoreHome!=null && g.scoreAway!=null) ? `${g.scoreHome} - ${g.scoreAway}` : "—";
-        const clock = live ? formatLiveClock(g) : (formatKickoff(g.startTs) ? ("Começa " + formatKickoff(g.startTs)) : "Em breve");
+        const clock = live ? formatLiveClock(g) : (formatKickoff(g) ? ("Começa " + formatKickoff(g)) : "Em breve");
 
         const card = document.createElement("div");
         card.className = "hero-card";
@@ -1867,7 +1845,7 @@ if (!window.__AUTO_REFRESH__) {
         items.slice(0, 20).forEach(g=>{
           const c = document.createElement("div");
           c.className = "sheet-card";
-          const timeTxt = g.startTs ? (formatDow(g) + " " + formatKickoff(g.startTs)) : "horário indefinido";
+          const timeTxt = g.startTs ? (formatDow(g) + " " + formatKickoff(g)) : "horário indefinido";
           c.innerHTML = `
             <div class="sheet-card-top">
               <div class="sheet-teams">
@@ -1908,25 +1886,17 @@ if (!window.__AUTO_REFRESH__) {
       let games = allGames.slice();
       games = games.filter(g=> !finishedTooOld(g));
 
-      // Limita a lista para reduzir "1000+ jogos":
-      // Mantém AO VIVO sempre, e fora do ao vivo mostra só: HOJE + 2 DIAS (no fuso do Brasil).
-      function tzNowSaoPaulo(){
-        return new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
-      }
-      function startOfTodaySaoPauloMs(){
-        const d = tzNowSaoPaulo();
-        d.setHours(0,0,0,0);
-        return d.getTime();
-      }
-      const START_TODAY_MS = startOfTodaySaoPauloMs();
-      const END_WINDOW_MS = START_TODAY_MS + (3 * 24 * 60 * 60 * 1000) - 1; // hoje + 2 dias (3 dias no total)
+      // Limita a lista para reduzir "1000+ jogos": mostra apenas dentro de uma janela de 3 dias
+      // (mantém ao vivo e recém-encerrados pelo filtro finishedTooOld).
+      const nowSec = Math.floor(Date.now()/1000);
+      const WINDOW_PAST_SEC = 24*60*60;   // 1 dia pra trás
+      const WINDOW_FUTURE_SEC = 3*24*60*60; // 3 dias pra frente
       games = games.filter(g=>{
         if (isLive(g)) return true;
-        const tsMs = (g.startMs ?? g.kickoffMs ?? g.timestampMs) || getStartMs(g);
-        if (!tsMs) return false;
-        return tsMs >= START_TODAY_MS && tsMs <= END_WINDOW_MS;
+        const ts = Number(g.startTs || 0);
+        if (!ts) return false;
+        return ts >= (nowSec - WINDOW_PAST_SEC) && ts <= (nowSec + WINDOW_FUTURE_SEC);
       });
-
 
       games = games.filter(g=>{
         if(state.sport === "all") return true;
@@ -1954,21 +1924,14 @@ if (!window.__AUTO_REFRESH__) {
         nextGames = nextGames.slice().sort(safeTimeSort);
       }
 
-      const START_TODAY_MS2 = (function(){
-        const d = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
-        d.setHours(0,0,0,0);
-        return d.getTime();
-      })();
-      const END_WINDOW_MS2 = START_TODAY_MS2 + (3 * 24 * 60 * 60 * 1000) - 1; // hoje + 2 dias
+      const nowSec2 = Math.floor(Date.now()/1000);
+      const WINDOW_PAST_SEC2 = 24*60*60;
+      const WINDOW_FUTURE_SEC2 = 3*24*60*60;
 
       const base = allGames
         .filter(g=>!finishedTooOld(g))
         .filter(g=>{
           if (isLive(g)) return true;
-          const tsMs = (g.startMs ?? g.kickoffMs ?? g.timestampMs) || getStartMs(g);
-          if (!tsMs) return false;
-          return tsMs >= START_TODAY_MS2 && tsMs <= END_WINDOW_MS2;
-        });
           const ts = Number(g.startTs || 0);
           if (!ts) return false;
           return ts >= (nowSec2 - WINDOW_PAST_SEC2) && ts <= (nowSec2 + WINDOW_FUTURE_SEC2);
@@ -1999,7 +1962,7 @@ loadData();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("sw.js?v=" + APP_VERSION, { scope: "./" });
+      const reg = await navigator.serviceWorker.register("sw.js", { scope: "./" });
       console.log("SW ok", reg.scope);
     } catch (err) {
       console.log("SW erro", err);
