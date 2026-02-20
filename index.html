@@ -804,7 +804,7 @@
 
   <script>
     
-  const APP_VERSION = "20260220153820";
+  const APP_VERSION = "20260220160001";
 const LS_API_KEY = "RADAR_API_URL";
     const DEFAULT_LOCAL_URL = "jogos.json";
     const REFRESH_MS = 30_000;
@@ -1007,17 +1007,30 @@ const LS_API_KEY = "RADAR_API_URL";
     /* DATA LOAD */
     function buildDataUrl(){
   // prioridade: URL configurada pelo usuário (modal / long press)
-  const base = (state.apiUrl && state.apiUrl.trim()) ? state.apiUrl.trim() : DEFAULT_LOCAL_URL;
+  const raw = (state.apiUrl && state.apiUrl.trim()) ? state.apiUrl.trim() : DEFAULT_LOCAL_URL;
+
+  // Resolve URL:
+  // - Se for http(s), usa direto
+  // - Se for caminho absoluto (/...), mantém no mesmo domínio
+  // - Se for relativo (jogos.json), resolve sempre na pasta atual (respeita <base> e /repo/)
+  let u;
+  try{
+    if(/^https?:\/\//i.test(raw)) u = new URL(raw);
+    else u = new URL(raw, document.baseURI);
+  }catch{
+    u = new URL(DEFAULT_LOCAL_URL, document.baseURI);
+  }
+
   // cache-bust para não ficar preso no cache do GitHub Pages / navegador
-  const sep = base.includes("?") ? "&" : "?";
-  return base + sep + "ts=" + Date.now();
+  u.searchParams.set("ts", String(Date.now()));
+  return u.toString();
 }
 async function fetchJsonWithTimeout(url, timeoutMs=9000){
       const ctrl = new AbortController();
       const t = setTimeout(()=>ctrl.abort(), timeoutMs);
       try{
         const res = await fetch(url, {cache:"no-store", signal: ctrl.signal});
-        if(!res.ok) throw new Error("HTTP " + res.status);
+        if(!res.ok) throw new Error("HTTP " + res.status + " ao buscar " + url);
         return await res.json();
       }finally{ clearTimeout(t); }
     }
