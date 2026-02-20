@@ -1398,11 +1398,27 @@ timestampMs: tsMs,
       return Array.from(map.entries());
     }
 
-    function formatKickoff(ts){
-  if (!ts) return "";
-  const n = Number(ts);
-  if (!Number.isFinite(n) || n <= 0) return "";
-  const d = new Date(n > 1e12 ? n : n * 1000);
+    function formatKickoff(input){
+  // Aceita:
+  // - timestamp (segundos ou ms)
+  // - OU o objeto do jogo (g), onde tentamos extrair startTs/startMs
+  if(!input) return "";
+
+  let n;
+  if (typeof input === "object"){
+    // tenta pegar ms/ts do jogo
+    const ms = getStartMs(input);
+    n = ms ? ms : Number(input.startTs || input.kickoffTs || input.timestamp || 0) * 1000;
+  } else {
+    n = Number(input);
+    if (Number.isFinite(n) && n > 0){
+      // se vier em segundos, converte
+      if (n <= 1e12) n = n * 1000;
+    }
+  }
+
+  if(!Number.isFinite(n) || n <= 0) return "";
+  const d = new Date(n);
 
   // sempre horário do Brasil (America/Sao_Paulo)
   return new Intl.DateTimeFormat("pt-BR", {
@@ -1886,16 +1902,21 @@ if (!window.__AUTO_REFRESH__) {
       let games = allGames.slice();
       games = games.filter(g=> !finishedTooOld(g));
 
-      // Limita a lista para reduzir "1000+ jogos": mostra apenas dentro de uma janela de 3 dias
-      // (mantém ao vivo e recém-encerrados pelo filtro finishedTooOld).
-      const nowSec = Math.floor(Date.now()/1000);
-      const WINDOW_PAST_SEC = 24*60*60;   // 1 dia pra trás
-      const WINDOW_FUTURE_SEC = 3*24*60*60; // 3 dias pra frente
+      // Limita a lista para reduzir "1000+ jogos":
+      // mostra apenas HOJE + 2 dias (no fuso do Brasil), mantendo AO VIVO sempre.
+      const now = new Date();
+      // início de hoje (00:00) e final do dia +2 (23:59:59)
+      const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+      const endPlus2 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 23, 59, 59, 999);
+
+      const startSec = Math.floor(startToday.getTime()/1000);
+      const endSec = Math.floor(endPlus2.getTime()/1000);
+
       games = games.filter(g=>{
         if (isLive(g)) return true;
         const ts = Number(g.startTs || 0);
         if (!ts) return false;
-        return ts >= (nowSec - WINDOW_PAST_SEC) && ts <= (nowSec + WINDOW_FUTURE_SEC);
+        return ts >= startSec && ts <= endSec;
       });
 
       games = games.filter(g=>{
