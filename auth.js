@@ -1,85 +1,128 @@
-// auth.js — controla login/logout e redirecionamentos
+// auth.js - Radar PRO (GitHub Pages) - Login obrigatório via Supabase Auth (Email/Senha)
+// Ajustado para os IDs do login.html: #form, #email, #password, #password2, #msg, #tabLogin, #tabSignup.
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = "https://wthlxrukcwyqdkeuvjcs.supabase.co";
-// Use a anon/public key (JWT)
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0aGx4cnVrY3d5cWRrZXV2amNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NzIzNTgsImV4cCI6MjA4NzM0ODM1OH0.4Xt5lvcgPbpqbuqJrL75xKYSuOcBDn5aIvnm_p1cn2U";
+const SUPABASE_URL = "https://mpgddtgntrqcixhkczrs.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wZ2RkdGdudHJxY2l4aGtjenJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMDg0ODQsImV4cCI6MjA1NjU4NDQ4NH0.7K2l6j2hC69QwsgAjp0uYNEdWtnbEw4OfwH9zjvYhGg";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+});
 
+// --- helpers de URL (funciona em GitHub Pages com subpasta /radar-jogos-/) ---
 function getBasePath() {
-  const p = window.location.pathname;
-  const m = p.match(/^(\/[^\/]+\/)/);
-  return m ? m[1] : "/";
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  return parts.length ? `/${parts[0]}/` : "/";
 }
-
-function buildUrl(file, params = {}) {
+function buildUrl(file) {
   const base = getBasePath();
-  const url = new URL(base + file, window.location.origin);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  return url.toString();
+  const clean = String(file || "").replace(/^\//, "");
+  return `${window.location.origin}${base}${clean}`;
 }
-
-// Aceita ?next= (do guard) e também ?returnTo= (caso você use no futuro)
 function getNextUrl() {
-  const qs = new URLSearchParams(window.location.search);
-  const next = qs.get("next") || qs.get("returnTo");
-  if (!next) return buildUrl("index.html");
-  // Se vier algo absoluto, ignora por segurança
-  if (/^https?:\/\//i.test(next)) return buildUrl("index.html");
-  // normaliza: se já começa com /, usa o origin + caminho; senão, considera relativo
-  if (next.startsWith("/")) return window.location.origin + next;
-  return buildUrl(next.replace(/^\.\//, ""));
+  const u = new URL(window.location.href);
+  return u.searchParams.get("next") || buildUrl("index.html");
 }
-
-function $(id) { return document.getElementById(id); }
-function setMsg(msg, ok = false) {
-  const el = $("msg");
+function setMsg(text, type = "info") {
+  const el = document.getElementById("msg");
   if (!el) return;
-  el.textContent = msg || "";
-  el.style.color = ok ? "#2ecc71" : "#ff6b6b";
+  el.textContent = text || "";
+  el.dataset.type = type;
+  el.style.opacity = text ? "1" : "0";
 }
 
-async function initLoginPage() {
-  // Se já está logado, manda pro próximo destino
-  const { data } = await supabase.auth.getSession();
-  if (data?.session) {
-    window.location.replace(getNextUrl());
-    return;
+document.addEventListener("DOMContentLoaded", async () => {
+  const envPill = document.getElementById("envPill");
+  if (envPill) envPill.textContent = "Supabase conectado ✅";
+
+  const form = document.getElementById("form");
+  const emailEl = document.getElementById("email");
+  const passEl = document.getElementById("password");
+  const pass2El = document.getElementById("password2");
+  const btnSubmit = document.getElementById("btnSubmit");
+  const tabLogin = document.getElementById("tabLogin");
+  const tabSignup = document.getElementById("tabSignup");
+  const signupExtra = document.getElementById("signupExtra");
+  const forgot = document.getElementById("forgot");
+
+  // Se já estiver logado, manda direto pro app
+  try {
+    const { data } = await supabase.auth.getSession();
+    if (data?.session) {
+      window.location.replace(getNextUrl());
+      return;
+    }
+  } catch (_) {}
+
+  let mode = "login"; // login | signup
+
+  function applyMode() {
+    const isSignup = mode === "signup";
+    if (signupExtra) signupExtra.style.display = isSignup ? "block" : "none";
+    tabLogin?.classList.toggle("active", !isSignup);
+    tabSignup?.classList.toggle("active", isSignup);
+    if (btnSubmit) btnSubmit.textContent = isSignup ? "Criar conta" : "Entrar";
+    setMsg("");
   }
 
-  const form = $("loginForm");
-  if (!form) return;
+  tabLogin?.addEventListener("click", () => { mode = "login"; applyMode(); });
+  tabSignup?.addEventListener("click", () => { mode = "signup"; applyMode(); });
 
-  form.addEventListener("submit", async (e) => {
+  forgot?.addEventListener("click", async (e) => {
     e.preventDefault();
-    setMsg("");
-
-    const email = $("email")?.value?.trim();
-    const password = $("password")?.value;
-
-    if (!email || !password) {
-      setMsg("Preencha e-mail e senha.");
-      return;
-    }
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setMsg("Falha no login: " + error.message);
-      return;
-    }
-
-    setMsg("Login OK ✅", true);
-    window.location.replace(getNextUrl());
+    const email = (emailEl?.value || "").trim();
+    if (!email) return setMsg("Digite seu e-mail para receber o link de recuperação.", "warn");
+    setMsg("Enviando link de recuperação...", "info");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: buildUrl("login.html") });
+    if (error) return setMsg(`Erro: ${error.message}`, "error");
+    setMsg("Link de recuperação enviado! Verifique seu e-mail.", "ok");
   });
-}
 
-async function logout() {
-  await supabase.auth.signOut();
-  window.location.replace(buildUrl("login.html"));
-}
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = (emailEl?.value || "").trim();
+    const password = passEl?.value || "";
+    const password2 = pass2El?.value || "";
 
-// Exporta para usar no index (botão sair)
-window.RD_AUTH = { logout };
+    if (!email || !password) return setMsg("Preencha e-mail e senha.", "warn");
 
-initLoginPage();
+    if (btnSubmit) btnSubmit.disabled = true;
+
+    try {
+      if (mode === "signup") {
+        if (password.length < 6) return setMsg("A senha precisa ter pelo menos 6 caracteres.", "warn");
+        if (password !== password2) return setMsg("As senhas não conferem.", "warn");
+
+        setMsg("Criando conta...", "info");
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) return setMsg(`Erro: ${error.message}`, "error");
+
+        if (!data?.session) {
+          setMsg("Conta criada! Confirme no seu e-mail e depois faça login.", "ok");
+          mode = "login";
+          applyMode();
+          return;
+        }
+
+        setMsg("Conta criada e logado ✅ Redirecionando...", "ok");
+        window.location.replace(getNextUrl());
+      } else {
+        setMsg("Entrando...", "info");
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) return setMsg(`Erro: ${error.message}`, "error");
+        if (!data?.session) return setMsg("Não foi possível iniciar sessão. Tente novamente.", "error");
+
+        setMsg("Logado ✅ Redirecionando...", "ok");
+        window.location.replace(getNextUrl());
+      }
+    } catch (err) {
+      setMsg(`Erro inesperado: ${err?.message || err}`, "error");
+    } finally {
+      if (btnSubmit) btnSubmit.disabled = false;
+    }
+  });
+
+  applyMode();
+});
