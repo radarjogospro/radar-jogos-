@@ -1,128 +1,278 @@
-// auth.js - Radar PRO (GitHub Pages) - Login obrigatório via Supabase Auth (Email/Senha)
-// Ajustado para os IDs do login.html: #form, #email, #password, #password2, #msg, #tabLogin, #tabSignup.
+// auth.js - Radar PRO (GitHub Pages) | Login obrigatório via Supabase
+// Objetivo: não travar em "Conectando...", funcionar no celular e impedir bypass pro Radar sem login.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const SUPABASE_URL = "https://wthlxrukcwyqdkeuvjcs.supabase.co";
+const SUPABASE_KEY = "sb_publishable_vfPvj4TOQRPD5GA35QgXVg_wIBIlmZi";
+const SDK_TIMEOUT_MS = 8000;
 
-const SUPABASE_URL = "https://mpgddtgntrqcixhkczrs.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wZ2RkdGdudHJxY2l4aGtjenJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMDg0ODQsImV4cCI6MjA1NjU4NDQ4NH0.7K2l6j2hC69QwsgAjp0uYNEdWtnbEw4OfwH9zjvYhGg";
+let supabase = null;
 
-export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
-});
+const $ = (sel) => document.querySelector(sel);
+const byId = (id) => document.getElementById(id);
 
-// --- helpers de URL (funciona em GitHub Pages com subpasta /radar-jogos-/) ---
-function getBasePath() {
-  const parts = window.location.pathname.split("/").filter(Boolean);
-  return parts.length ? `/${parts[0]}/` : "/";
-}
-function buildUrl(file) {
-  const base = getBasePath();
-  const clean = String(file || "").replace(/^\//, "");
-  return `${window.location.origin}${base}${clean}`;
-}
-function getNextUrl() {
-  const u = new URL(window.location.href);
-  return u.searchParams.get("next") || buildUrl("index.html");
-}
-function setMsg(text, type = "info") {
-  const el = document.getElementById("msg");
-  if (!el) return;
-  el.textContent = text || "";
-  el.dataset.type = type;
-  el.style.opacity = text ? "1" : "0";
+function setPill(text, kind = "warn") {
+  const pill = byId("envPill");
+  if (!pill) return;
+  pill.textContent = text;
+  pill.classList.remove("ok", "warn", "err");
+  pill.classList.add(kind);
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const envPill = document.getElementById("envPill");
-  if (envPill) envPill.textContent = "Supabase conectado ✅";
+function setMsg(text = "", kind = "warn") {
+  const msg = byId("msg");
+  if (!msg) return;
+  if (!text) {
+    msg.style.display = "none";
+    msg.textContent = "";
+    msg.classList.remove("ok", "warn", "err");
+    return;
+  }
+  msg.style.display = "block";
+  msg.textContent = text;
+  msg.classList.remove("ok", "warn", "err");
+  msg.classList.add(kind);
+}
 
-  const form = document.getElementById("form");
-  const emailEl = document.getElementById("email");
-  const passEl = document.getElementById("password");
-  const pass2El = document.getElementById("password2");
-  const btnSubmit = document.getElementById("btnSubmit");
-  const tabLogin = document.getElementById("tabLogin");
-  const tabSignup = document.getElementById("tabSignup");
-  const signupExtra = document.getElementById("signupExtra");
-  const forgot = document.getElementById("forgot");
+function setDisabled(disabled) {
+  const ids = ["email", "password", "password2", "btnSubmit", "tabLogin", "tabSignup", "forgot"];
+  ids.forEach((id) => {
+    const el = byId(id);
+    if (el) el.disabled = !!disabled;
+  });
+}
 
-  // Se já estiver logado, manda direto pro app
-  try {
-    const { data } = await supabase.auth.getSession();
-    if (data?.session) {
-      window.location.replace(getNextUrl());
-      return;
+function isConfigured() {
+  return (
+    !!SUPABASE_URL &&
+    !!SUPABASE_KEY &&
+    !SUPABASE_URL.includes("COLOQUE") &&
+    !SUPABASE_KEY.includes("COLOQUE")
+  );
+}
+
+async function importWithTimeout(url, timeoutMs) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("timeout")), timeoutMs)
+  );
+  return Promise.race([import(url), timeout]);
+}
+
+async function loadSupabaseSDK() {
+  const candidates = [
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm",
+    "https://esm.sh/@supabase/supabase-js@2",
+  ];
+  let lastErr = null;
+  for (const u of candidates) {
+    try {
+      return await importWithTimeout(u, SDK_TIMEOUT_MS);
+    } catch (e) {
+      lastErr = e;
     }
-  } catch (_) {}
+  }
+  throw lastErr || new Error("Falha ao carregar SDK Supabase");
+}
 
-  let mode = "login"; // login | signup
+async function ensureSupabase() {
+  if (supabase) return supabase;
 
-  function applyMode() {
-    const isSignup = mode === "signup";
-    if (signupExtra) signupExtra.style.display = isSignup ? "block" : "none";
-    tabLogin?.classList.toggle("active", !isSignup);
-    tabSignup?.classList.toggle("active", isSignup);
-    if (btnSubmit) btnSubmit.textContent = isSignup ? "Criar conta" : "Entrar";
-    setMsg("");
+  // Impede bypass mesmo se estiver visível no HTML
+  const homeLink = byId("home");
+  if (homeLink) homeLink.style.display = "none";
+
+  if (!isConfigured()) {
+    setPill("Supabase não configurado", "err");
+    setMsg("Falta configurar SUPABASE_URL e SUPABASE_KEY no auth.js.", "err");
+    return null;
   }
 
-  tabLogin?.addEventListener("click", () => { mode = "login"; applyMode(); });
-  tabSignup?.addEventListener("click", () => { mode = "signup"; applyMode(); });
+  setPill("Conectando ao Supabase...", "warn");
+  setDisabled(true);
 
-  forgot?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const email = (emailEl?.value || "").trim();
-    if (!email) return setMsg("Digite seu e-mail para receber o link de recuperação.", "warn");
-    setMsg("Enviando link de recuperação...", "info");
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: buildUrl("login.html") });
-    if (error) return setMsg(`Erro: ${error.message}`, "error");
-    setMsg("Link de recuperação enviado! Verifique seu e-mail.", "ok");
+  try {
+    const { createClient } = await loadSupabaseSDK();
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true },
+    });
+
+    // Ping rápido ao Auth pra não ficar enganando o usuário
+    const { error } = await supabase.auth.getSession();
+    if (error) {
+      setPill("Supabase conectado (com aviso)", "warn");
+      setMsg("Conectei, mas o Auth respondeu com aviso. Tente novamente.", "warn");
+    } else {
+      setPill("Supabase conectado", "ok");
+      setMsg("", "ok");
+    }
+
+    setDisabled(false);
+    return supabase;
+  } catch (e) {
+    setPill("Falha ao conectar", "err");
+    setMsg(
+      "Não consegui carregar/conectar no Supabase. Pode ser internet/CDN bloqueado. " +
+        "Tente em outra rede ou aguarde e tente novamente.",
+      "err"
+    );
+    setDisabled(false);
+    return null;
+  }
+}
+
+function isSignupMode() {
+  return byId("tabSignup")?.classList.contains("active");
+}
+
+function setMode(mode) {
+  const tabLogin = byId("tabLogin");
+  const tabSignup = byId("tabSignup");
+  const signupExtra = byId("signupExtra");
+  const btn = byId("btnSubmit");
+
+  if (!tabLogin || !tabSignup || !signupExtra || !btn) return;
+
+  if (mode === "signup") {
+    tabSignup.classList.add("active");
+    tabLogin.classList.remove("active");
+    signupExtra.style.display = "block";
+    btn.textContent = "Criar conta";
+  } else {
+    tabLogin.classList.add("active");
+    tabSignup.classList.remove("active");
+    signupExtra.style.display = "none";
+    btn.textContent = "Entrar";
+  }
+}
+
+async function doLogin(email, password) {
+  const client = await ensureSupabase();
+  if (!client) return;
+
+  setMsg("", "ok");
+  setPill("Entrando...", "warn");
+  setDisabled(true);
+
+  const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    setPill("Falha no login", "err");
+    setMsg(error.message || "Falha no login.", "err");
+    setDisabled(false);
+    return;
+  }
+
+  // Sessão ok → entra no Radar
+  setPill("Logado ✓", "ok");
+  setMsg("Login feito! Abrindo o Radar…", "ok");
+
+  // Pequeno delay só pra mostrar feedback (não é obrigatório)
+  setTimeout(() => {
+    window.location.href = "./";
+  }, 300);
+}
+
+async function doSignup(email, password, password2) {
+  const client = await ensureSupabase();
+  if (!client) return;
+
+  if (password !== password2) {
+    setMsg("As senhas não conferem.", "warn");
+    return;
+  }
+  if (password.length < 6) {
+    setMsg("A senha precisa ter pelo menos 6 caracteres.", "warn");
+    return;
+  }
+
+  setMsg("", "ok");
+  setPill("Criando conta...", "warn");
+  setDisabled(true);
+
+  const { data, error } = await client.auth.signUp({ email, password });
+
+  if (error) {
+    setPill("Falha ao criar", "err");
+    setMsg(error.message || "Falha ao criar conta.", "err");
+    setDisabled(false);
+    return;
+  }
+
+  // Se seu Supabase exigir confirmação por e-mail, data.session vem null.
+  if (data?.session) {
+    setPill("Logado ✓", "ok");
+    setMsg("Conta criada e logado! Abrindo o Radar…", "ok");
+    setTimeout(() => (window.location.href = "./"), 300);
+  } else {
+    setPill("Conta criada", "ok");
+    setMsg("Conta criada. Verifique seu e-mail para confirmar (se estiver habilitado).", "warn");
+    setDisabled(false);
+  }
+}
+
+async function doForgot(email) {
+  const client = await ensureSupabase();
+  if (!client) return;
+
+  if (!email) {
+    setMsg("Digite seu e-mail primeiro.", "warn");
+    return;
+  }
+
+  setPill("Enviando e-mail...", "warn");
+  const { error } = await client.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname.replace("login.html", "login.html"),
   });
 
+  if (error) {
+    setPill("Erro", "err");
+    setMsg(error.message || "Não foi possível enviar o e-mail.", "err");
+    return;
+  }
+
+  setPill("OK", "ok");
+  setMsg("Se esse e-mail existir, enviamos um link de recuperação.", "ok");
+}
+
+function wireUI() {
+  // Tabs
+  byId("tabLogin")?.addEventListener("click", () => setMode("login"));
+  byId("tabSignup")?.addEventListener("click", () => setMode("signup"));
+
+  // Default
+  setMode("login");
+
+  // Submit
+  const form = byId("form");
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = (emailEl?.value || "").trim();
-    const password = passEl?.value || "";
-    const password2 = pass2El?.value || "";
 
-    if (!email || !password) return setMsg("Preencha e-mail e senha.", "warn");
+    const email = (byId("email")?.value || "").trim();
+    const password = byId("password")?.value || "";
+    const password2 = byId("password2")?.value || "";
 
-    if (btnSubmit) btnSubmit.disabled = true;
-
-    try {
-      if (mode === "signup") {
-        if (password.length < 6) return setMsg("A senha precisa ter pelo menos 6 caracteres.", "warn");
-        if (password !== password2) return setMsg("As senhas não conferem.", "warn");
-
-        setMsg("Criando conta...", "info");
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) return setMsg(`Erro: ${error.message}`, "error");
-
-        if (!data?.session) {
-          setMsg("Conta criada! Confirme no seu e-mail e depois faça login.", "ok");
-          mode = "login";
-          applyMode();
-          return;
-        }
-
-        setMsg("Conta criada e logado ✅ Redirecionando...", "ok");
-        window.location.replace(getNextUrl());
-      } else {
-        setMsg("Entrando...", "info");
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) return setMsg(`Erro: ${error.message}`, "error");
-        if (!data?.session) return setMsg("Não foi possível iniciar sessão. Tente novamente.", "error");
-
-        setMsg("Logado ✅ Redirecionando...", "ok");
-        window.location.replace(getNextUrl());
-      }
-    } catch (err) {
-      setMsg(`Erro inesperado: ${err?.message || err}`, "error");
-    } finally {
-      if (btnSubmit) btnSubmit.disabled = false;
+    if (!email || !password) {
+      setMsg("Preencha e-mail e senha.", "warn");
+      return;
     }
+
+    if (isSignupMode()) await doSignup(email, password, password2);
+    else await doLogin(email, password);
   });
 
-  applyMode();
-});
+  byId("btnSubmit")?.addEventListener("click", (e) => {
+    // deixa o handler do form resolver
+    e.preventDefault();
+    form?.requestSubmit?.();
+  });
+
+  byId("forgot")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    const email = (byId("email")?.value || "").trim();
+    doForgot(email);
+  });
+
+  // Conecta sem travar a UI
+  ensureSupabase();
+}
+
+document.addEventListener("DOMContentLoaded", wireUI);
