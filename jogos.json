@@ -1,19 +1,73 @@
 {
-  "updatedAt": "17/07/2026, 19:12:22",
-  "cacheBust": "1784326342369",
+  "updatedAt": "17/07/2026, 20:06:48",
+  "cacheBust": "1784329608511",
   "source": "DEMO",
   "games": [
     {
-      "id": "fb-0184",
+      "id": "fb-0097",
       "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Marseille",
-      "away": "Urawa Reds",
-      "startTs": 1784321351,
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Urawa Reds",
+      "away": "Inter Miami",
+      "startTs": 1784324261,
       "status": "LIVE",
-      "minute": 49,
+      "minute": 23,
       "scoreHome": 4,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0197",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Barcelona",
+      "away": "Inter",
+      "startTs": 1784324378,
+      "status": "LIVE",
+      "minute": 16,
+      "scoreHome": 2,
+      "scoreAway": 3,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0127",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Urawa Reds",
+      "away": "Al Nassr",
+      "startTs": 1784324780,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 3,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0153",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Inter",
+      "away": "Sevilla",
+      "startTs": 1784324786,
+      "status": "LIVE",
+      "minute": 8,
+      "scoreHome": 1,
       "scoreAway": 4,
       "odds": {
         "home": null,
@@ -22,15 +76,33 @@
       }
     },
     {
-      "id": "fb-0134",
+      "id": "fb-0027",
       "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "NYCFC",
+      "away": "Roma",
+      "startTs": 1784324816,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 2,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0030",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
       "home": "Internacional",
-      "away": "Arsenal",
-      "startTs": 1784321796,
+      "away": "Milan",
+      "startTs": 1784325153,
       "status": "LIVE",
-      "minute": 18,
+      "minute": 38,
       "scoreHome": 0,
       "scoreAway": 0,
       "odds": {
@@ -40,286 +112,16 @@
       }
     },
     {
-      "id": "fb-0174",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Tottenham",
-      "away": "Dortmund",
-      "startTs": 1784321798,
-      "status": "LIVE",
-      "minute": 5,
-      "scoreHome": 2,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0214",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Atletico Madrid",
-      "away": "Internacional",
-      "startTs": 1784321853,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0054",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Inter Miami",
-      "away": "Al Hilal",
-      "startTs": 1784321983,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0149",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Urawa Reds",
-      "away": "Seattle Sounders",
-      "startTs": 1784322058,
-      "status": "LIVE",
-      "minute": 20,
-      "scoreHome": 1,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0154",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Tottenham",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784322121,
-      "status": "LIVE",
-      "minute": 2,
-      "scoreHome": 4,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0167",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Milan",
-      "away": "Roma",
-      "startTs": 1784322140,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0177",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Al Nassr",
-      "away": "Chelsea",
-      "startTs": 1784322421,
-      "status": "LIVE",
-      "minute": 38,
-      "scoreHome": 4,
-      "scoreAway": 3,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0035",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Al Nassr",
-      "away": "Juventus",
-      "startTs": 1784322576,
-      "status": "LIVE",
-      "minute": 72,
-      "scoreHome": 2,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0112",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Kawasaki Frontale",
-      "away": "Man City",
-      "startTs": 1784322803,
-      "status": "LIVE",
-      "minute": 41,
-      "scoreHome": 2,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0033",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Barcelona",
-      "away": "Marseille",
-      "startTs": 1784322905,
-      "status": "LIVE",
-      "minute": 18,
-      "scoreHome": 4,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0076",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "NYCFC",
-      "away": "Corinthians",
-      "startTs": 1784322972,
-      "status": "LIVE",
-      "minute": 58,
-      "scoreHome": 4,
-      "scoreAway": 3,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0193",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Man United",
-      "away": "Real Madrid",
-      "startTs": 1784323194,
-      "status": "LIVE",
-      "minute": 44,
-      "scoreHome": 3,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0098",
+      "id": "fb-0038",
       "sport": "football",
       "league": "La Liga",
       "country": "Spain",
-      "home": "Urawa Reds",
-      "away": "Corinthians",
-      "startTs": 1784323239,
+      "home": "Atletico Madrid",
+      "away": "Palmeiras",
+      "startTs": 1784325589,
       "status": "LIVE",
-      "minute": 19,
-      "scoreHome": 3,
-      "scoreAway": 3,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0191",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Leverkusen",
-      "away": "PSG",
-      "startTs": 1784323443,
-      "status": "LIVE",
-      "minute": 56,
+      "minute": 24,
       "scoreHome": 2,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0046",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Inter",
-      "away": "Al Hilal",
-      "startTs": 1784323584,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 0,
-      "scoreAway": 5,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0216",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "São Paulo",
-      "away": "Napoli",
-      "startTs": 1784323665,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 0,
       "scoreAway": 3,
       "odds": {
         "home": null,
@@ -328,35 +130,17 @@
       }
     },
     {
-      "id": "fb-0125",
+      "id": "fb-0118",
       "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Grêmio",
-      "away": "Al Nassr",
-      "startTs": 1784323681,
-      "status": "LIVE",
-      "minute": 25,
-      "scoreHome": 3,
-      "scoreAway": 1,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0110",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Barcelona",
-      "away": "Lyon",
-      "startTs": 1784323779,
-      "status": "LIVE",
-      "minute": 9,
-      "scoreHome": 1,
-      "scoreAway": 1,
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Leverkusen",
+      "away": "Man City",
+      "startTs": 1784326300,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 4,
       "odds": {
         "home": null,
         "draw": null,
@@ -368,12 +152,30 @@
       "sport": "football",
       "league": "Saudi Pro League",
       "country": "Saudi Arabia",
-      "home": "Arsenal",
-      "away": "Leverkusen",
-      "startTs": 1784324360,
+      "home": "Palmeiras",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784326444,
       "status": "LIVE",
-      "minute": 50,
+      "minute": 56,
       "scoreHome": 2,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0137",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Al Nassr",
+      "away": "Lyon",
+      "startTs": 1784326472,
+      "status": "LIVE",
+      "minute": 30,
+      "scoreHome": 3,
       "scoreAway": 0,
       "odds": {
         "home": null,
@@ -384,1401 +186,33 @@
     {
       "id": "fb-0014",
       "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Urawa Reds",
-      "away": "Tottenham",
-      "startTs": 1784324374,
-      "status": "LIVE",
-      "minute": 27,
-      "scoreHome": 2,
-      "scoreAway": 3,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0083",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Man United",
-      "away": "Yokohama F. Marinos",
-      "startTs": 1784324982,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 5,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0104",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Sevilla",
-      "away": "Man United",
-      "startTs": 1784324985,
-      "status": "LIVE",
-      "minute": 5,
-      "scoreHome": 3,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0196",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Man United",
-      "away": "Leverkusen",
-      "startTs": 1784325112,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0117",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "São Paulo",
-      "away": "Napoli",
-      "startTs": 1784325180,
-      "status": "LIVE",
-      "minute": 88,
-      "scoreHome": 0,
-      "scoreAway": 4,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0185",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Al Hilal",
-      "away": "Urawa Reds",
-      "startTs": 1784325261,
-      "status": "LIVE",
-      "minute": 74,
-      "scoreHome": 3,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0139",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Dortmund",
-      "away": "PSG",
-      "startTs": 1784325469,
-      "status": "LIVE",
-      "minute": 90,
-      "scoreHome": 1,
-      "scoreAway": 3,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0094",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Inter Miami",
-      "away": "Corinthians",
-      "startTs": 1784325628,
-      "status": "LIVE",
-      "minute": 34,
-      "scoreHome": 1,
-      "scoreAway": 0,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0168",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Flamengo",
-      "away": "Milan",
-      "startTs": 1784325738,
-      "status": "LIVE",
-      "minute": 41,
-      "scoreHome": 1,
-      "scoreAway": 4,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0008",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Napoli",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784325884,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 4,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0088",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Urawa Reds",
-      "away": "Roma",
-      "startTs": 1784326059,
-      "status": "FT",
-      "minute": 90,
-      "scoreHome": 4,
-      "scoreAway": 3,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0123",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "RB Leipzig",
-      "away": "Sevilla",
-      "startTs": 1784326276,
-      "status": "LIVE",
-      "minute": 79,
-      "scoreHome": 3,
-      "scoreAway": 2,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0068",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Leverkusen",
-      "away": "Bayern",
-      "startTs": 1784326375,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0065",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Corinthians",
-      "away": "Bayern",
-      "startTs": 1784326431,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0124",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Kawasaki Frontale",
-      "away": "Bayern",
-      "startTs": 1784326784,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0006",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Milan",
-      "away": "Internacional",
-      "startTs": 1784327306,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0069",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Tottenham",
-      "away": "Sevilla",
-      "startTs": 1784327403,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0137",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "São Paulo",
-      "away": "Lyon",
-      "startTs": 1784327873,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0081",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "São Paulo",
-      "away": "Dortmund",
-      "startTs": 1784327903,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0113",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Corinthians",
-      "away": "Flamengo",
-      "startTs": 1784328246,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0210",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Man United",
-      "away": "Roma",
-      "startTs": 1784328451,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0162",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Al Ittihad",
-      "away": "Real Madrid",
-      "startTs": 1784328509,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0161",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Al Ittihad",
-      "away": "Inter",
-      "startTs": 1784328663,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0102",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Internacional",
-      "away": "Flamengo",
-      "startTs": 1784328914,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0133",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Real Madrid",
-      "away": "Al Nassr",
-      "startTs": 1784329033,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0182",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Man United",
-      "away": "Grêmio",
-      "startTs": 1784329075,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0048",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Liverpool",
-      "away": "Corinthians",
-      "startTs": 1784329340,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0103",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Internacional",
-      "away": "Arsenal",
-      "startTs": 1784329493,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0042",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Juventus",
-      "away": "Lyon",
-      "startTs": 1784329869,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0087",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "PSG",
-      "away": "Inter",
-      "startTs": 1784329899,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0109",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Marseille",
-      "away": "Al Hilal",
-      "startTs": 1784330133,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0187",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "NYCFC",
-      "away": "Leverkusen",
-      "startTs": 1784330418,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0130",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Flamengo",
-      "away": "Barcelona",
-      "startTs": 1784330449,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0056",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Juventus",
-      "away": "Corinthians",
-      "startTs": 1784330548,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0025",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Leverkusen",
-      "away": "Tottenham",
-      "startTs": 1784330667,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0090",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Inter",
-      "away": "Tottenham",
-      "startTs": 1784330980,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0150",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Arsenal",
-      "away": "Seattle Sounders",
-      "startTs": 1784331006,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0018",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Juventus",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784331146,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0024",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Flamengo",
-      "away": "Milan",
-      "startTs": 1784331427,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0017",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Man City",
-      "away": "Juventus",
-      "startTs": 1784331480,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0180",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Milan",
-      "away": "Juventus",
-      "startTs": 1784331514,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0106",
-      "sport": "football",
       "league": "Ligue 1",
       "country": "France",
-      "home": "Urawa Reds",
-      "away": "Barcelona",
-      "startTs": 1784331708,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0073",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Yokohama F. Marinos",
-      "away": "NYCFC",
-      "startTs": 1784331808,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0096",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Marseille",
-      "away": "Palmeiras",
-      "startTs": 1784331923,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0165",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Leverkusen",
-      "away": "Liverpool",
-      "startTs": 1784332075,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0077",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Marseille",
-      "away": "Al Nassr",
-      "startTs": 1784332274,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0044",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Tottenham",
-      "away": "Bayern",
-      "startTs": 1784332383,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0089",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Atletico Madrid",
-      "away": "Al Ittihad",
-      "startTs": 1784332902,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0100",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "NYCFC",
-      "away": "Real Madrid",
-      "startTs": 1784332963,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0188",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Real Madrid",
-      "away": "Al Nassr",
-      "startTs": 1784333069,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0183",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "RB Leipzig",
-      "away": "Palmeiras",
-      "startTs": 1784333675,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0169",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "São Paulo",
-      "away": "Lyon",
-      "startTs": 1784333883,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0053",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Marseille",
-      "away": "NYCFC",
-      "startTs": 1784333896,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0019",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Marseille",
-      "away": "Tottenham",
-      "startTs": 1784333947,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0135",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Corinthians",
-      "away": "Bayern",
-      "startTs": 1784334162,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0029",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "RB Leipzig",
-      "away": "Lyon",
-      "startTs": 1784334707,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0141",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Lyon",
-      "away": "Real Madrid",
-      "startTs": 1784334785,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0144",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Seattle Sounders",
-      "away": "Urawa Reds",
-      "startTs": 1784335055,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0202",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Liverpool",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784335238,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0200",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "São Paulo",
-      "away": "Inter",
-      "startTs": 1784335333,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0120",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Internacional",
-      "away": "Napoli",
-      "startTs": 1784335355,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0030",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Arsenal",
-      "away": "Palmeiras",
-      "startTs": 1784335412,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0041",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Al Ittihad",
-      "away": "Barcelona",
-      "startTs": 1784335477,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0052",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Al Ittihad",
-      "away": "Barcelona",
-      "startTs": 1784335528,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0043",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Man City",
-      "away": "Napoli",
-      "startTs": 1784335635,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0151",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Man United",
-      "away": "Atletico Madrid",
-      "startTs": 1784335712,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0189",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "NYCFC",
-      "away": "Roma",
-      "startTs": 1784336197,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0075",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Man City",
-      "away": "Liverpool",
-      "startTs": 1784336250,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0027",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Leverkusen",
-      "away": "Tottenham",
-      "startTs": 1784336693,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0105",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Al Nassr",
-      "away": "Atletico Madrid",
-      "startTs": 1784337052,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0032",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Al Ittihad",
-      "away": "PSG",
-      "startTs": 1784337394,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0101",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "LA Galaxy",
-      "away": "RB Leipzig",
-      "startTs": 1784337814,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0051",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Barcelona",
-      "away": "Inter",
-      "startTs": 1784337940,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0074",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Bayern",
-      "away": "PSG",
-      "startTs": 1784338164,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0171",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Juventus",
-      "away": "Al Hilal",
-      "startTs": 1784338684,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0143",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "LA Galaxy",
-      "away": "Seattle Sounders",
-      "startTs": 1784338853,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0127",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Roma",
-      "away": "Dortmund",
-      "startTs": 1784339323,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0212",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
       "home": "Palmeiras",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784339799,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "away": "Milan",
+      "startTs": 1784326532,
+      "status": "LIVE",
+      "minute": 43,
+      "scoreHome": 4,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0033",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Inter",
+      "away": "Man City",
+      "startTs": 1784327585,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 2,
+      "scoreAway": 5,
       "odds": {
         "home": null,
         "draw": null,
@@ -1788,663 +222,15 @@
     {
       "id": "fb-0129",
       "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Flamengo",
-      "away": "Dortmund",
-      "startTs": 1784339941,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0115",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Barcelona",
-      "away": "Chelsea",
-      "startTs": 1784340203,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0190",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Internacional",
-      "away": "Liverpool",
-      "startTs": 1784340263,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0176",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Palmeiras",
-      "away": "Real Madrid",
-      "startTs": 1784340478,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0201",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Barcelona",
-      "away": "Lyon",
-      "startTs": 1784340619,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0172",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Arsenal",
-      "away": "RB Leipzig",
-      "startTs": 1784340851,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0021",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Man United",
-      "away": "Liverpool",
-      "startTs": 1784340904,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0220",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Marseille",
-      "away": "Lyon",
-      "startTs": 1784340937,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0011",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Roma",
-      "away": "Corinthians",
-      "startTs": 1784340998,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0026",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "LA Galaxy",
-      "away": "São Paulo",
-      "startTs": 1784341654,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0142",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "NYCFC",
-      "away": "Al Ittihad",
-      "startTs": 1784341811,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0111",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Al Hilal",
-      "away": "Urawa Reds",
-      "startTs": 1784341828,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0126",
-      "sport": "football",
       "league": "J-League",
       "country": "Japan",
-      "home": "Man City",
-      "away": "Atletico Madrid",
-      "startTs": 1784341941,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0049",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Sevilla",
-      "away": "Napoli",
-      "startTs": 1784342066,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0197",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Internacional",
-      "away": "Inter",
-      "startTs": 1784342397,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0136",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Inter",
-      "away": "Roma",
-      "startTs": 1784342699,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0015",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Seattle Sounders",
-      "away": "Al Ittihad",
-      "startTs": 1784342980,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0153",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "LA Galaxy",
-      "away": "Corinthians",
-      "startTs": 1784343020,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0114",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Sevilla",
-      "away": "Man United",
-      "startTs": 1784343075,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0062",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Liverpool",
-      "away": "Napoli",
-      "startTs": 1784343201,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0204",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Atletico Madrid",
-      "away": "Roma",
-      "startTs": 1784343246,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0072",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Grêmio",
-      "away": "LA Galaxy",
-      "startTs": 1784343815,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0219",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Kawasaki Frontale",
-      "away": "Inter",
-      "startTs": 1784344112,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0038",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Corinthians",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784344172,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0164",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Tottenham",
+      "home": "Marseille",
       "away": "NYCFC",
-      "startTs": 1784344204,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0082",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Liverpool",
-      "away": "Yokohama F. Marinos",
-      "startTs": 1784344295,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0138",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Milan",
-      "away": "LA Galaxy",
-      "startTs": 1784344327,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0037",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "NYCFC",
-      "away": "Bayern",
-      "startTs": 1784344339,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0159",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Milan",
-      "away": "Al Ittihad",
-      "startTs": 1784344455,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0039",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Al Hilal",
-      "away": "Grêmio",
-      "startTs": 1784344936,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0085",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Tottenham",
-      "away": "Liverpool",
-      "startTs": 1784345241,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0170",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "NYCFC",
-      "away": "Bayern",
-      "startTs": 1784345586,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0057",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Barcelona",
-      "away": "RB Leipzig",
-      "startTs": 1784345771,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0023",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "LA Galaxy",
-      "away": "Corinthians",
-      "startTs": 1784346106,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0031",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Seattle Sounders",
-      "away": "Al Ittihad",
-      "startTs": 1784346728,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0016",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "LA Galaxy",
-      "away": "Roma",
-      "startTs": 1784346960,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0209",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Napoli",
-      "away": "Man United",
-      "startTs": 1784346990,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "startTs": 1784327772,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 5,
+      "scoreAway": 4,
       "odds": {
         "home": null,
         "draw": null,
@@ -2454,69 +240,15 @@
     {
       "id": "fb-0012",
       "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Dortmund",
-      "away": "Marseille",
-      "startTs": 1784347062,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0028",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "LA Galaxy",
-      "away": "Atletico Madrid",
-      "startTs": 1784347536,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0119",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Kawasaki Frontale",
-      "away": "Liverpool",
-      "startTs": 1784347607,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0179",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
+      "league": "K League",
+      "country": "South Korea",
       "home": "Internacional",
-      "away": "Dortmund",
-      "startTs": 1784348010,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "away": "Palmeiras",
+      "startTs": 1784327946,
+      "status": "LIVE",
+      "minute": 9,
+      "scoreHome": 0,
+      "scoreAway": 4,
       "odds": {
         "home": null,
         "draw": null,
@@ -2524,269 +256,17 @@
       }
     },
     {
-      "id": "fb-0206",
+      "id": "fb-0106",
       "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "PSG",
-      "away": "Al Nassr",
-      "startTs": 1784348353,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0203",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
+      "league": "Premier League",
+      "country": "England",
       "home": "Juventus",
-      "away": "São Paulo",
-      "startTs": 1784349213,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0067",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "NYCFC",
-      "away": "Urawa Reds",
-      "startTs": 1784349477,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0071",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Corinthians",
-      "away": "Chelsea",
-      "startTs": 1784349599,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0121",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Yokohama F. Marinos",
-      "away": "Internacional",
-      "startTs": 1784349735,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0211",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Marseille",
-      "away": "São Paulo",
-      "startTs": 1784350430,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0095",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Kawasaki Frontale",
-      "away": "Liverpool",
-      "startTs": 1784350491,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0010",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "PSG",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784350514,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0066",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Barcelona",
       "away": "Flamengo",
-      "startTs": 1784351164,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0215",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "LA Galaxy",
-      "away": "Leverkusen",
-      "startTs": 1784351390,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0146",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Arsenal",
-      "away": "Chelsea",
-      "startTs": 1784351404,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0132",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Atletico Madrid",
-      "away": "Inter",
-      "startTs": 1784351502,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0079",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "PSG",
-      "away": "Grêmio",
-      "startTs": 1784351847,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0213",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "São Paulo",
-      "away": "Barcelona",
-      "startTs": 1784351985,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0036",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Leverkusen",
-      "away": "Internacional",
-      "startTs": 1784352148,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "startTs": 1784328014,
+      "status": "LIVE",
+      "minute": 57,
+      "scoreHome": 0,
+      "scoreAway": 3,
       "odds": {
         "home": null,
         "draw": null,
@@ -2796,15 +276,15 @@
     {
       "id": "fb-0007",
       "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "RB Leipzig",
-      "away": "Inter Miami",
-      "startTs": 1784352302,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Urawa Reds",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784328020,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 0,
+      "scoreAway": 3,
       "odds": {
         "home": null,
         "draw": null,
@@ -2812,17 +292,17 @@
       }
     },
     {
-      "id": "fb-0178",
+      "id": "fb-0194",
       "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Grêmio",
-      "away": "Tottenham",
-      "startTs": 1784352510,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Marseille",
+      "away": "Sevilla",
+      "startTs": 1784328032,
+      "status": "LIVE",
+      "minute": 5,
+      "scoreHome": 1,
+      "scoreAway": 0,
       "odds": {
         "home": null,
         "draw": null,
@@ -2832,123 +312,51 @@
     {
       "id": "fb-0004",
       "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Marseille",
-      "away": "RB Leipzig",
-      "startTs": 1784352827,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0047",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Lyon",
-      "away": "Flamengo",
-      "startTs": 1784353427,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0108",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Internacional",
-      "away": "Al Nassr",
-      "startTs": 1784353540,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0217",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Sevilla",
-      "away": "Al Nassr",
-      "startTs": 1784354399,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0175",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "NYCFC",
-      "away": "Flamengo",
-      "startTs": 1784354820,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0155",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Kawasaki Frontale",
-      "away": "Bayern",
-      "startTs": 1784354936,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0116",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
+      "league": "Bundesliga",
+      "country": "Germany",
       "home": "Al Hilal",
-      "away": "São Paulo",
-      "startTs": 1784355110,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "away": "NYCFC",
+      "startTs": 1784328253,
+      "status": "LIVE",
+      "minute": 51,
+      "scoreHome": 4,
+      "scoreAway": 2,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0025",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Real Madrid",
+      "away": "NYCFC",
+      "startTs": 1784328496,
+      "status": "LIVE",
+      "minute": 33,
+      "scoreHome": 0,
+      "scoreAway": 2,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0187",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "RB Leipzig",
+      "away": "Al Ittihad",
+      "startTs": 1784328551,
+      "status": "FT",
+      "minute": 90,
+      "scoreHome": 4,
+      "scoreAway": 5,
       "odds": {
         "home": null,
         "draw": null,
@@ -2958,87 +366,15 @@
     {
       "id": "fb-0152",
       "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Roma",
-      "away": "LA Galaxy",
-      "startTs": 1784355116,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0070",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Flamengo",
-      "away": "Lyon",
-      "startTs": 1784355243,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0091",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Urawa Reds",
-      "away": "Arsenal",
-      "startTs": 1784355499,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0181",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Dortmund",
-      "away": "Grêmio",
-      "startTs": 1784356441,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0140",
-      "sport": "football",
       "league": "Liga MX",
       "country": "Mexico",
-      "home": "Lyon",
-      "away": "Kawasaki Frontale",
-      "startTs": 1784356585,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "home": "Man United",
+      "away": "Barcelona",
+      "startTs": 1784329189,
+      "status": "LIVE",
+      "minute": 17,
+      "scoreHome": 3,
+      "scoreAway": 1,
       "odds": {
         "home": null,
         "draw": null,
@@ -3046,17 +382,35 @@
       }
     },
     {
-      "id": "fb-0013",
+      "id": "fb-0111",
       "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "São Paulo",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Marseille",
+      "away": "Inter Miami",
+      "startTs": 1784329376,
+      "status": "LIVE",
+      "minute": 39,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0209",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Juventus",
       "away": "Marseille",
-      "startTs": 1784356821,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
+      "startTs": 1784329433,
+      "status": "LIVE",
+      "minute": 24,
+      "scoreHome": 0,
+      "scoreAway": 2,
       "odds": {
         "home": null,
         "draw": null,
@@ -3064,427 +418,13 @@
       }
     },
     {
-      "id": "fb-0156",
+      "id": "fb-0200",
       "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "NYCFC",
-      "away": "Man United",
-      "startTs": 1784356995,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0058",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "Inter",
-      "away": "Atletico Madrid",
-      "startTs": 1784357017,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0060",
-      "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Urawa Reds",
-      "away": "Al Nassr",
-      "startTs": 1784357081,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0055",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "PSG",
-      "away": "Seattle Sounders",
-      "startTs": 1784357205,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0080",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Real Madrid",
-      "away": "Marseille",
-      "startTs": 1784358131,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0195",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Tottenham",
-      "away": "Seattle Sounders",
-      "startTs": 1784358605,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0131",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
+      "league": "Bundesliga",
+      "country": "Germany",
       "home": "Yokohama F. Marinos",
-      "away": "São Paulo",
-      "startTs": 1784358646,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0009",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Roma",
-      "away": "Al Nassr",
-      "startTs": 1784358861,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0045",
-      "sport": "football",
-      "league": "La Liga",
-      "country": "Spain",
-      "home": "LA Galaxy",
-      "away": "Inter",
-      "startTs": 1784359048,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0166",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Palmeiras",
-      "away": "Atletico Madrid",
-      "startTs": 1784359070,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0063",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Atletico Madrid",
-      "away": "Leverkusen",
-      "startTs": 1784359618,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0084",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Al Ittihad",
-      "away": "Barcelona",
-      "startTs": 1784359709,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0198",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Tottenham",
-      "away": "Barcelona",
-      "startTs": 1784359788,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0093",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Tottenham",
-      "away": "São Paulo",
-      "startTs": 1784360015,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0078",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Dortmund",
       "away": "Kawasaki Frontale",
-      "startTs": 1784360576,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0192",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Kawasaki Frontale",
-      "away": "PSG",
-      "startTs": 1784360906,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0208",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Inter Miami",
-      "away": "Tottenham",
-      "startTs": 1784361309,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0040",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Internacional",
-      "away": "Seattle Sounders",
-      "startTs": 1784361412,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0218",
-      "sport": "football",
-      "league": "Ligue 1",
-      "country": "France",
-      "home": "Kawasaki Frontale",
-      "away": "Man City",
-      "startTs": 1784361510,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0173",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Urawa Reds",
-      "away": "Leverkusen",
-      "startTs": 1784361577,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0020",
-      "sport": "football",
-      "league": "Premier League",
-      "country": "England",
-      "home": "Inter Miami",
-      "away": "PSG",
-      "startTs": 1784361859,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0097",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Urawa Reds",
-      "away": "Dortmund",
-      "startTs": 1784362068,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0092",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Internacional",
-      "away": "Bayern",
-      "startTs": 1784362106,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0122",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Real Madrid",
-      "away": "Yokohama F. Marinos",
-      "startTs": 1784362139,
+      "startTs": 1784330019,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3498,11 +438,11 @@
     {
       "id": "fb-0050",
       "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "LA Galaxy",
-      "away": "NYCFC",
-      "startTs": 1784362156,
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Chelsea",
+      "away": "Internacional",
+      "startTs": 1784330132,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3514,247 +454,211 @@
       }
     },
     {
-      "id": "fb-0157",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "LA Galaxy",
-      "away": "Al Nassr",
-      "startTs": 1784362402,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0118",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Grêmio",
-      "away": "Yokohama F. Marinos",
-      "startTs": 1784362933,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0061",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Al Hilal",
-      "away": "Inter Miami",
-      "startTs": 1784363274,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0022",
-      "sport": "football",
-      "league": "Serie A",
-      "country": "Italy",
-      "home": "Napoli",
-      "away": "Dortmund",
-      "startTs": 1784363803,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0207",
-      "sport": "football",
-      "league": "K League",
-      "country": "South Korea",
-      "home": "Flamengo",
-      "away": "Liverpool",
-      "startTs": 1784363823,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0194",
-      "sport": "football",
-      "league": "Liga MX",
-      "country": "Mexico",
-      "home": "Palmeiras",
-      "away": "Milan",
-      "startTs": 1784363944,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0186",
-      "sport": "football",
-      "league": "MLS",
-      "country": "USA",
-      "home": "Napoli",
-      "away": "Tottenham",
-      "startTs": 1784364298,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0205",
-      "sport": "football",
-      "league": "Bundesliga",
-      "country": "Germany",
-      "home": "Yokohama F. Marinos",
-      "away": "Man City",
-      "startTs": 1784364389,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0160",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Lyon",
-      "away": "RB Leipzig",
-      "startTs": 1784364412,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0003",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "Real Madrid",
-      "away": "Bayern",
-      "startTs": 1784364594,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0086",
-      "sport": "football",
-      "league": "Libertadores",
-      "country": "South America",
-      "home": "São Paulo",
-      "away": "Sevilla",
-      "startTs": 1784365296,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0064",
-      "sport": "football",
-      "league": "Champions League",
-      "country": "Europe",
-      "home": "Roma",
-      "away": "Man City",
-      "startTs": 1784365555,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0099",
-      "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Man City",
-      "away": "NYCFC",
-      "startTs": 1784365656,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0199",
+      "id": "fb-0159",
       "sport": "football",
       "league": "J-League",
       "country": "Japan",
-      "home": "Grêmio",
-      "away": "Lyon",
-      "startTs": 1784365849,
+      "home": "Milan",
+      "away": "Man City",
+      "startTs": 1784330288,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0077",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Seattle Sounders",
+      "away": "Roma",
+      "startTs": 1784330479,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0101",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Arsenal",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784330629,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0168",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Flamengo",
+      "away": "Man United",
+      "startTs": 1784330852,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0087",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Al Ittihad",
+      "away": "Al Hilal",
+      "startTs": 1784330878,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0166",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Al Nassr",
+      "away": "Leverkusen",
+      "startTs": 1784331774,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0215",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Inter Miami",
+      "away": "Urawa Reds",
+      "startTs": 1784331788,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0056",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Inter Miami",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784331878,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0136",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Urawa Reds",
+      "away": "Man City",
+      "startTs": 1784331899,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0059",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Leverkusen",
+      "away": "Palmeiras",
+      "startTs": 1784332029,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0109",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Palmeiras",
+      "away": "LA Galaxy",
+      "startTs": 1784332056,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0053",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Chelsea",
+      "away": "Flamengo",
+      "startTs": 1784332387,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3770,9 +674,9 @@
       "sport": "football",
       "league": "Liga MX",
       "country": "Mexico",
-      "home": "Real Madrid",
-      "away": "Arsenal",
-      "startTs": 1784366537,
+      "home": "Marseille",
+      "away": "Bayern",
+      "startTs": 1784332457,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3784,13 +688,1561 @@
       }
     },
     {
-      "id": "fb-0034",
+      "id": "fb-0098",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "São Paulo",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784332629,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0047",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Real Madrid",
+      "away": "Chelsea",
+      "startTs": 1784333220,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0207",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "LA Galaxy",
+      "away": "Internacional",
+      "startTs": 1784333688,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0036",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Grêmio",
+      "away": "Marseille",
+      "startTs": 1784333936,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0149",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Corinthians",
+      "away": "Lyon",
+      "startTs": 1784333948,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0105",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Atletico Madrid",
+      "away": "Flamengo",
+      "startTs": 1784334156,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0117",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Palmeiras",
+      "away": "Juventus",
+      "startTs": 1784334620,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0124",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Liverpool",
+      "away": "Roma",
+      "startTs": 1784334635,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0002",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Napoli",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784334872,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0112",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Man United",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784334964,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0003",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "LA Galaxy",
+      "away": "Corinthians",
+      "startTs": 1784335117,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0022",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Inter",
+      "away": "Yokohama F. Marinos",
+      "startTs": 1784335164,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0217",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Chelsea",
+      "away": "Liverpool",
+      "startTs": 1784335361,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0139",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "PSG",
+      "away": "Corinthians",
+      "startTs": 1784335539,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0204",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Sevilla",
+      "away": "Seattle Sounders",
+      "startTs": 1784336099,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0165",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Man City",
+      "away": "Atletico Madrid",
+      "startTs": 1784336623,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0201",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Seattle Sounders",
+      "away": "LA Galaxy",
+      "startTs": 1784336688,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0110",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Arsenal",
+      "away": "Dortmund",
+      "startTs": 1784336888,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0055",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Inter",
+      "away": "Grêmio",
+      "startTs": 1784337139,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0214",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Inter",
+      "away": "NYCFC",
+      "startTs": 1784337438,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0122",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Chelsea",
+      "away": "RB Leipzig",
+      "startTs": 1784337555,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0218",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Seattle Sounders",
+      "away": "NYCFC",
+      "startTs": 1784337742,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0160",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "NYCFC",
+      "away": "LA Galaxy",
+      "startTs": 1784338311,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0181",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "LA Galaxy",
+      "away": "RB Leipzig",
+      "startTs": 1784338697,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0044",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Atletico Madrid",
+      "away": "Grêmio",
+      "startTs": 1784338805,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0212",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Al Nassr",
+      "away": "Tottenham",
+      "startTs": 1784338932,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0039",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Al Ittihad",
+      "away": "Seattle Sounders",
+      "startTs": 1784339162,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0052",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Al Ittihad",
+      "away": "Barcelona",
+      "startTs": 1784339210,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0066",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Man City",
+      "away": "LA Galaxy",
+      "startTs": 1784339259,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0116",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Inter Miami",
+      "away": "Man City",
+      "startTs": 1784339264,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0171",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Al Hilal",
+      "away": "Napoli",
+      "startTs": 1784339367,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0141",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Milan",
+      "away": "Lyon",
+      "startTs": 1784339952,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0203",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Kawasaki Frontale",
+      "away": "Urawa Reds",
+      "startTs": 1784339991,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0062",
       "sport": "football",
       "league": "Serie A",
       "country": "Italy",
-      "home": "NYCFC",
+      "home": "Seattle Sounders",
+      "away": "Inter Miami",
+      "startTs": 1784340609,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0189",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "São Paulo",
+      "away": "Al Ittihad",
+      "startTs": 1784340694,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0195",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Chelsea",
+      "away": "Milan",
+      "startTs": 1784340869,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0193",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Al Ittihad",
+      "away": "Marseille",
+      "startTs": 1784340995,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0180",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Milan",
+      "away": "Inter Miami",
+      "startTs": 1784341409,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0147",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Internacional",
+      "away": "Corinthians",
+      "startTs": 1784341742,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0064",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Urawa Reds",
+      "away": "PSG",
+      "startTs": 1784341764,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0150",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Liverpool",
+      "away": "Tottenham",
+      "startTs": 1784341799,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0108",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "São Paulo",
+      "away": "Al Ittihad",
+      "startTs": 1784341871,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0010",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Al Ittihad",
+      "away": "Lyon",
+      "startTs": 1784341906,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0208",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Chelsea",
+      "away": "Sevilla",
+      "startTs": 1784342065,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0125",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Napoli",
+      "away": "Man United",
+      "startTs": 1784342507,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0206",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Milan",
+      "away": "Juventus",
+      "startTs": 1784342631,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0184",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Urawa Reds",
+      "away": "Marseille",
+      "startTs": 1784342898,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0017",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Lyon",
+      "away": "Sevilla",
+      "startTs": 1784342963,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0013",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Napoli",
+      "away": "Man United",
+      "startTs": 1784343301,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0133",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Al Hilal",
+      "away": "Leverkusen",
+      "startTs": 1784343397,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0086",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Al Nassr",
+      "away": "Barcelona",
+      "startTs": 1784343553,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0173",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Sevilla",
+      "away": "Dortmund",
+      "startTs": 1784343926,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0142",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Yokohama F. Marinos",
+      "away": "Real Madrid",
+      "startTs": 1784343972,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0019",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Man City",
+      "away": "Juventus",
+      "startTs": 1784344292,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0074",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Tottenham",
+      "away": "Chelsea",
+      "startTs": 1784344399,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0018",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Seattle Sounders",
+      "away": "NYCFC",
+      "startTs": 1784344558,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0128",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Kawasaki Frontale",
+      "away": "RB Leipzig",
+      "startTs": 1784344876,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0131",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Urawa Reds",
+      "away": "Man City",
+      "startTs": 1784345236,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0073",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Inter",
+      "away": "Seattle Sounders",
+      "startTs": 1784345341,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0084",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Corinthians",
       "away": "Atletico Madrid",
-      "startTs": 1784366554,
+      "startTs": 1784345425,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0190",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Liverpool",
+      "away": "Milan",
+      "startTs": 1784345446,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0095",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Napoli",
+      "away": "Urawa Reds",
+      "startTs": 1784345586,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0169",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Al Ittihad",
+      "away": "Dortmund",
+      "startTs": 1784345629,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0088",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Atletico Madrid",
+      "away": "Liverpool",
+      "startTs": 1784345640,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0174",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Inter",
+      "away": "Seattle Sounders",
+      "startTs": 1784345731,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0179",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Seattle Sounders",
+      "away": "Al Ittihad",
+      "startTs": 1784345901,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0177",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Man City",
+      "away": "Internacional",
+      "startTs": 1784346049,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0102",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Al Ittihad",
+      "away": "Internacional",
+      "startTs": 1784346392,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0121",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Atletico Madrid",
+      "away": "Grêmio",
+      "startTs": 1784346460,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0078",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Bayern",
+      "away": "Napoli",
+      "startTs": 1784346466,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0061",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Chelsea",
+      "away": "LA Galaxy",
+      "startTs": 1784346541,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0048",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Atletico Madrid",
+      "away": "Tottenham",
+      "startTs": 1784346546,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0037",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Grêmio",
+      "away": "Al Ittihad",
+      "startTs": 1784346918,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0144",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "LA Galaxy",
+      "away": "Chelsea",
+      "startTs": 1784347042,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0178",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Marseille",
+      "away": "Flamengo",
+      "startTs": 1784347322,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0130",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "São Paulo",
+      "away": "Barcelona",
+      "startTs": 1784347978,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0099",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Barcelona",
+      "away": "LA Galaxy",
+      "startTs": 1784348205,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0220",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Flamengo",
+      "away": "Corinthians",
+      "startTs": 1784348264,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0035",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Sevilla",
+      "away": "LA Galaxy",
+      "startTs": 1784348552,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0082",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "NYCFC",
+      "away": "Sevilla",
+      "startTs": 1784348738,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0123",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Sevilla",
+      "away": "Napoli",
+      "startTs": 1784348929,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0114",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Seattle Sounders",
+      "away": "Leverkusen",
+      "startTs": 1784349019,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0120",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Roma",
+      "away": "Real Madrid",
+      "startTs": 1784349129,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0068",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Arsenal",
+      "away": "Napoli",
+      "startTs": 1784349158,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0145",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Internacional",
+      "away": "Chelsea",
+      "startTs": 1784349173,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0060",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Grêmio",
+      "away": "Liverpool",
+      "startTs": 1784349680,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0026",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Al Ittihad",
+      "away": "Milan",
+      "startTs": 1784349911,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3804,11 +2256,641 @@
     {
       "id": "fb-0158",
       "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Corinthians",
+      "away": "Urawa Reds",
+      "startTs": 1784350400,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0054",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Dortmund",
+      "away": "Man United",
+      "startTs": 1784350746,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0041",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Corinthians",
+      "away": "Urawa Reds",
+      "startTs": 1784351216,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0162",
+      "sport": "football",
       "league": "Champions League",
       "country": "Europe",
-      "home": "PSG",
+      "home": "Lyon",
+      "away": "RB Leipzig",
+      "startTs": 1784351316,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0016",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Tottenham",
       "away": "Roma",
-      "startTs": 1784366969,
+      "startTs": 1784351610,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0067",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Leverkusen",
+      "away": "Sevilla",
+      "startTs": 1784351740,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0210",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Corinthians",
+      "away": "Arsenal",
+      "startTs": 1784351940,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0021",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Man United",
+      "away": "Juventus",
+      "startTs": 1784352180,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0188",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Arsenal",
+      "away": "NYCFC",
+      "startTs": 1784352189,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0113",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "NYCFC",
+      "away": "Arsenal",
+      "startTs": 1784352293,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0143",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Man City",
+      "away": "Flamengo",
+      "startTs": 1784352480,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0146",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Sevilla",
+      "away": "Seattle Sounders",
+      "startTs": 1784352483,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0075",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Real Madrid",
+      "away": "Yokohama F. Marinos",
+      "startTs": 1784352642,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0107",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Atletico Madrid",
+      "away": "Barcelona",
+      "startTs": 1784352707,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0119",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Dortmund",
+      "away": "LA Galaxy",
+      "startTs": 1784352819,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0011",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Atletico Madrid",
+      "away": "Barcelona",
+      "startTs": 1784353511,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0140",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Napoli",
+      "away": "Juventus",
+      "startTs": 1784354369,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0135",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Kawasaki Frontale",
+      "away": "Chelsea",
+      "startTs": 1784354406,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0126",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Real Madrid",
+      "away": "Napoli",
+      "startTs": 1784354418,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0199",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Liverpool",
+      "away": "Al Ittihad",
+      "startTs": 1784354620,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0040",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "PSG",
+      "away": "Urawa Reds",
+      "startTs": 1784354726,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0154",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Kawasaki Frontale",
+      "away": "Lyon",
+      "startTs": 1784355120,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0029",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Man United",
+      "away": "Grêmio",
+      "startTs": 1784355177,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0115",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Inter",
+      "away": "Al Hilal",
+      "startTs": 1784356128,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0049",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Grêmio",
+      "away": "Man City",
+      "startTs": 1784356396,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0079",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Arsenal",
+      "away": "Al Nassr",
+      "startTs": 1784356508,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0134",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "LA Galaxy",
+      "away": "Bayern",
+      "startTs": 1784356622,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0028",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Marseille",
+      "away": "Al Hilal",
+      "startTs": 1784356729,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0023",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Lyon",
+      "away": "Yokohama F. Marinos",
+      "startTs": 1784356966,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0080",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Yokohama F. Marinos",
+      "away": "Al Ittihad",
+      "startTs": 1784357574,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0076",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Marseille",
+      "away": "Bayern",
+      "startTs": 1784357743,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0202",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "LA Galaxy",
+      "away": "Leverkusen",
+      "startTs": 1784357775,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0058",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Corinthians",
+      "away": "Man United",
+      "startTs": 1784357788,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0090",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Sevilla",
+      "away": "Tottenham",
+      "startTs": 1784357979,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0100",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Al Hilal",
+      "away": "Atletico Madrid",
+      "startTs": 1784358247,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0192",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Corinthians",
+      "away": "Yokohama F. Marinos",
+      "startTs": 1784358526,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3824,9 +2906,81 @@
       "sport": "football",
       "league": "K League",
       "country": "South Korea",
-      "home": "Tottenham",
-      "away": "Internacional",
-      "startTs": 1784367394,
+      "home": "Urawa Reds",
+      "away": "Bayern",
+      "startTs": 1784358682,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0043",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "RB Leipzig",
+      "away": "Grêmio",
+      "startTs": 1784358786,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0042",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Milan",
+      "away": "PSG",
+      "startTs": 1784358802,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0138",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Urawa Reds",
+      "away": "Arsenal",
+      "startTs": 1784358966,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0185",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Roma",
+      "away": "Inter",
+      "startTs": 1784359470,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3840,11 +2994,11 @@
     {
       "id": "fb-0163",
       "sport": "football",
-      "league": "Brasileirão",
-      "country": "Brazil",
-      "home": "Al Ittihad",
-      "away": "Lyon",
-      "startTs": 1784367715,
+      "league": "MLS",
+      "country": "USA",
+      "home": "Sevilla",
+      "away": "Al Nassr",
+      "startTs": 1784359719,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3856,13 +3010,13 @@
       }
     },
     {
-      "id": "fb-0145",
+      "id": "fb-0157",
       "sport": "football",
       "league": "Champions League",
       "country": "Europe",
-      "home": "Yokohama F. Marinos",
-      "away": "Marseille",
-      "startTs": 1784367832,
+      "home": "Al Nassr",
+      "away": "Internacional",
+      "startTs": 1784359811,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3874,31 +3028,13 @@
       }
     },
     {
-      "id": "fb-0107",
-      "sport": "football",
-      "league": "Saudi Pro League",
-      "country": "Saudi Arabia",
-      "home": "Palmeiras",
-      "away": "Roma",
-      "startTs": 1784368067,
-      "status": "NS",
-      "minute": null,
-      "scoreHome": null,
-      "scoreAway": null,
-      "odds": {
-        "home": null,
-        "draw": null,
-        "away": null
-      }
-    },
-    {
-      "id": "fb-0147",
+      "id": "fb-0008",
       "sport": "football",
       "league": "Ligue 1",
       "country": "France",
-      "home": "Roma",
-      "away": "Leverkusen",
-      "startTs": 1784368082,
+      "home": "Urawa Reds",
+      "away": "Tottenham",
+      "startTs": 1784359841,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3910,13 +3046,49 @@
       }
     },
     {
-      "id": "fb-0128",
+      "id": "fb-0191",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Bayern",
+      "away": "Barcelona",
+      "startTs": 1784359927,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0081",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Tottenham",
+      "away": "Leverkusen",
+      "startTs": 1784360149,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0132",
       "sport": "football",
       "league": "K League",
       "country": "South Korea",
-      "home": "Roma",
-      "away": "PSG",
-      "startTs": 1784368421,
+      "home": "Inter Miami",
+      "away": "Al Hilal",
+      "startTs": 1784360414,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3928,13 +3100,13 @@
       }
     },
     {
-      "id": "fb-0059",
+      "id": "fb-0045",
       "sport": "football",
-      "league": "J-League",
-      "country": "Japan",
-      "home": "Sevilla",
-      "away": "Yokohama F. Marinos",
-      "startTs": 1784368993,
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Leverkusen",
+      "away": "Milan",
+      "startTs": 1784361080,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
@@ -3946,13 +3118,841 @@
       }
     },
     {
-      "id": "fb-0002",
+      "id": "fb-0104",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Arsenal",
+      "away": "Al Nassr",
+      "startTs": 1784361336,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0219",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "NYCFC",
+      "away": "LA Galaxy",
+      "startTs": 1784361403,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0103",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Chelsea",
+      "away": "Kawasaki Frontale",
+      "startTs": 1784361422,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0015",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Flamengo",
+      "away": "Tottenham",
+      "startTs": 1784361651,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0156",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Grêmio",
+      "away": "Al Hilal",
+      "startTs": 1784361770,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0092",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Bayern",
+      "away": "São Paulo",
+      "startTs": 1784361858,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0213",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Al Hilal",
+      "away": "Chelsea",
+      "startTs": 1784362027,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0083",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Urawa Reds",
+      "away": "Al Hilal",
+      "startTs": 1784362028,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0170",
       "sport": "football",
       "league": "Ligue 1",
       "country": "France",
+      "home": "Inter",
+      "away": "Inter Miami",
+      "startTs": 1784362778,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0020",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Al Nassr",
+      "away": "Palmeiras",
+      "startTs": 1784362829,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0085",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Urawa Reds",
+      "away": "Marseille",
+      "startTs": 1784363387,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0089",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Real Madrid",
+      "away": "Bayern",
+      "startTs": 1784363425,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0051",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Arsenal",
+      "away": "Palmeiras",
+      "startTs": 1784363805,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0034",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Man United",
+      "away": "Urawa Reds",
+      "startTs": 1784363924,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0211",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "LA Galaxy",
+      "away": "Napoli",
+      "startTs": 1784363954,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0172",
+      "sport": "football",
+      "league": "Libertadores",
+      "country": "South America",
+      "home": "Man United",
+      "away": "Al Hilal",
+      "startTs": 1784364045,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0069",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Palmeiras",
+      "away": "Barcelona",
+      "startTs": 1784364158,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0024",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Arsenal",
+      "away": "Urawa Reds",
+      "startTs": 1784364745,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0057",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Dortmund",
+      "away": "Grêmio",
+      "startTs": 1784365340,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0006",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Grêmio",
+      "away": "Juventus",
+      "startTs": 1784365366,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0198",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Al Ittihad",
+      "away": "Real Madrid",
+      "startTs": 1784365573,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0161",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Chelsea",
+      "away": "Milan",
+      "startTs": 1784365751,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0151",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Tottenham",
+      "away": "Yokohama F. Marinos",
+      "startTs": 1784365776,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0009",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Palmeiras",
+      "away": "Leverkusen",
+      "startTs": 1784365786,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0031",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Liverpool",
+      "away": "Al Nassr",
+      "startTs": 1784365885,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0094",
+      "sport": "football",
+      "league": "Liga MX",
+      "country": "Mexico",
+      "home": "Bayern",
+      "away": "Real Madrid",
+      "startTs": 1784366552,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0071",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Corinthians",
+      "away": "Juventus",
+      "startTs": 1784366950,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0176",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Al Ittihad",
+      "away": "Al Hilal",
+      "startTs": 1784366982,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0205",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Flamengo",
+      "away": "Internacional",
+      "startTs": 1784367097,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0155",
+      "sport": "football",
+      "league": "Ligue 1",
+      "country": "France",
+      "home": "Palmeiras",
+      "away": "Milan",
+      "startTs": 1784367103,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0096",
+      "sport": "football",
+      "league": "Brasileirão",
+      "country": "Brazil",
+      "home": "Al Hilal",
+      "away": "Roma",
+      "startTs": 1784367703,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0186",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Sevilla",
+      "away": "São Paulo",
+      "startTs": 1784367747,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0182",
+      "sport": "football",
+      "league": "Bundesliga",
+      "country": "Germany",
+      "home": "Al Nassr",
+      "away": "Bayern",
+      "startTs": 1784367764,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0093",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Roma",
+      "away": "Urawa Reds",
+      "startTs": 1784367919,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0216",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Chelsea",
+      "away": "Milan",
+      "startTs": 1784368174,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0072",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
       "home": "Yokohama F. Marinos",
+      "away": "Al Ittihad",
+      "startTs": 1784368473,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0070",
+      "sport": "football",
+      "league": "Premier League",
+      "country": "England",
+      "home": "Chelsea",
+      "away": "Napoli",
+      "startTs": 1784370256,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0164",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Barcelona",
+      "away": "Arsenal",
+      "startTs": 1784370442,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0065",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Liverpool",
+      "away": "Inter Miami",
+      "startTs": 1784370584,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0063",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "Al Hilal",
+      "away": "Marseille",
+      "startTs": 1784371502,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0175",
+      "sport": "football",
+      "league": "Serie A",
+      "country": "Italy",
+      "home": "Flamengo",
+      "away": "Urawa Reds",
+      "startTs": 1784371626,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0046",
+      "sport": "football",
+      "league": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Flamengo",
+      "away": "Al Ittihad",
+      "startTs": 1784371707,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0167",
+      "sport": "football",
+      "league": "MLS",
+      "country": "USA",
+      "home": "Roma",
+      "away": "Marseille",
+      "startTs": 1784371948,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0183",
+      "sport": "football",
+      "league": "Champions League",
+      "country": "Europe",
+      "home": "NYCFC",
       "away": "RB Leipzig",
-      "startTs": 1784369523,
+      "startTs": 1784372035,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0032",
+      "sport": "football",
+      "league": "K League",
+      "country": "South Korea",
+      "home": "Urawa Reds",
+      "away": "Arsenal",
+      "startTs": 1784372340,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0196",
+      "sport": "football",
+      "league": "La Liga",
+      "country": "Spain",
+      "home": "Tottenham",
+      "away": "Yokohama F. Marinos",
+      "startTs": 1784372410,
+      "status": "NS",
+      "minute": null,
+      "scoreHome": null,
+      "scoreAway": null,
+      "odds": {
+        "home": null,
+        "draw": null,
+        "away": null
+      }
+    },
+    {
+      "id": "fb-0091",
+      "sport": "football",
+      "league": "J-League",
+      "country": "Japan",
+      "home": "Al Nassr",
+      "away": "Inter Miami",
+      "startTs": 1784372795,
       "status": "NS",
       "minute": null,
       "scoreHome": null,
